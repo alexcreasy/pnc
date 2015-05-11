@@ -15,7 +15,7 @@
     ]);
 
   if (pnc.enableAuth) {
-
+    console.log('** Authentication Enabled **');
     var auth = {};
 
     angular.element(document).ready(function () {
