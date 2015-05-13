@@ -14,6 +14,42 @@
     'pnc.environment'
     ]);
 
+
+  function Authenticator(spec) {
+    var authenticated = false;
+    var principle = null;
+    var config = spec.keycloakConfig;
+    var keycloak = null;
+
+    this.isAuthenticated = function() {
+      return authenticated;
+    };
+
+    this.getPrinciple = function() {
+      return principle;
+    };
+
+    this.login = function() {
+      keycloak = new Keycloak(config);
+      keycloak.init({ onLoad: 'login-required' }).
+        success(function () {
+          authenticated = true;
+          keycloak.loadUserProfile().success(function() {
+              principle = keycloak.profile;
+          }.error(function() {
+            console.log("Error logging in");
+          });
+
+
+      $log.debug('User Profile: %O ', Auth.keycloak.profile);
+    }).error(function() {
+      $log.debug('failed to load user profile');
+    });
+
+      }
+
+  }
+
   if (pnc.enableAuth) {
     console.log('** Authentication Enabled **');
     var auth = {};
