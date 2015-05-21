@@ -29,7 +29,8 @@
     'pnc.record',
     'pnc.configuration-set',
     'pnc.websockets',
-    'pnc.milestone'
+    'pnc.milestone',
+    'pnc.error'
   ]);
 
   /*jshint camelcase: false */

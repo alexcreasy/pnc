@@ -2,13 +2,13 @@
 
 (function() {
 
-  var module = angular.module('pnc.error', []);
+  var module = angular.module('pnc.error', ['pnc']);
 
   module.service('HttpErrorService', function($log) {
     var handlers = {};
 
     var defaultHandler = function(response) {
-        $log.warn('No default HTTP error handler: %O', response);
+      $log.warn('No default HTTP error handler: %O', response);
     };
 
     this.registerDefaultHandler = function(func) {
@@ -39,12 +39,12 @@
     };
   });
 
-  module.config(function($log, $httpProvider, Auth, HttpErrorService,
+  module.config(function($httpProvider, Auth, HttpErrorService,
                          Notifications) {
 
     // Handle HTTP Code 401: Unauthorized.
     HttpErrorService.registerHandler(401, function(response) {
-      $log.error('401 Unauthorized: %O', response);
+      //$log.warn('401 Unauthorized: %O', response);
       if (Auth.loggedIn) {
         // Probable session timeout.
         Auth.logout();
@@ -55,7 +55,7 @@
 
     // Handle HTTP Code 403: Forbidden.
     HttpErrorService.registerHandler(403, function(response) {
-      $log.error('403: Forbidden');
+      //$log.error('403: Forbidden');
       Notifications.error('403 Forbidden: %O', response);
     });
 
