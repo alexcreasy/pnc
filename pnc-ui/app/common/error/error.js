@@ -4,11 +4,11 @@
 
   var module = angular.module('pnc.error', ['pnc']);
 
-  module.service('HttpErrorService', function($log) {
+  module.provider('httpError', function httpErrorProvider () {
     var handlers = {};
 
     var defaultHandler = function(response) {
-      $log.warn('No default HTTP error handler: %O', response);
+      console.log('No default HTTP error handler: %O', response);
     };
 
     this.registerDefaultHandler = function(func) {
@@ -19,32 +19,37 @@
       handlers[status] = func;
     };
 
-    this.handle = function(response) {
-      if (handlers[response.status]) {
-        handlers[response.status](response);
-      } else {
-        defaultHandler(response);
-      }
+    this.$get = function() {
+      return {
+        handle: function(response) {
+          if (handlers[response.status]) {
+            handlers[response.status](response);
+          } else {
+            defaultHandler(response);
+          }
+        }
+      };
     };
   });
 
-  module.factory('HttpErrorInterceptor', function($q, HttpErrorService) {
+  module.factory('HttpErrorInterceptor', function($q, httpError) {
     return function(promise) {
       return promise.then(function(response) {
         return response;
       }, function(response) {
-        HttpErrorService.handle(response);
+        httpError.handle(response);
         return $q.reject(response);
       });
     };
   });
 
-  module.config(function($httpProvider, Auth, HttpErrorService,
-                         Notifications) {
+  module.config(function($httpProvider, httpErrorProvider, $injector) {
 
     // Handle HTTP Code 401: Unauthorized.
-    HttpErrorService.registerHandler(401, function(response) {
-      //$log.warn('401 Unauthorized: %O', response);
+    httpErrorProvider.registerHandler(401, function(response) {
+      var $log = $injector.get('$log');
+      var Auth = $injector.get('Auth');
+      $log.warn('401 Unauthorized: %O', response);
       if (Auth.loggedIn) {
         // Probable session timeout.
         Auth.logout();
@@ -54,8 +59,10 @@
     });
 
     // Handle HTTP Code 403: Forbidden.
-    HttpErrorService.registerHandler(403, function(response) {
-      //$log.error('403: Forbidden');
+    httpErrorProvider.registerHandler(403, function(response) {
+      var $log = $injector.get('$log');
+      var Notifications = $injector.get('Notifications');
+      $log.error('403: Forbidden');
       Notifications.error('403 Forbidden: %O', response);
     });
 
