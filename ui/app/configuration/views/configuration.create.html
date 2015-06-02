@@ -78,8 +78,8 @@
 
     <div class="form-group">
       <label for="input-product-versions" class="col-sm-2 control-label">Product Versions</label>
-      <div class="col-sm-10" ng-show="createCtrl.products.selected">
-        x<pnc-select selected="createCtrl.productVersions.selected" query="createCtrl.productVersions.getItems($viewValue)"></pnc-select>
+      <div class="col-sm-10 col-md-4" ng-show="createCtrl.products.selected">
+        <pnc-select selected="createCtrl.productVersions.selected" display-property="version" query="createCtrl.productVersions.getItems($viewValue)"></pnc-select>
       </div>
     </div>
 

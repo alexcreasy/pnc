@@ -82,13 +82,14 @@
           productId: that.products.selected.id
         });
         // that.productVersions.all = ({id: that.products.selected.id});
-        // $log.debug('productVersions: %O', that.productVersions.all);
+        $log.debug('productVersions: %O', that.productVersions.all);
       };
 
       this.productVersions.getItems = function($viewValue) {
-        return $filter('filter')(this.productVersions.all, {
-          name: $viewValue
+        var result = $filter('filter')(that.productVersions.all, {
+          version: $viewValue
         });
+        return result;
       };
 
       this.submit = function() {
