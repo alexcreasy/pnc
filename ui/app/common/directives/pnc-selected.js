@@ -21,6 +21,29 @@
 
   var module = angular.module('pnc.common.directives');
 
+  /**
+   * @ngdoc directive
+   * @name pnc.common.directives:pncSelect
+   * @restrict E
+   * @param {array} selected
+   * An array on the in scope controller that will hold the items selected by
+   * the user. The array can be pre-populated to show items that are already
+   * selected.
+   * @param {function} query
+   * A function that should return an array of possible items for the user to
+   * select, filtered by what the user has currently entered, this is passed to
+   * the function as the only parameter.
+   * @description
+   * A directive that allows users to select multiple options from a list of
+   * possible types. The user finds possible items by typing into a type-ahead
+   * style input box. The selected items are presented to the user in a list.
+   * The user is given the option to remove items from the list by pressing a
+   * cross button next to the selected item.
+   * @example
+   * <pnc-select selected="ctrl.selected" query="ctrl.getItems($viewValue)">
+   * </pnc-select>
+   * @author Alex Creasy
+   */
   module.directive('pncSelect', function() {
 
     var tmpl =
