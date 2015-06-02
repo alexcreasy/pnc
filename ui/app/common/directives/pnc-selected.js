@@ -33,6 +33,8 @@
    * A function that should return an array of possible items for the user to
    * select, filtered by what the user has currently entered, this is passed to
    * the function as the only parameter.
+   * @param {string=} display-property
+   * The name of the property on the item to search against and display.
    * @description
    * A directive that allows users to select multiple options from a list of
    * possible types. The user finds possible items by typing into a type-ahead
@@ -40,16 +42,16 @@
    * The user is given the option to remove items from the list by pressing a
    * cross button next to the selected item.
    * @example
-   * <pnc-select selected="ctrl.selected" query="ctrl.getItems($viewValue)">
+   * <pnc-select display-property="name" selected="ctrl.selected" query="ctrl.getItems($viewValue)">
    * </pnc-select>
    * @author Alex Creasy
    */
   module.directive('pncSelect', function() {
 
     var tmpl =
-      '<ul class="list-group">' +
+      '<ul class="list-group" ng-show="selected">' +
         '<li class="list-group-item" ng-repeat="item in selected">' +
-          '{{ item.version }}' +
+          '{{ item[displayProperty] }}' +
           '<button type="button" class="close" aria-label="Close" ng-click="removeItem(item)">' +
             '<span aria-hidden="true">×</span>' +
           '</button>' +
@@ -57,10 +59,10 @@
       '</ul>' +
       '<div>' +
         '<input type="text" ng-model="selectedItem" placeholder="Enter product version..." ' +
-               'typeahead="item as item.name for item in query({$viewValue: $viewValue})" ' +
+               'typeahead="item as item[displayProperty] for item in query({$viewValue: $viewValue})" ' +
                'typeahead-editable="false" typeahead-loading="loadingLocations" class="form-control" ' +
                'typeahead-on-select="onSelect($item, $model, $label)" typeahead-wait-ms="200">' +
-        '<span class="spinner spinner-xs spinner-inline"></span>' +
+        '<span ng-show="loadingLocations" class="spinner spinner-xs spinner-inline"></span>' +
       '</div>'
     ;
 
@@ -94,7 +96,8 @@
     return {
       scope: {
         selected: '=',
-        query: '&'
+        query: '&',
+        displayProperty: '@'
       },
       template: tmpl,
       controller: ctrl
