@@ -49,7 +49,7 @@
     var tmpl =
       '<ul class="list-group">' +
         '<li class="list-group-item" ng-repeat="item in selected">' +
-          '{{ item.name }}' +
+          '{{ item.version }}' +
           '<button type="button" class="close" aria-label="Close" ng-click="removeItem(item)">' +
             '<span aria-hidden="true">×</span>' +
           '</button>' +

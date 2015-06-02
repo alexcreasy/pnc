@@ -20,6 +20,6 @@
 
 (function() {
 
-    angular.module('pnc.common.directives', []);
+    angular.module('pnc.common.directives', ['ui.bootstrap']);
 
 })();
