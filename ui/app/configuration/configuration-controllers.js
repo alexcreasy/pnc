@@ -77,12 +77,9 @@
       this.productVersions.all = [];
 
       this.productVersions.update = function() {
-        $log.debug('productId = %d', that.products.selected.id);
         that.productVersions.all = PncRestClient.Product.getVersions({
           productId: that.products.selected.id
         });
-        // that.productVersions.all = ({id: that.products.selected.id});
-        $log.debug('productVersions: %O', that.productVersions.all);
       };
 
       this.productVersions.getItems = function($viewValue) {
@@ -92,7 +89,16 @@
         return result;
       };
 
+      function gatherIds(array) {
+        var result = [];
+        for (var i = 0; i < array.length; i++) {
+          result.push(array[i].id);
+        }
+        return result;
+      }
+
       this.submit = function() {
+        that.data.productVersionIds = gatherIds(that.productVersions.selected);
         that.data.$save().then(
           function(result) {
             Notifications.success('Configuration created');
@@ -108,6 +114,8 @@
       };
     }
   ]);
+
+
 
   module.controller('ConfigurationDetailController', [
     '$log',
