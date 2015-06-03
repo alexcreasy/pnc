@@ -51,15 +51,15 @@
   ]);
 
   module.controller('ConfigurationCreateController', [
+    '$scope',
     '$state',
     '$log',
-    '$filter',
     'PncRestClient',
     'Notifications',
     'environments',
     'projects',
     'products',
-    function($state, $log, $filter, PncRestClient, Notifications, environments,
+    function($scope, $state, $log, PncRestClient, Notifications, environments,
              projects, products) {
 
       var that = this;
@@ -68,26 +68,8 @@
       this.environments = environments;
       this.projects = projects;
 
-      this.products = {};
-      this.products.all = products;
-      this.products.selected = null;
-
-      this.productVersions = {};
-      this.productVersions.selected = [];
-      this.productVersions.all = [];
-
-      this.productVersions.update = function() {
-        that.productVersions.all = PncRestClient.Product.getVersions({
-          productId: that.products.selected.id
-        });
-      };
-
-      this.productVersions.getItems = function($viewValue) {
-        var result = $filter('filter')(that.productVersions.all, {
-          version: $viewValue
-        });
-        return result;
-      };
+      $scope.products = products;
+      $scope.productVersions = [];
 
       function gatherIds(array) {
         var result = [];
@@ -98,7 +80,7 @@
       }
 
       this.submit = function() {
-        that.data.productVersionIds = gatherIds(that.productVersions.selected);
+        that.data.productVersionIds = gatherIds($scope.productVersions);
         that.data.$save().then(
           function(result) {
             Notifications.success('Configuration created');
@@ -111,6 +93,27 @@
             Notifications.error('Configuration creation failed');
           }
         );
+      };
+    }
+  ]);
+
+  module.controller('SelectVersionController',
+    ['$scope', '$log', '$filter', 'PncRestClient', function($scope, $log, $filter, PncRestClient) {
+
+      var that = this;
+      this.selectedProduct = null;
+
+      this.update = function() {
+        $scope.productVersions = PncRestClient.Product.getVersions({
+          productId: that.selectedProduct.id
+        });
+      };
+
+      this.getItems = function($viewValue) {
+        var result = $filter('filter')($scope.productVersions, {
+          version: $viewValue
+        });
+        return result;
       };
     }
   ]);
