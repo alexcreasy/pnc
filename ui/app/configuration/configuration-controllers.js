@@ -102,15 +102,16 @@
 
       var that = this;
       this.selectedProduct = null;
+      this.allVersions
 
       this.update = function() {
-        $scope.productVersions = PncRestClient.Product.getVersions({
+        that.allVersions = PncRestClient.Product.getVersions({
           productId: that.selectedProduct.id
         });
       };
 
       this.getItems = function($viewValue) {
-        var result = $filter('filter')($scope.productVersions, {
+        var result = $filter('filter')(that.allVersions, {
           version: $viewValue
         });
         return result;
