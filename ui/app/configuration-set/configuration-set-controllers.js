@@ -82,10 +82,6 @@
             else {
               $state.go('configuration-set.list');
             }
-          },
-          function(response) {
-            $log.error('Create Configuration Set failed: response: %O', response);
-            Notifications.error('Configuration Set creation failed');
           }
         );
       };
@@ -149,16 +145,12 @@
              var params = { configurationSetId: self.configurationSetDetail.id };
              $state.go('configuration-set.detail', params, { reload: true, inherit: false,
                       notify: true });
-           },
-           function(response) {
-             $log.error('Build Configuration adding failed: response: %O', response);
-             Notifications.error('Configuration addition to Configuration Set failed');
            }
          );
        }
       };
 
-     
+
     }
   ]);
 
@@ -237,19 +229,13 @@
         $log.debug('**Initiating build of SET: %s**', self.set.name);
 
         PncRestClient.ConfigurationSet.build({
-          configurationSetId: self.set.id }, {}).$promise.then(
-            function(result) {
-              $log.debug('Initiated Build: %O, result: %O', self.set,
-                         result);
-              Notifications.success('Initiated build of Configuration Set: ' +
-                                    self.set.name);
-            },
-            function(response) {
-              $log.error('Failed to initiated build: %O, response: %O',
-                         self.set, response);
-              Notifications.error('Could not initiate build of Configuration Set: ' +
-                                    self.set.name);
-            }
+          configurationSetId: self.set.id
+        }, {}).$promise.then(function(result) {
+            $log.debug('Initiated Build: %O, result: %O', self.set,
+                       result);
+            Notifications.success('Initiated build of Configuration Set: ' +
+                                  self.set.name);
+          }
         );
       };
 
@@ -258,16 +244,13 @@
         $log.debug('Updating configuration-set: %O', this.set);
 
         this.set.$update().then(
+
           function(result) {
             $log.debug('Update Config: %O, result: %O', self.set,
                        result);
             Notifications.success('Configuration Set updated');
-          },
-          function(response) {
-            $log.error('Update set: %O failed, response: %O',
-                       self.set, response);
-            Notifications.error('Configuration Set update failed');
           }
+
         );
       };
 
@@ -305,12 +288,6 @@
             Notifications.success('Configuration removed from Configuration Set');
             var params = { configurationSetId: self.set.id };
             $state.go('configuration-set.detail', params, { reload: true, inherit: false, notify: true });
-          },
-          // Failure
-          function (response) {
-            $log.error('Removal of Configuration from Configuration Set: %O failed, response: %O',
-             self.set, response);
-            Notifications.error('Configuration removal from Configuration Set failed');
           }
         );
       };
@@ -325,12 +302,6 @@
             Notifications.success('Configuration Set deleted');
             // Attempt to fo to previous state
             $state.go(previousState.Name, previousState.Params);
-          },
-          // Failure
-          function (response) {
-            $log.error('Delete configuration set: %O failed, response: %O',
-                       self.set, response);
-            Notifications.error('Configuration Set deletion failed');
           }
         );
       };
