@@ -83,10 +83,6 @@
             $state.go('configuration.detail.show', {
               configurationId: result.id
             });
-          },
-          function(response) {
-            $log.error('Create configuration failed: response: %O', response);
-            Notifications.error('Configuration creation failed');
           }
         );
       };
@@ -164,7 +160,6 @@
         all: [],
 
         update: function() {
-          $log.debug('productVersions >> update()');
           that.productVersions.all = PncRestClient.Product.getVersions({
             productId: that.products.selected.id
           });
@@ -215,12 +210,6 @@
                          result);
               Notifications.success('Initiated build of configuration: ' +
                                     that.configuration.name);
-            },
-            function(response) {
-              $log.error('Failed to initiated build: %O, response: %O',
-                         that.configuration, response);
-              Notifications.error('Could not initiate build of configuration: ' +
-                                    that.configuration.name);
             }
           );
       };
@@ -240,11 +229,6 @@
             $log.debug('Update Config: %O, result: %O', that.configuration,
                        result);
             Notifications.success('Configuration updated');
-          },
-          function(response) {
-            $log.error('Update configuration: %O failed, response: %O',
-                       that.configuration, response);
-            Notifications.error('Configuration update failed');
           }
         );
       };
@@ -257,11 +241,6 @@
 
           $state.go('configuration.detail.show', { configurationId: result.id });
           Notifications.success('Configuration cloned');
-        },
-        function(response) {
-          $log.error('Clone configuration: %O failed, response: %O',
-                     that.configuration, response);
-          Notifications.error('Configuration clone failed');
         });
       };
 
@@ -275,12 +254,6 @@
             Notifications.success('Configuration deleted');
             $state.go('configuration.list', {}, { reload: true, inherit: false,
                       notify: true });
-          },
-          // Failure
-          function (response) {
-            $log.error('Delete configuration: %O failed, response: %O',
-                       that.configuration, response);
-            Notifications.error('Configuration deletion failed');
           }
         );
       };
