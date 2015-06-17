@@ -86,10 +86,6 @@
                   versionId: versionDetail.id
                 }, {reload: true});
               }
-            },
-            function (response) {
-              $log.error('Creation of Milestone: response: %O', response);
-              Notifications.error('Creation of milestone failed');
             }
           );
         }
@@ -101,10 +97,6 @@
                 productId: productDetail.id,
                 versionId: versionDetail.id
               }, {reload:true});
-            },
-            function(response) {
-              $log.error('Update milestone failed, response: %O', response);
-              Notifications.error('Milestone update failed');
             }
           );
         }
@@ -145,10 +137,6 @@
               productId: productDetail.id,
               versionId: versionDetail.id
             }, {reload:true});
-          },
-          function(response) {
-            $log.error('Release milestone failed, response: %O', response);
-            Notifications.error('Milestone release failed');
           }
         );
       };
