@@ -101,6 +101,8 @@
       }
     });
 
+    $httpProvider.interceptors.push('errorInterceptor');
+
     if (PROPERTIES.AUTH_ENABLED) {
       keycloakProvider.setKeycloak(keycloak);
       $httpProvider.interceptors.push('authInterceptor');
