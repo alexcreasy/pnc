@@ -61,7 +61,7 @@
     }
     ]);
 
-  app.factory('authInterceptor', [
+  app.factory('httpAuthenticationInterceptor', [
     '$q',
     '$log',
     'keycloak',
@@ -73,10 +73,12 @@
       }
 
       return {
-        request: function (config) {
 
+        request: function (config) {
           if (keycloak && keycloak.token) {
 
+            // Prevents screen flicker by directly returning the config
+            // object if the keycloak token does not need to be refreshed.
             if (!keycloak.isTokenExpired(5)) {
 
               addAuthHeaders(config, keycloak.token);
@@ -94,21 +96,29 @@
               });
 
               return deferred.promise;
-
             }
           }
         }
+
       };
     }
   ]);
 
-  app.factory('errorInterceptor', [
+  app.factory('httpResponseInterceptor', [
     '$log',
     '$q',
     'Notifications',
     'keycloak',
     function($log, $q, Notifications, keycloak) {
       return {
+
+        response: function(response) {
+          if (response.config.method !== 'GET') {
+            $log.debug('HTTP response: %O', response);
+            Notifications.success(response.status + ': ' + response.statusText);
+          }
+          return response;
+        },
 
         responseError: function(rejection) {
           switch(rejection.status) {
@@ -119,11 +129,12 @@
               keycloak.login();
               break;
             default:
-              $log.debug('HTTP request rejected: %O', rejection);
+              $log.debug('HTTP response: %O', rejection);
               Notifications.error(rejection.status + ': ' +
                                   rejection.statusText);
               break;
           }
+          return rejection;
         }
 
       };
@@ -137,12 +148,10 @@
     }
 
     return {
+
       authenticated: false,
-
       logout: nullFunction,
-
       login: nullFunction,
-
       token: 'token',
 
       isTokenExpired: function() {
