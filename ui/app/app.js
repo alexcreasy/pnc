@@ -34,6 +34,7 @@
     'pnc.common.directives',
     'pnc.common.websockets',
     'pnc.common.buildNotifications',
+    'pnc.common.eventbus'
   ]);
 
   var authEnabled = pnc_globals.enableAuth; // jshint ignore:line
