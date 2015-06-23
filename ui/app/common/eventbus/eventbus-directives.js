@@ -51,11 +51,12 @@
     return {
       restrict: 'A',
       scope: {
-        eventType: '@',
-        callback: '&'
+        pncCallback: '&'
       },
       link: function(scope, element, attrs) {
-        scope.$on(scope.eventType, scope.callback(event, data));
+        scope.$on(attrs.pncListen, function(event, payload) {
+          scope.pncCallback({ event: event, payload: payload });
+        });
       }
     };
 

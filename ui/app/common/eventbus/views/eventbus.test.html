@@ -37,11 +37,11 @@
         <th>action</th>
       </thead>
       <tbody>
-      <tr ng-repeat="row in eventCtrl.getData()">
+      <tr ng-repeat="row in eventCtrl.getData()" pnc-listen="buildStatus" pnc-callback="eventCtrl.update(event, payload)">
         <td>{{ row.id }}</td>
         <td>{{ row.name }}</td>
         <td>{{ row.status }}</td>
-        <td><button class="btn btn-large btn-warning" ng-click="eventCtrl.update(row)">Complete</button></td>
+        <td><button class="btn btn-large btn-warning" ng-click="eventCtrl.fireEvent(row)">Complete</button></td>
       </tr>
       </tbody>
     </table>

@@ -50,8 +50,17 @@
         return data;
       };
 
-      this.changeWs = function(status) {
-        broadcast('buildStatus', newEvent('completed', 1, status, 'acreasy'));
+      // this.changeWs = function(status) {
+      //   broadcast('buildStatus', newEvent('completed', 1, status, 'acreasy'));
+      // };
+
+
+      this.update = function(event, payload) {
+        data[payload.id].status = payload.status;
+      };
+
+      this.fireEvent = function(obj) {
+        broadcast('buildStatus', newEvent('completed', obj.id, 'COMPLETED', 'acreasy'));
       };
 
       var newEvent = function(type, affectedId, newStatus, userId) {
@@ -67,13 +76,13 @@
         $rootScope.$broadcast(eventType, object);
       };
 
-      this.update = function(obj) {
-        broadcast('buildStatus', newEvent('completed', obj.id, 'COMPLETED', 'acreasy'));
-      };
+      // this.update = function(obj) {
+      //   broadcast('buildStatus', newEvent('completed', obj.id, 'COMPLETED', 'acreasy'));
+      // };
 
-      $scope.$on('buildStatus', function(event, payload) {
-        data[payload.id].status = payload.status;
-      });
+      // $scope.$on('buildStatus', function(event, payload) {
+      //   data[payload.id].status = payload.status;
+      // });
     }
   ]);
 
