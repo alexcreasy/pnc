@@ -98,6 +98,7 @@
               return deferred.promise;
             }
           }
+          return config;
         }
 
       };
