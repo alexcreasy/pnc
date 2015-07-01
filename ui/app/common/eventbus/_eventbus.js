@@ -20,12 +20,17 @@
 (function () {
 
   var module = angular.module('pnc.common.eventbus', [
-    'ui.router'
+    'ui.router',
+    'pnc.common.websockets'
   ]);
 
   module.config([
     '$stateProvider',
-    function ($stateProvider) {
+    'WebSocketsProvider',
+    function ($stateProvider, WebSocketsProvider) {
+
+      WebSocketsProvider.registerListener('EventBusWebSocketListener');
+      WebSocketsProvider.setEndpoint('ws://localhost:8080/pnc-rest/ws/build-records/notifications');
 
       $stateProvider.state('event', {
         abstract: true,
@@ -45,5 +50,9 @@
       });
     }
   ]);
+
+  module.run(function(WebSockets) {
+    console.log(WebSockets);
+  });
 
 })();

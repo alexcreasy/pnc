@@ -24,8 +24,7 @@
   module.controller('EventTestController', [
     '$log',
     '$rootScope',
-    '$scope',
-    function($log, $rootScope, $scope) {
+    function($log, $rootScope) {
       $log.debug('thisCtrl = %O', this);
 
       var data = [
