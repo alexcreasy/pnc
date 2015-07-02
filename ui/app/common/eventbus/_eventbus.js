@@ -51,8 +51,7 @@
     }
   ]);
 
-  module.run(function(WebSockets) {
-    console.log(WebSockets);
+  module.run(function() {
   });
 
 })();
