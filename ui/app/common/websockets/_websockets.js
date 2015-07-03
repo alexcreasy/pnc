@@ -27,5 +27,4 @@
     'DEFAULT_URI': 'ws://' +  location.host + '/pnc-rest/ws/build-records/notifications'
   });
 
-
 })();
