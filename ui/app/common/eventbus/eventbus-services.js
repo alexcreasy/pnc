@@ -1,20 +1,20 @@
 /*
- * JBoss, Home of Professional Open Source.
- * Copyright 2014 Red Hat, Inc., and individual contributors
- * as indicated by the @author tags.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* JBoss, Home of Professional Open Source.
+* Copyright 2014 Red Hat, Inc., and individual contributors
+* as indicated by the @author tags.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 'use strict';
 
 (function () {
@@ -30,17 +30,8 @@
 
       BUILD_FAILED: 'BUILD_FAILED',
 
-      BUILD_STATE_FINAL: 'BUILD_STATE_FINAL'
-
     };
 
-    events.prototype.forEach = function(fn) {
-      var e = events.getOwnPropertyNames();
-      for (var i = 0; i < e.length; i++) {
-        fn(e[i]);
-      }
-    };
-    // Make events immutable.
     Object.freeze(events);
     return events;
   });
@@ -57,28 +48,29 @@
       // as each value.
       function initMap() {
         var result = {};
-        var eventTypesArr = EventTypes.getOwnPropertyNames();
-        for (var i = 0; i < eventTypesArr.length; i++) {
-          result[eventTypesArr[i]] = [];
-        }
+        angular.forEach(EventTypes, function(value, key) {
+          result[key] = [];
+        });
         return result;
       }
 
       /**
-       * Returns a function that can be used to deregister an event
-       * listener, this is returned to the user when they call
-       * registerListener().
-       */
+      * Returns a function that can be used to deregister an event
+      * listener, this is returned to the user when they call
+      * registerListener().
+      */
       function createDeRegistrationFunction(eventType, callback) {
         var bucket = listenersMap[eventType];
-
         return function() {
+          $log.debug('dereg function for: %O / %O - listenersMap=%O', eventType, callback, listenersMap);
           for (var i = 0; i < bucket.length; i++) {
             if (bucket[i] === callback) {
               // Not removing the item from the array provides thread
               // safety since the index of other callbacks in the array
-              // won't be shifted.
+              // won't be shifted. This could potentially cause a memory-leak
+              // though.
               bucket[i] = function() {};
+              $log.debug('registered listener: event: %O, callback: %O, listenersMap: %O', event, callback, listenersMap);
               return;
             }
           }
@@ -92,17 +84,21 @@
           if (!EventTypes[event]) {
             throw new TypeError('event must be a valid event from EventTypes service');
           }
+          if (!payload) {
+            throw new TypeError('Empty param payload');
+          }
 
           // Run the event through registered listeners before broadcasting.
-
-          listenersMap[0].forEach(function(listener) {
-            listener(payload);
+          angular.forEach(listenersMap, function(value, key) {
+            listenersMap[key].forEach(function(listener) {
+              listener(payload);
+            });
           });
 
-          $rootScope.broadcast(event, payload);
+          $rootScope.$broadcast(event, payload);
         },
         registerListener: function(event, callback) {
-          if (callback.typeof !== 'function') {
+          if (!angular.isFunction(callback)) {
             throw new TypeError('Listener callback must be a function');
           }
 
@@ -111,7 +107,7 @@
           }
 
           listenersMap[event].push(callback);
-
+          $log.debug('registered listener: event: %O, callback: %O', event, callback);
           // Returns a function that can be used to deregister the listener.
           return createDeRegistrationFunction(event, callback);
         }

@@ -51,7 +51,23 @@
     }
   ]);
 
-  module.run(function() {
+  module.run(function($log, $rootScope, EventTypes, EventBus) {
+    angular.forEach(EventTypes, function(value, key) {
+      $log.debug('EVENT: $s => $s', key, value);
+    });
+
+    var scope = $rootScope.$new();
+
+    scope.$on(EventTypes.BUILD_STARTED, function(event, payload) {
+      $log.debug('EVENT SOUNDED: %O, %O', event, payload);
+    });
+
+    var deReg = EventBus.registerListener(EventTypes.BUILD_STARTED, function(event, payload) {
+      $log.debug('has event: %O, %O', event, payload);
+    });
+
+    EventBus.broadcast(EventTypes.BUILD_STARTED, { bleh: 'bleh' });
+    deReg();
   });
 
 })();
