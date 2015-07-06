@@ -31,17 +31,17 @@
     }
   ]);
 
-  module.run(function($log, $rootScope, eventTypes, eventBus, webSocketBus) {
+  module.run(function(/*$log, $rootScope, eventTypes, eventBus, */webSocketBus) {
     webSocketBus.open();
-    eventBus.registerListener(eventTypes.BUILD_STARTED, function(event, payload) {
-      $log.debug('eventBus: %O / %O', event, payload);
-    });
 
-    var scope = $rootScope.$new();
-    scope.$on(eventTypes.BUILD_STARTED, function(event, payload) {
-      $log.debug('Scope listener: %O / %O', event, payload);
-    });
-
+    // eventBus.registerListener(eventTypes.BUILD_STARTED, function(event, payload) {
+    //   $log.debug('eventBus: %O / %O', event, payload);
+    // });
+    //
+    // var scope = $rootScope.$new();
+    // scope.$on(eventTypes.BUILD_STARTED, function(event, payload) {
+    //   $log.debug('Scope listener: %O / %O', event, payload);
+    // });
   });
 
 })();

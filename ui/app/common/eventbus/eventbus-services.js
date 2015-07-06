@@ -21,20 +21,15 @@
 
   var module = angular.module('pnc.common.eventbus');
 
-  module.factory('eventTypes', function() {
-    var events = {
+  module.constant('eventTypes', Object.freeze({
 
-      BUILD_STARTED: 'BUILD_STARTED',
+    BUILD_STARTED: 'BUILD_STARTED',
 
-      BUILD_COMPLETED: 'BUILD_COMPLETED',
+    BUILD_COMPLETED: 'BUILD_COMPLETED',
 
-      BUILD_FAILED: 'BUILD_FAILED',
+    BUILD_FAILED: 'BUILD_FAILED',
 
-    };
-
-    Object.freeze(events);
-    return events;
-  });
+  }));
 
   module.factory('eventBus', [
     '$log',
@@ -124,8 +119,10 @@
         onMessage: function(message) {
           if (eventTypes[message.payload.eventType]) {
             eventBus.broadcast(message.payload.eventType, message.payload);
+          } else {
+            $log.warn('eventBusWebSocketListener received unrecognised eventType `' +
+              message.payload.eventType + '`, ignoring');
           }
-          $log.debug('EBWSL Heard Message: %O', message);
         }
       };
     }
