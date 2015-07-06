@@ -316,6 +316,18 @@ public class BuildConfigurationEndpoint {
         return buildConfigurationProvider.getBuildRecords(pageIndex, pageSize, sortingRsql, rsql, id);
     }
 
+    @ApiOperation(value = "Get all running build records associated with this build configuration, returns empty list if no build records are found")
+    @GET
+    @Path("/{id}/running-build-records")
+    public Response getRunningBuildRecords(
+            @ApiParam(value = "Page index") @QueryParam("pageIndex") @DefaultValue("0") int pageIndex,
+            @ApiParam(value = "Pagination size") @DefaultValue("50") @QueryParam("pageSize") int pageSize,
+            @ApiParam(value = "Sorting RSQL") @QueryParam("sort") String sortingRsql,
+            @ApiParam(value = "RSQL query", required = false) @QueryParam("q") String rsql,
+            @ApiParam(value = "Build configuration id", required = true) @PathParam("id") Integer id) {
+        return buildConfigurationProvider.getBuildRecords(pageIndex, pageSize, sortingRsql, rsql, id);
+    }
+
     @ApiOperation(value = "Get latest build record associated with this build configuration, returns no content if no build records are found")
     @GET
     @Path("/{id}/build-records/latest")

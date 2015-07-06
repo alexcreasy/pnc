@@ -103,6 +103,23 @@ public class BuildRecordProvider {
                 .collect(Collectors.toList());
     }
 
+    public List<BuildRecordRest> getAllRunningForConfiguration(Integer pageIndex, Integer pageSize, String sortingRsql, String rsql, Integer configurationId) {
+        if(!Strings.isNullOrEmpty(sortingRsql)) {
+            logger.warn("Sorting RSQL is not supported, ignoring");
+        }
+
+        if(!Strings.isNullOrEmpty(rsql)) {
+            logger.warn("Querying RSQL is not supported, ignoring");
+        }
+
+        return nullableStreamOf(buildCoordinator.getBuildTasks()).map(submittedBuild -> new BuildRecordRest(submittedBuild))
+                .skip(pageIndex * pageSize)
+                .limit(pageSize)
+                .filter(record -> record.getBuildConfigurationId().equals(configurationId))
+                .collect(Collectors.toList());
+    }
+
+
     public List<BuildRecordRest> getAllArchivedOfBuildConfiguration(int pageIndex, int pageSize, String sortingRsql, String query, Integer buildRecordId) {
         Predicate<BuildRecord> rsqlPredicate = rsqlPredicateProducer.getPredicate(BuildRecord.class, query);
         PageInfo pageInfo = pageInfoProducer.getPageInfo(pageIndex, pageSize);
