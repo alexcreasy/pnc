@@ -23,8 +23,8 @@
     'angular-websocket'
   ]);
 
-  module.constant('WEBSOCKET_CONFIG', {
-    'DEFAULT_URI': 'ws://' +  location.host + '/pnc-rest/ws/build-records/notifications'
-  });
+  module.constant('DEFAULT_WS_ENDPOINT',
+    'ws://' +  location.host + '/pnc-rest/ws/build-records/notifications'
+  );
 
 })();

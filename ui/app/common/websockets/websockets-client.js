@@ -24,10 +24,10 @@
   module.factory('BuildRecordNotifications', [
     '$log',
     '$websocket',
-    'WEBSOCKET_CONFIG',
-    function ($log, $websocket, WEBSOCKET_CONFIG) {
+    'DEFAULT_WS_ENDPOINT',
+    function ($log, $websocket, DEFAULT_WS_ENDPOINT) {
 
-      var socket = $websocket(WEBSOCKET_CONFIG.DEFAULT_URI);
+      var socket = $websocket(DEFAULT_WS_ENDPOINT);
 
       var callbacks = [];
 

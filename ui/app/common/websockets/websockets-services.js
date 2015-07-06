@@ -31,10 +31,10 @@
    * @author Alex Creasy
    */
   module.provider('webSocketBus', [
-    'WEBSOCKET_CONFIG',
-    function (WEBSOCKET_CONFIG) {
+    'DEFAULT_WS_ENDPOINT',
+    function (DEFAULT_WS_ENDPOINT) {
 
-      var socketUrl = WEBSOCKET_CONFIG.DEFAULT_ENDPOINT;
+      var socketUrl = DEFAULT_WS_ENDPOINT;
       var socket;
       var listenerServiceNames = [];
       var listeners = [];
