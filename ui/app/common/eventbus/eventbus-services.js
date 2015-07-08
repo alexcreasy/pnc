@@ -118,6 +118,7 @@
       return {
         onMessage: function(message) {
           if (eventTypes[message.payload.eventType]) {
+            $log.debug('Broadcasting Event: %O', message.payload);
             eventBus.broadcast(message.payload.eventType, message.payload);
           } else {
             $log.warn('eventBusWebSocketListener received unrecognised eventType `' +

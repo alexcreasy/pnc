@@ -30,7 +30,9 @@
     No running builds.
   </p>
 
-  <table ng-hide="!runningRecords.length" class="table table-bordered table-striped table-hover">
+  <pnc-running-builds pnc-filter-by="ctrl.filterSpec"></pnc-running-builds>
+
+  <!-- <table ng-hide="!runningRecords.length" class="table table-bordered table-striped table-hover">
     <tbody>
     <th>ID</th>
     <th>Start time</th>
@@ -69,6 +71,6 @@
       </td>
     </tr>
     </tbody>
-  </table>
+  </table> -->
 
 </div>

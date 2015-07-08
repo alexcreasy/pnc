@@ -239,19 +239,54 @@
   module.controller('ConfigurationSidebarController', [
     '$log',
     '$stateParams',
+    '$filter',
+    'PncRestClient',
+    'eventTypes',
     'buildRecordList',
     'runningBuildRecordList',
-    function($log, $stateParams, buildRecordList, runningBuildRecordList) {
-      var filteredRunningBuildRecords;
+    function($log, $stateParams, $filter, PncRestClient, eventTypes,
+             buildRecordList, runningBuildRecordList) {
 
-      var filterRecords = function(records, configId) {
-        var result = [];
-        records.forEach(function(record) {
-          if ()
-        });
-        return result;
+      this.runningBuildRecordList = runningBuildRecordList;
+      var runningMap = this.runningMap = new buckets.Dictionary();
+      var completedMap = this.completedMap = new buckets.Dictionary();
+
+      $filter('filter')(runningBuildRecordList, {
+        buildConfigurationId: $stateParams.configurationId
+      }).forEach(function(r) {
+        runningMap.set(r.id, r);
+      });
+
+      this.getRunningRecords = function() {
+        $log.debug('runningRecords=%a',runningMap.values());
+        return runningMap.values();
       };
 
+      this.getCompletedRecords = function() {
+        return completedMap.values();
+      };
+
+      this.onRunningStatusChange = function(event, payload) {
+        $log.debug('onRunningStatusChange(event=%O, payload=%O)',event, payload);
+        PncRestClient.Running.get({ recordId: payload.id }).$promise.then(function(result) {
+          $log.debug('Fetched running record: %O', result);
+          switch(payload.eventType) {
+            case eventTypes.BUILD_STARTED:
+              runningMap.set(result.id, result);
+              break;
+            case eventTypes.BUILD_FAILED:
+            case eventTypes.BUILD_COMPLETED:
+              runningMap.remove(result.id);
+              break;
+          }
+        });
+      };
+
+      // this.onCompletedStatusChange = function(record) {
+      //   //       return PncRestClient.Record.getAllForConfiguration({
+      //   //         configurationId: $stateParams.configurationId
+      //   //       }).$promise;
+      // };
     }
   ]);
 

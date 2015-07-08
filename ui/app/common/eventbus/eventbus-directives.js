@@ -25,11 +25,9 @@
    * @ngdoc directive
    * @name pnc.common.eventbus:pncListen
    * @restrict A
-   * @param {array} selected-items
+   * @param {string}
 
-   * @param {function} query
-
-   * @param {string=} display-property
+   * @param {pncCallback} query
 
    * @description
 
@@ -44,9 +42,13 @@
       scope: {
         pncCallback: '&'
       },
-      link: function(scope, element, attrs) {
-        scope.$on(attrs.pncListen, function(event, payload) {
-          scope.pncCallback({ event: event, payload: payload });
+      link: function(scope, element, attrs) {  
+        var listenEvents = attrs.pncListen.split('|');
+
+        listenEvents.forEach(function(eventType) {
+          scope.$on(eventType.trim(), function(event, payload) {
+            scope.pncCallback({event: event, payload: payload });
+          });
         });
       }
     };
