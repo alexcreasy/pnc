@@ -35,7 +35,7 @@
 
   * @author Alex Creasy
   */
-  module.directive('pncRunningBuilds', [
+  module.directive('pncBuilds', [
     '$log',
     'PncRestClient',
     'eventTypes',
@@ -43,16 +43,51 @@
 
       return {
         restrict: 'E',
-        // controllerAs: 'ctrl',
-        templateUrl: 'record/views/pnc-running-builds.html',
+        templateUrl: 'record/views/pnc-builds.html',
         scope: {
           pncFilterBy: '=',
-          pncType: '@'
+          pncMode: '@'
         },
         link: function(scope) {
 
-          var runningMap = new buckets.Dictionary();
+          var recordMap = new buckets.Dictionary();
           var filterSpec = scope.pncFilterBy;
+
+          // Are we monitoring running or completed builds?
+          if (!scope.pncMode) {
+            throw new Error('Expected attribute `pnc-mode`');
+          }
+          var mode = scope.pncMode.toLowerCase();
+
+          // The REST models to query for data for each mode.
+          var restModels = {
+            running: PncRestClient.Running,
+            completed: PncRestClient.Record
+          };
+
+          // Event handlers for each mode.
+          var eventHandlers = {
+            running: function(eventType, record) {
+              switch(eventType) {
+                case eventTypes.BUILD_STARTED:
+                  recordMap.set(record.id, record);
+                  break;
+                case eventTypes.BUILD_FAILED:
+                case eventTypes.BUILD_COMPLETED:
+                  recordMap.remove(record.id);
+                  break;
+              }
+            },
+
+            completed: function(eventType, record) {
+              switch(eventType) {
+                case eventTypes.BUILD_FAILED:
+                case eventTypes.BUILD_COMPLETED:
+                  recordMap.set(record.id, record);
+                  break;
+              }
+            }
+          };
 
           var isEligible = function(entity, filterSpec) {
             if (angular.isUndefined(filterSpec)) {
@@ -69,44 +104,36 @@
             return result;
           };
 
-          // Initialise our map with id => record entries.
-          PncRestClient.Running.query().$promise.then(
-            function success(result) {
-              $log.debug('pncRunningBuildsSmall: success: %O', result);
-              result.forEach(function(record) {
-                if (isEligible(record, filterSpec)) {
-                  runningMap.set(record.id, record);
-                }
-              });
-            }
-          );
-
           scope.getRecords = function() {
-            $log.debug('runningRecords=%a',runningMap.values());
-            return runningMap.values();
+            $log.debug('runningRecords=%a',recordMap.values());
+            return recordMap.values();
           };
 
           scope.onEvent = function(event, payload) {
             $log.debug('onRunningStatusChange(event=%O, payload=%O)',event, payload);
             PncRestClient.Running.get({ recordId: payload.id }).$promise.then(
-                function(result) {
+              function(result) {
 
-                  if (isEligible(result, filterSpec)) {
+                if (isEligible(result, filterSpec)) {
+                  $log.debug('Fetched running record: %O', result);
+                  eventHandlers[mode](payload.eventType, result);
+                }
 
-                    $log.debug('Fetched running record: %O', result);
-                    switch(payload.eventType) {
-                      case eventTypes.BUILD_STARTED:
-                        runningMap.set(result.id, result);
-                        break;
-                      case eventTypes.BUILD_FAILED:
-                      case eventTypes.BUILD_COMPLETED:
-                        runningMap.remove(result.id);
-                        break;
-                    }
-                  }
               }
             );
           };
+
+          // Initialise our map with id => record entries.
+          restModels[mode].query().$promise.then(
+            function success(result) {
+              $log.debug('pncBuilds: success: %O', result);
+              result.forEach(function(record) {
+                if (isEligible(record, filterSpec)) {
+                  recordMap.set(record.id, record);
+                }
+              });
+            }
+          );
         }
       };
     }

@@ -30,7 +30,18 @@
     No running builds.
   </p>
 
-  <pnc-running-builds></pnc-running-builds>
+  <pnc-builds pnc-mode="running"></pnc-builds>
+
+  <div>
+    <h2>Finished builds</h2>
+  </div>
+
+  <p ng-hide="finishedRecords.length">
+    No finished builds.
+  </p>
+
+  <pnc-builds pnc-mode="completed"></pnc-builds>
+
 
   <!-- <table ng-hide="!runningRecords.length" class="table table-bordered table-striped table-hover">
     <tbody>
