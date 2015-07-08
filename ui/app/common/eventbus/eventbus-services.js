@@ -65,7 +65,7 @@
               // won't be shifted. In theory this could cause a memory-leak
               // though.
               bucket[i] = function() {};
-              $log.debug('registered listener: event: %O, callback: %O, listenersMap: %O', event, callback, listenersMap);
+              $log.debug('de-registered listener: event: %O, callback: %O, listenersMap: %O', event, callback, listenersMap);
               return;
             }
           }

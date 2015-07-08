@@ -35,26 +35,24 @@
 
   * @author Alex Creasy
   */
-  module.directive('pncRunningBuilds', function() {
+  module.directive('pncRunningBuilds', [
+    '$log',
+    'PncRestClient',
+    'eventTypes',
+    function($log, PncRestClient, eventTypes) {
 
-    return {
-      restrict: 'E',
-      controllerAs: 'ctrl',
-      templateUrl: 'record/views/pnc-running-builds.html',
-      scope: {
-        pncFilterBy: '='
-      },
-      controller: [
-        '$scope',
-        '$attrs',
-        '$log',
-        'PncRestClient',
-        'eventTypes',
-        function($scope, $attrs, $log, PncRestClient, eventTypes) {
+      return {
+        restrict: 'E',
+        // controllerAs: 'ctrl',
+        templateUrl: 'record/views/pnc-running-builds.html',
+        scope: {
+          pncFilterBy: '=',
+          pncType: '@'
+        },
+        link: function(scope) {
 
-          var runningMap = this.runningMap = new buckets.Dictionary();
-
-          var filterSpec = $scope.pncFilterBy;
+          var runningMap = new buckets.Dictionary();
+          var filterSpec = scope.pncFilterBy;
 
           var isEligible = function(entity, filterSpec) {
             if (angular.isUndefined(filterSpec)) {
@@ -83,12 +81,12 @@
             }
           );
 
-          this.getRecords = function() {
+          scope.getRecords = function() {
             $log.debug('runningRecords=%a',runningMap.values());
             return runningMap.values();
           };
 
-          this.onEvent = function(event, payload) {
+          scope.onEvent = function(event, payload) {
             $log.debug('onRunningStatusChange(event=%O, payload=%O)',event, payload);
             PncRestClient.Running.get({ recordId: payload.id }).$promise.then(
                 function(result) {
@@ -110,8 +108,8 @@
             );
           };
         }
-      ]
-    };
-  });
+      };
+    }
+  ]);
 
 })();
