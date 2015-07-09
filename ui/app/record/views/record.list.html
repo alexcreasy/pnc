@@ -21,25 +21,7 @@
   <div class="page-header">
     <h1>Build Progress</h1>
   </div>
-
-  <div>
-      <h2>Running builds</h2>
-  </div>
-
-  <p ng-hide="runningRecords.length">
-    No running builds.
-  </p>
-
-  <pnc-builds pnc-mode="running"></pnc-builds>
-
-  <div>
-    <h2>Finished builds</h2>
-  </div>
-
-  <p ng-hide="finishedRecords.length">
-    No finished builds.
-  </p>
-
+  <pnc-running-builds></pnc-running-builds>
   <pnc-recent-builds></pnc-recent-builds>
 
 

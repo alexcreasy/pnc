@@ -132,8 +132,7 @@
               break;
             default:
               $log.debug('HTTP response: %O', rejection);
-              Notifications.error(rejection.status + ': ' +
-                                  rejection.statusText);
+              Notifications.httpError('HTTP Error', rejection);
               break;
           }
           return rejection;
