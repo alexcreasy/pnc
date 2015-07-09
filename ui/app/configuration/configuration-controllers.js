@@ -239,105 +239,13 @@
   module.controller('ConfigurationSidebarController', [
     '$log',
     '$stateParams',
-    '$filter',
-    'PncRestClient',
-    'eventTypes',
-    'buildRecordList',
-    'runningBuildRecordList',
-    function($log, $stateParams, $filter, PncRestClient, eventTypes,
-             buildRecordList, runningBuildRecordList) {
-
-      this.runningBuildRecordList = runningBuildRecordList;
-      var runningMap = this.runningMap = new buckets.Dictionary();
-      var completedMap = this.completedMap = new buckets.Dictionary();
-
-      $filter('filter')(runningBuildRecordList, {
+    function($log, $stateParams) {
+      this.filterBy = {
         buildConfigurationId: $stateParams.configurationId
-      }).forEach(function(r) {
-        runningMap.set(r.id, r);
-      });
-
-      this.getRunningRecords = function() {
-        $log.debug('runningRecords=%a',runningMap.values());
-        return runningMap.values();
       };
-
-      this.getCompletedRecords = function() {
-        return completedMap.values();
-      };
-
-      this.onRunningStatusChange = function(event, payload) {
-        $log.debug('onRunningStatusChange(event=%O, payload=%O)',event, payload);
-        PncRestClient.Running.get({ recordId: payload.id }).$promise.then(function(result) {
-          $log.debug('Fetched running record: %O', result);
-          switch(payload.eventType) {
-            case eventTypes.BUILD_STARTED:
-              runningMap.set(result.id, result);
-              break;
-            case eventTypes.BUILD_FAILED:
-            case eventTypes.BUILD_COMPLETED:
-              runningMap.remove(result.id);
-              break;
-          }
-        });
-      };
-
-      // this.onCompletedStatusChange = function(record) {
-      //   //       return PncRestClient.Record.getAllForConfiguration({
-      //   //         configurationId: $stateParams.configurationId
-      //   //       }).$promise;
-      // };
     }
   ]);
 
-  // module.controller('ConfigurationSidebarController', [
-  //   '$log',
-  //   '$scope',
-  //   '$stateParams',
-  //   'PncRestClient',
-  //   'buildRecordList',
-  //   'runningBuildRecordList',
-  //   'BuildProgressService',
-  //   'BuildRecordNotifications',
-  //   'Notifications',
-  //   function ($log, $scope, $stateParams, PncRestClient, buildRecordList, runningBuildRecordList,
-  //             BuildProgressService, BuildRecordNotifications, Notifications) {
-  //     $log.debug('ConfigurationSidebarController >> arguments=%O', arguments);
-  //
-  //     BuildProgressService.track($scope, 'runningBuildRecordList', function () {
-  //       return PncRestClient.Running.query().$promise;
-  //     }, [
-  //       BuildProgressService.BUILD_RECORD_FILTER.WITH_BUILD_CONFIGURATION($stateParams.configurationId),
-  //       BuildProgressService.BUILD_RECORD_FILTER.IS_IN_PROGRESS()
-  //     ], BuildProgressService.BUILD_RECORD_UPDATER);
-  //
-  //
-  //     BuildProgressService.track($scope, 'buildRecords', function () {
-  //       return PncRestClient.Record.getAllForConfiguration({
-  //         configurationId: $stateParams.configurationId
-  //       }).$promise;
-  //     }, [
-  //       BuildProgressService.BUILD_RECORD_FILTER.WITH_BUILD_CONFIGURATION($stateParams.configurationId),
-  //       BuildProgressService.BUILD_RECORD_FILTER.IS_FINISHED()
-  //     ], BuildProgressService.BUILD_RECORD_UPDATER);
-  //
-  //
-  //     BuildRecordNotifications.listen(function (record) {
-  //       switch (record.status) {
-  //         case 'SUCCESS':
-  //           Notifications.success('Build #' + record.id + ' finished successfully.');
-  //           break;
-  //         case 'FAILED':
-  //         case 'UNSTABLE':
-  //         case 'ABORTED':
-  //         case 'CANCELLED':
-  //         case 'SYSTEM_ERROR':
-  //         case 'UNKNOWN':
-  //           Notifications.error('Build #' + record.id + ' finished with problems (' + record.status + ').');
-  //       }
-  //     });
-  //   }
-  // ]);
 
   function gatherIds(array) {
     var result = [];

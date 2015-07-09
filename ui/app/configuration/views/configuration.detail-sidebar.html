@@ -17,48 +17,7 @@
     limitations under the License.
 
 -->
-
-  <div class="panel panel-default push-down">
-    <div class="panel-heading">
-      Running Builds
-    </div>
-    <table class="table table-striped table-hover" pnc-listen="BUILD_STARTED|BUILD_FAILED|BUILD_COMPLETED" pnc-callback="sidebarCtrl.onRunningStatusChange(event, payload)">
-      <tbody>
-        <tr ng-repeat="runningRecord in sidebarCtrl.getRunningRecords()">
-          <td>
-            <build-status-icon status="runningRecord.status"></build-status-icon>
-          </td>
-          <td> # {{ runningRecord.id }}</td>
-          <td> {{ runningRecord.name }}</td>
-          <td>{{ runningRecord.startTime | date:'medium'}}</td>
-        </tr>
-        <tr ng-hide="sidebarCtrl.getRunningRecords().length">
-          <td>
-            No running builds
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      Recent Builds
-    </div>
-    <table class="table table-striped table-hover">
-      <tbody>
-        <tr ng-repeat="record in buildRecords | limitTo:10">
-          <td>
-            <build-status-icon status="record.status"></build-status-icon>
-          </td>
-          <td><a href ui-sref="record.detail.info({recordId: record.id})"> # {{ record.id }}</a></td>
-          <td><a href ui-sref="record.detail.info({recordId: record.id})">{{ record.name }}</a></td>
-          <td>{{ record.startTime | date:'medium'}}</td>
-        </tr>
-        <tr ng-hide="buildRecords.length">
-          <td>
-            No recent builds
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<div class="push-down">
+  <pnc-running-builds pnc-filter-by="sidebarCtrl.filterBy"></pnc-running-builds>
+  <pnc-recent-builds pnc-filter-by="sidebarCtrl.filterBy"></pnc-recent-builds>
+</div>
