@@ -51,18 +51,27 @@
   * @description
   * Displays a table of recently completed builds.
   * @example
-  * // Without filtering
-  * <pnc-recent-builds></pnc-recent-builds>
+  * # Without filtering
+  * ```html
+    <pnc-recent-builds></pnc-recent-builds>
+  * ```
   *
-  * // With filtering, show builds for BuildConfiguration with id 7 and userId 23.
-  * <pnc-recent-builds pnc-filter-by="controller.filterSpec"></pnc-recent-builds>
+  * # Filter for builds of BuildConfiguration where id=7 and for user with id=23.
+  * ```html
+    <div ng-controller="myController as ctrl">
+      <pnc-recent-builds pnc-filter-by="ctrl.filterSpec"></pnc-recent-builds>
+    </div>
+  * ```
   *
-  * // in the controller.
-  * this.filterSpec = {
-  *   buildConfigurationId: 7,
-  *   userId: 23
-  * };
-  *
+  * ```js
+    angular.module('myModule')
+      .controller('myController', function() {
+        this.filterSpec = {
+          buildConfigurationId: 7,
+          userId: 23
+        }
+      });
+  * ```
   * @author Alex Creasy
   */
   module.directive('pncRecentBuilds', [
@@ -136,18 +145,27 @@
   * @description
   * Displays a table of running builds.
   * @example
-  * // Without filtering
-  * <pnc-running-builds></pnc-running-builds>
+  * # Without filtering
+  * ```html
+    <pnc-running-builds></pnc-running-builds>
+  * ```
   *
-  * // With filtering
-  * <pnc-running-builds pnc-filter-by="controller.filterSpec"></pnc-running-builds>
+  * # Filter for builds of BuildConfiguration where id=7 and for user with id=23.
+  * ```html
+    <div ng-controller="myController as ctrl">
+      <pnc-running-builds pnc-filter-by="ctrl.filterSpec"></pnc-running-builds>
+    </div>
+  * ```
   *
-  * // Then in Your controller:
-  * this.filterSpec = {
-  *   buildConfigurationId: 7,
-  *   userId: 23
-  * };
-  *
+  * ```js
+    angular.module('myModule')
+      .controller('myController', function() {
+        this.filterSpec = {
+          buildConfigurationId: 7,
+          userId: 23
+        }
+      });
+  * ```
   * @author Alex Creasy
   */
   module.directive('pncRunningBuilds', [

@@ -21,6 +21,13 @@
 
   var module = angular.module('pnc.common.eventbus');
 
+  /**
+   * @ngdoc constant
+   * @name pnc.common.eventBus:eventTypes
+   * @description
+   * An enumeration of events
+   *
+   */
   module.constant('eventTypes', Object.freeze({
 
     BUILD_STARTED: 'BUILD_STARTED',
@@ -31,6 +38,17 @@
 
   }));
 
+  /**
+   * @ngdoc service
+   * @name pnc.common.eventbus:eventBus
+   * @requires $log
+   * @requires $rootScope
+   * @requires $eventTypes
+   * @description
+   *
+   *
+   * @author Alex Creasy
+   */
   module.factory('eventBus', [
     '$log',
     '$rootScope',

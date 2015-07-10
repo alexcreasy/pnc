@@ -160,7 +160,7 @@
       },
 
       idTokenParsed: {
-          preferred_username: 'Authentication Disabled' // jshint ignore:line
+        preferred_username: 'Authentication Disabled' // jshint ignore:line
       },
 
     };

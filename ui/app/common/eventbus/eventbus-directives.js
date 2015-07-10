@@ -25,14 +25,22 @@
    * @ngdoc directive
    * @name pnc.common.eventbus:pncListen
    * @restrict A
-   * @param {string}
-
-   * @param {pncCallback} query
-
+   * @param {string} pnc-listen
+   * The event types to listen for seperated by a `|` character. Valid events
+   * are found in {@link pnc.common.eventBus:eventTypes `eventTypes`}
+   * @param {function} pnc-callback
+   * A callback function that will be executed when an event that is being
+   * listened for occurs. The callback will be invoked with 2 parameters, the
+   * first is the event object itself, the second the payload object that was
+   * broadcast with the event.
    * @description
-
+   * Listens for specific events and executes a callback function
+   * when any of the specified events occur.
    * @example
-
+   * ```html
+   * <div pnc-listen="BUILD_COMPLETED|BUILD_FAILED" pnc-callback="(event, payload)">
+   * </div>
+   *```
    * @author Alex Creasy
    */
   module.directive('pncListen', function() {
@@ -42,7 +50,7 @@
       scope: {
         pncCallback: '&'
       },
-      link: function(scope, element, attrs) {  
+      link: function(scope, element, attrs) {
         var listenEvents = attrs.pncListen.split('|');
 
         listenEvents.forEach(function(eventType) {
