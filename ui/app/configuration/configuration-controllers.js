@@ -240,9 +240,11 @@
     '$log',
     '$stateParams',
     function($log, $stateParams) {
+
       this.filterBy = {
         buildConfigurationId: $stateParams.configurationId
       };
+
     }
   ]);
 

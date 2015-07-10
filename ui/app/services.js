@@ -20,7 +20,6 @@
  (function() {
   var app = angular.module('pnc');
 
-
   app.provider('keycloak', function() {
     var keycloak;
 
@@ -33,9 +32,10 @@
         keycloak = newMockKeycloak();
       },
 
-      $get: function() {
+      $get: ['$log', function($log) {
+        $log.debug('keycloak=%O', keycloak);
         return keycloak;
-      }
+      }]
     };
   });
 

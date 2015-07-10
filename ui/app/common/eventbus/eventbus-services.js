@@ -84,10 +84,8 @@
           }
 
           // Run the event through registered listeners before broadcasting.
-          angular.forEach(listenersMap, function(value, key) {
-            listenersMap[key].forEach(function(listener) {
-              listener(event, payload);
-            });
+          listenersMap[payload.eventType].forEach(function(listener) {
+            listener(event, payload);
           });
 
           $rootScope.$broadcast(event, payload);

@@ -31,8 +31,18 @@
     }
   ]);
 
-  module.run(function(/*$log, $rootScope, eventTypes, eventBus, */webSocketBus) {
+  module.run(function($log, eventTypes, eventBus, webSocketBus, Notifications) {
     webSocketBus.open();
+
+    eventBus.registerListener(eventTypes.BUILD_STARTED, function(event, payload) {
+      Notifications.info('Build #' + payload.id + ' started');
+    });
+    eventBus.registerListener(eventTypes.BUILD_COMPLETED, function(event, payload) {
+      Notifications.success('Build #' + payload.id + ' completed.');
+    });
+    eventBus.registerListener(eventTypes.BUILD_FAILED, function(event, payload) {
+      Notifications.warn('Build #' + payload.id + ' failed.');
+    });
 
     // eventBus.registerListener(eventTypes.BUILD_STARTED, function(event, payload) {
     //   $log.debug('eventBus: %O / %O', event, payload);

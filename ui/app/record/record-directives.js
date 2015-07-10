@@ -54,10 +54,10 @@
   * // Without filtering
   * <pnc-recent-builds></pnc-recent-builds>
   *
-  * // With filtering
+  * // With filtering, show builds for BuildConfiguration with id 7 and userId 23.
   * <pnc-recent-builds pnc-filter-by="controller.filterSpec"></pnc-recent-builds>
   *
-  * // Then in Your controller:
+  * // in the controller.
   * this.filterSpec = {
   *   buildConfigurationId: 7,
   *   userId: 23
