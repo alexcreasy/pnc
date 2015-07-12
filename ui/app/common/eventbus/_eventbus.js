@@ -26,14 +26,18 @@
   module.config([
     'webSocketBusProvider',
     function(webSocketBusProvider) {
-      webSocketBusProvider.registerListener('eventBusWebSocketListener');
-      webSocketBusProvider.setEndpoint('ws://localhost:8080/pnc-rest/ws/build-records/notifications');
+
+      webSocketBusProvider.newEndpoint(
+        'ws://localhost:8080/pnc-rest/ws/build-records/notifications',
+        'eventBusWebSocketListener'
+      );
+
+      // webSocketBusProvider.registerListener('eventBusWebSocketListener');
+      // webSocketBusProvider.setEndpoint('ws://localhost:8080/pnc-rest/ws/build-records/notifications');
     }
   ]);
 
   module.run(function($log, eventTypes, eventBus, webSocketBus, Notifications) {
-    webSocketBus.open();
-
     eventBus.registerListener(eventTypes.BUILD_STARTED, function(event, payload) {
       Notifications.info('Build #' + payload.id + ' started');
     });
@@ -43,15 +47,6 @@
     eventBus.registerListener(eventTypes.BUILD_FAILED, function(event, payload) {
       Notifications.warn('Build #' + payload.id + ' failed.');
     });
-
-    // eventBus.registerListener(eventTypes.BUILD_STARTED, function(event, payload) {
-    //   $log.debug('eventBus: %O / %O', event, payload);
-    // });
-    //
-    // var scope = $rootScope.$new();
-    // scope.$on(eventTypes.BUILD_STARTED, function(event, payload) {
-    //   $log.debug('Scope listener: %O / %O', event, payload);
-    // });
   });
 
 })();

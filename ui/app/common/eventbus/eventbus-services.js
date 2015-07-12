@@ -138,8 +138,17 @@
             eventBus.broadcast(message.payload.eventType, message.payload);
           } else {
             $log.warn('eventBusWebSocketListener received unrecognised eventType `' +
-              message.payload.eventType + '`, ignoring');
+              message.payload.eventType + '`, ignoring.', message);
           }
+        },
+        onOpen: function() {
+          $log.info('WebSocket opened successfully');
+        },
+        onClose: function() {
+          $log.info('WebSocket closed');
+        },
+        onError: function(args) {
+          $log.error('WebSocket Error: ', args);
         }
       };
     }
