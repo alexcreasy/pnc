@@ -23,8 +23,4 @@
     'angular-websocket'
   ]);
 
-  module.constant('DEFAULT_WS_ENDPOINT',
-    'ws://' +  location.host + '/pnc-rest/ws/build-records/notifications'
-  );
-
 })();
