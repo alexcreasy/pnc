@@ -44,6 +44,32 @@
       * @name webSocketBusProvider#registerListener
       * @param {string} serviceName The name of the service to register as a listener.
       * @description
+      * Registers a service as a listener for websockets. A listener service
+      * should expose an `onMessage` method that will be invoked and passed the
+      * websocket message as an object, each time a message is receievd on the
+      * websocket endpoint.
+      * @example
+      * # Creating a basic listener service.
+      * ```js
+          angular.module('myModule')
+            .factory('loggingWebSocketListener',
+              function($log) {
+                return {
+                  onMessage: function(message) {
+                    $log.info('Received: %O', message);
+                  }
+                }
+              }
+            );
+      * ```
+      * # Registering a listener service.
+      * ```js
+          angular.module('myModule', ['pnc.common.websockets'])
+            // Inject the webSocketBusProvider into the module config.
+            .config(function(webSocketBusProvider) {
+              webSocketBusProvider.registerListener('loggingWebSocketListener');
+            });
+      * ```
       */
       this.registerListener = function(serviceName) {
         listenerServiceNames.push(serviceName);
