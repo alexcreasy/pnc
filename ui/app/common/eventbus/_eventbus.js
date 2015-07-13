@@ -29,23 +29,17 @@
 
       webSocketBusProvider.newEndpoint(
         'ws://localhost:8080/pnc-rest/ws/build-records/notifications',
-        'eventBusWebSocketListener'
+        'eventBroadcastingWebSocketListener'
       );
-
-      // webSocketBusProvider.registerListener('eventBusWebSocketListener');
-      // webSocketBusProvider.setEndpoint('ws://localhost:8080/pnc-rest/ws/build-records/notifications');
     }
   ]);
 
-  module.run(function($log, eventTypes, eventBus, webSocketBus, Notifications) {
-    eventBus.registerListener(eventTypes.BUILD_STARTED, function(event, payload) {
-      Notifications.info('Build #' + payload.id + ' started');
-    });
-    eventBus.registerListener(eventTypes.BUILD_COMPLETED, function(event, payload) {
-      Notifications.success('Build #' + payload.id + ' completed.');
-    });
-    eventBus.registerListener(eventTypes.BUILD_FAILED, function(event, payload) {
-      Notifications.warn('Build #' + payload.id + ' failed.');
+  module.run(function($log, $rootScope, webSocketBus, eventTypes, eventNotifier) {
+
+    var scope = $rootScope.$new();
+
+    scope.$on(eventTypes.BUILD_STATUS, function(event, payload) {
+      eventNotifier.notify(event, payload);
     });
   });
 

@@ -27,7 +27,7 @@
    * equal.
    */
   function isEligible(entity, filterSpec) {
-    console.log('isEligible: entity=`' + JSON.stringify(entity) + '`, filterSpec=`' + JSON.stringify(filterSpec) + '`');
+    // console.log('isEligible: entity=`' + JSON.stringify(entity) + '`, filterSpec=`' + JSON.stringify(filterSpec) + '`');
     if (angular.isUndefined(filterSpec)) {
       return true;
     }
@@ -38,7 +38,7 @@
         result = false;
       }
     });
-    console.log('isEligible result=' + result);
+    // console.log('isEligible result=' + result);
     return result;
   }
 
@@ -101,7 +101,7 @@
              *   https://projects.engineering.redhat.com/browse/NCL-1034
              * and should be removed when this is resolved.
              */
-            $timeout(function() {
+            // $timeout(function() {
               PncRestClient.Record.get({ recordId: payload.id }).$promise.then(
                 function(result) {
                   if (isEligible(result, filterSpec)) {
@@ -109,7 +109,7 @@
                   }
                 }
               );
-            }, 10000);
+            // }, 10000);
           };
 
           scope.getRecords = function() {
@@ -126,8 +126,15 @@
                 }
               });
 
-              scope.$on(eventTypes.BUILD_COMPLETED, onBuildFinished);
-              scope.$on(eventTypes.BUILD_FAILED, onBuildFinished);
+              scope.$on(eventTypes.BUILD_STATUS, function(event, payload) {
+                switch(payload.buildStatus) {
+                  case 'DONE':
+                  case 'SYSTEM_ERROR':
+                  case 'REJECTED':
+                    onBuildFinished(event, payload);
+                    break;
+                }
+              });
             }
           );
         }
@@ -214,9 +221,19 @@
                   recordMap.set(record.id, record);
                 }
               });
-              scope.$on(eventTypes.BUILD_STARTED, onBuildStarted);
-              scope.$on(eventTypes.BUILD_COMPLETED, onBuildFinished);
-              scope.$on(eventTypes.BUILD_FAILED, onBuildFinished);
+
+              scope.$on(eventTypes.BUILD_STATUS, function(event, payload) {
+                switch(payload.buildStatus) {
+                  case 'REPO_SETTING_UP':
+                    onBuildStarted(event, payload);
+                    break;
+                  case 'DONE':
+                  case 'SYSTEM_ERROR':
+                  case 'REJECTED':
+                    onBuildFinished(event, payload);
+                    break;
+                }
+              });
             }
           );
         }

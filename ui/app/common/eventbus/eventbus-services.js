@@ -30,125 +30,89 @@
    */
   module.constant('eventTypes', Object.freeze({
 
-    BUILD_STARTED: 'BUILD_STARTED',
-
-    BUILD_COMPLETED: 'BUILD_COMPLETED',
-
-    BUILD_FAILED: 'BUILD_FAILED',
+    BUILD_STATUS: 'BUILD_STATUS'
 
   }));
 
-  /**
-   * @ngdoc service
-   * @name pnc.common.eventbus:eventBus
-   * @requires $log
-   * @requires $rootScope
-   * @requires $eventTypes
-   * @description
-   *
-   *
-   * @author Alex Creasy
-   */
-  module.factory('eventBus', [
+  module.factory('eventBroadcastingWebSocketListener', [
     '$log',
     '$rootScope',
     'eventTypes',
-    function ($log, $rootScope, eventTypes) {
+    function($log, $rootScope, eventTypes) {
 
-      var listenersMap;
-
-      // Returns a map with eventType as the key and an empty array
-      // as each value.
-      function initMap() {
-        var result = {};
-        angular.forEach(eventTypes, function(value, key) {
-          result[key] = [];
-        });
-        return result;
+      // Temporary shim to reformat messages until backend work is completed.
+      function messageShim(message) {
+       return {
+         eventType: eventTypes.BUILD_STATUS,
+         payload: message.payload
+       };
       }
-
-      /**
-      * Returns a function that can be used to deregister an event
-      * listener, this is returned to the user when they call
-      * registerListener().
-      */
-      function createDeRegistrationFunction(eventType, callback) {
-        var bucket = listenersMap[eventType];
-        return function() {
-          $log.debug('dereg function for: %O / %O - listenersMap=%O', eventType, callback, listenersMap);
-          for (var i = 0; i < bucket.length; i++) {
-            if (bucket[i] === callback) {
-              // Not removing the item from the array provides thread
-              // safety since the index of other callbacks in the array
-              // won't be shifted. In theory this could cause a memory-leak
-              // though.
-              bucket[i] = function() {};
-              $log.debug('de-registered listener: event: %O, callback: %O, listenersMap: %O', event, callback, listenersMap);
-              return;
-            }
-          }
-        };
-      }
-
-      listenersMap = initMap();
 
       return {
-        broadcast: function(event, payload) {
-          if (!eventTypes[event]) {
-            throw new TypeError('event must be a valid event from eventTypes service');
-          }
-          if (!payload) {
-            throw new TypeError('Empty param payload');
-          }
 
-          // Run the event through registered listeners before broadcasting.
-          listenersMap[payload.eventType].forEach(function(listener) {
-            listener(event, payload);
-          });
+        onMessage: function(message) {
+          var _message = messageShim(message);
 
-          $rootScope.$broadcast(event, payload);
+          if (eventTypes[_message.eventType]) {
+            $log.debug('Broadcasting Event: %O', _message);
+            $rootScope.$broadcast(_message.eventType, _message.payload);
+          } else {
+            $log.warn('Received unrecognised event on socket: %O', _message);
+          }
         },
-        registerListener: function(event, callback) {
-          if (!angular.isFunction(callback)) {
-            throw new TypeError('Listener callback must be a function');
-          }
 
-          if (!eventTypes[event]) {
-            throw new TypeError('event must be a valid event from eventTypes service');
-          }
+        onOpen: function() {
+          $log.info('WebSocket opened successfully');
+        },
 
-          listenersMap[event].push(callback);
-          $log.debug('registered listener: event: %O, callback: %O', event, callback);
-          // Returns a function that can be used to deregister the listener.
-          return createDeRegistrationFunction(event, callback);
+        onClose: function() {
+          $log.info('WebSocket closed');
+        },
+
+        onError: function() {
+          $log.error('WebSocket Error: ', arguments);
         }
+
       };
     }
   ]);
 
-  module.factory('eventBusWebSocketListener', [
-    '$log',
-    'eventBus',
-    'eventTypes',
-    function($log, eventBus, eventTypes) {
-      return {
-        onMessage: function(message) {
-          if (eventTypes[message.payload.eventType]) {
-            $log.debug('Broadcasting Event: %O', message.payload);
-            eventBus.broadcast(message.payload.eventType, message.payload);
-          } else {
-            $log.warn('eventBusWebSocketListener received unrecognised eventType `' +
-              message.payload.eventType + '`, ignoring.', message);
+  module.factory('eventNotifier', [
+    'Notifications',
+    'PncRestClient',
+    function(Notifications, PncRestClient) {
+
+      function onBuildStart(payload) {
+        Notifications.info('Build #' + payload.id + ' in progress');
+      }
+
+      function onBuildFinish(payload) {
+        PncRestClient.Record.get({ recordId: payload.id }).$promise.then(
+          function(result) {
+            switch(result.status) {
+              case 'SUCCESS':
+                Notifications.success('Build #' + payload.id + ' completed');
+                break;
+              case 'FAILED':
+              case 'SYSTEM_ERROR':
+                Notifications.warn('Build #' + payload.id + ' failed');
+                break;
+            }
           }
-        },
-        onOpen: function() {
-          $log.info('WebSocket opened successfully');
-        },
-        onClose: function() {
-          $log.info('WebSocket closed');
-        },
-        onError: function(args) {
-          $log.error('WebSocket Error: ', args);
+        );
+      }
+
+      return {
+        notify: function(event, payload) {
+          switch(payload.buildStatus) {
+            case 'REPO_SETTING_UP':
+              onBuildStart(payload);
+              break;
+            case 'DONE':
+            case 'REJECTED':
+              onBuildFinish(payload);
+              break;
+          }
         }
       };
     }
