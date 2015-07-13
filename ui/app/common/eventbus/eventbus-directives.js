@@ -38,8 +38,8 @@
    * when any of the specified events occur.
    * @example
    * ```html
-   * <div pnc-listen="BUILD_COMPLETED|BUILD_FAILED" pnc-callback="(event, payload)">
-   * </div>
+      <div pnc-listen="BUILD_COMPLETED|BUILD_FAILED" pnc-callback="(event, payload)">
+      </div>
    *```
    * @author Alex Creasy
    */

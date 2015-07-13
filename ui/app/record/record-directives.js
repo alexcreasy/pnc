@@ -27,6 +27,7 @@
    * equal.
    */
   function isEligible(entity, filterSpec) {
+    console.log('isEligible: entity=`' + JSON.stringify(entity) + '`, filterSpec=`' + JSON.stringify(filterSpec) + '`');
     if (angular.isUndefined(filterSpec)) {
       return true;
     }
@@ -37,6 +38,7 @@
         result = false;
       }
     });
+    console.log('isEligible result=' + result);
     return result;
   }
 
@@ -196,9 +198,7 @@
           };
 
           var onBuildFinished = function(event, payload) {
-            if (isEligible(payload, filterSpec)) {
-              recordMap.remove(payload.id, payload);
-            }
+            recordMap.remove(payload.id);
           };
 
           scope.getRecords = function() {

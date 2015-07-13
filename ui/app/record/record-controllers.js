@@ -62,26 +62,6 @@
     function ($log) {
 
       $log.debug('RecordListCtrl');
-
-      this.filterSpec = {
-        buildConfigurationId: 6
-      };
-
-      // BuildProgressService.track($scope, 'runningRecords', function () {
-      //   return PncRestClient.Running.query().$promise;
-      // }, [
-      //   BuildProgressService.BUILD_RECORD_FILTER.IS_IN_PROGRESS()
-      // ], BuildProgressService.BUILD_RECORD_UPDATER);
-      //
-      //
-      // BuildProgressService.track($scope, 'finishedRecords', function () {
-      //   return PncRestClient.Record.query().$promise;
-      // }, [
-      //   BuildProgressService.BUILD_RECORD_FILTER.IS_FINISHED()
-      // ], BuildProgressService.BUILD_RECORD_UPDATER);
-
-
-
     }
   ]);
 

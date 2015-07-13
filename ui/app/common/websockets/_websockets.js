@@ -19,7 +19,7 @@
 
 (function () {
 
-  var module = angular.module('pnc.common.websockets', [
+  angular.module('pnc.common.websockets', [
     'angular-websocket'
   ]);
 
