@@ -26,8 +26,7 @@
    * properties of entity and returns true only if they are ALL strictly
    * equal.
    */
-  function isEligible(entity, filterSpec) {
-    // console.log('isEligible: entity=`' + JSON.stringify(entity) + '`, filterSpec=`' + JSON.stringify(filterSpec) + '`');
+  function filtersMatch(entity, filterSpec) {
     if (angular.isUndefined(filterSpec)) {
       return true;
     }
@@ -38,7 +37,6 @@
         result = false;
       }
     });
-    // console.log('isEligible result=' + result);
     return result;
   }
 
@@ -95,46 +93,34 @@
           var filterSpec = scope.pncFilterBy;
 
           var onBuildFinished = function(event, payload) {
-            /*
-             * TODO: Wrapping the REST request in the $timeout call is a
-             * workaround to issue:
-             *   https://projects.engineering.redhat.com/browse/NCL-1034
-             * and should be removed when this is resolved.
-             */
-            // $timeout(function() {
-              PncRestClient.Record.get({ recordId: payload.id }).$promise.then(
-                function(result) {
-                  if (isEligible(result, filterSpec)) {
-                    recordMap.set(result.id, result);
-                  }
+            if (!filtersMatch(payload, filterSpec)) {
+              return;
+            }
+
+            PncRestClient.Record.get({ recordId: payload.id }).$promise.then(
+              function(result) {
+                if (filtersMatch(result, filterSpec)) {
+                  recordMap.set(result.id, result);
                 }
-              );
-            // }, 10000);
+              }
+            );
           };
 
           scope.getRecords = function() {
             return recordMap.values();
           };
 
-          // Initialise our map with id => record entries.
+          // Initialise recordMap with id => record entries.
           PncRestClient.Record.query().$promise.then(
             function success(result) {
-              $log.debug('pnc-recent-builds: success: %O', result);
+              $log.debug('pnc-recent-builds: initial fetch: %O', result);
               result.forEach(function(record) {
-                if (isEligible(record, filterSpec)) {
+                if (filtersMatch(record, filterSpec)) {
                   recordMap.set(record.id, record);
                 }
               });
-
-              scope.$on(eventTypes.BUILD_STATUS, function(event, payload) {
-                switch(payload.buildStatus) {
-                  case 'DONE':
-                  case 'SYSTEM_ERROR':
-                  case 'REJECTED':
-                    onBuildFinished(event, payload);
-                    break;
-                }
-              });
+              // Listen after initial fetch of records to prevent duplicates.
+              scope.$on(eventTypes.BUILD_FINISHED, onBuildFinished);
             }
           );
         }
@@ -195,11 +181,14 @@
           var filterSpec = scope.pncFilterBy;
 
           var onBuildStarted = function(event, payload) {
+
+            if(!filtersMatch(payload, filterSpec)) {
+              return;
+            }
+
             PncRestClient.Running.get({ recordId: payload.id }).$promise.then(
               function(result) {
-                if (isEligible(result, filterSpec)) {
-                  recordMap.set(result.id, result);
-                }
+                recordMap.set(result.id, result);
               }
             );
           };
@@ -212,28 +201,18 @@
             return recordMap.values();
           };
 
-          // Initialise our map with id => record entries.
+          // Initialise recordMap with id => record entries.
           PncRestClient.Running.query().$promise.then(
             function success(result) {
-              $log.debug('pnc-running-builds: success: %O', result);
+              $log.debug('pnc-running-builds: initial fetch: %O', result);
               result.forEach(function(record) {
-                if (isEligible(record, filterSpec)) {
+                if(filtersMatch(record, filterSpec)) {
                   recordMap.set(record.id, record);
                 }
               });
-
-              scope.$on(eventTypes.BUILD_STATUS, function(event, payload) {
-                switch(payload.buildStatus) {
-                  case 'REPO_SETTING_UP':
-                    onBuildStarted(event, payload);
-                    break;
-                  case 'DONE':
-                  case 'SYSTEM_ERROR':
-                  case 'REJECTED':
-                    onBuildFinished(event, payload);
-                    break;
-                }
-              });
+              // Listen after initial fetch of records to prevent duplicates.
+              scope.$on(eventTypes.BUILD_STARTED, onBuildStarted);
+              scope.$on(eventTypes.BUILD_FINISHED, onBuildFinished);
             }
           );
         }

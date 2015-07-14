@@ -23,7 +23,7 @@
     'ui.router',
     'pnc.remote.restClient',
     'angularUtils.directives.uiBreadcrumbs',
-    'pnc.common.eventbus',
+    'pnc.common.events',
     'pnc.common.directives'
   ]);
 

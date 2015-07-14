@@ -19,7 +19,7 @@
 
 (function() {
 
-  var module = angular.module('pnc.common.eventbus');
+  var module = angular.module('pnc.common.events');
 
   /**
    * @ngdoc directive

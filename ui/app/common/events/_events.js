@@ -34,13 +34,39 @@
     }
   ]);
 
-  module.run(function($log, $rootScope, webSocketBus, eventTypes, eventNotifier) {
+  module.run([
+    '$rootScope',
+    'webSocketBus',
+    'eventTypes',
+    'PncRestClient',
+    'Notifications',
+    function($rootScope, webSocketBus, eventTypes, PncRestClient, Notifications) {
+      var scope = $rootScope.$new();
 
-    var scope = $rootScope.$new();
+      //TODO: When backend functionality is available these notifications
+      // should only be fired if the userId of the payload matches the
+      // current logged in user.
 
-    scope.$on(eventTypes.BUILD_STATUS, function(event, payload) {
-      eventNotifier.notify(event, payload);
-    });
-  });
+      scope.$on(eventTypes.BUILD_STARTED, function(event, payload) {
+        Notifications.info('Build #' + payload.id + ' in progress');
+      });
+
+      // Notify user when builds finish.
+      scope.$on(eventTypes.BUILD_FINISHED, function(event, payload) {
+
+        PncRestClient.Record.get({ recordId: payload.id }).$promise.then(
+          function(result) {
+            if (result.status === 'SUCCESS') {
+              Notifications.success('Build #' + payload.id + ' completed');
+            } else {
+              Notifications.warn('Build #' + payload.id + ' failed');
+            }
+          }
+        );
+
+      });
+
+    }
+  ]);
 
 })();
