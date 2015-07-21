@@ -1,0 +1,31 @@
+<script type="text/ng-template" id="defaultSelectListTemplate.html">
+  <ul class="list-group" ng-show="shouldShow()">
+    <li class="list-group-item" ng-repeat="item in selectedItems">
+      {{ item[displayProperty] }}
+      <button type="button" class="close" aria-label="Close" ng-click="removeItem(item)">
+        <span aria-hidden="true">×</span>
+      </button>
+    </li>
+  </ul>
+</script>
+
+<div>
+  <div ng-if="listTemplateUrl" ng-include="listTemplateUrl">
+  </div>
+  <div ng-if="!listTemplateUrl" ng-include="'defaultSelectListTemplate.html'">
+  </div>
+
+  <div class="input-group">
+    <input type="text"
+           class="combobox form-control"
+           ng-model="selectedItem"
+           placeholder="{{ placeholder }}"
+           typeahead="item as item[displayProperty] for item in query({$viewValue: $viewValue})"
+           typeahead-editable="false"
+           typeahead-loading="loadingLocations"
+           typeahead-on-select="onSelect($item, $model, $label)"
+           typeahead-wait-ms="200">
+    <span class="input-group-addon" ng-click=""><span class="caret"/></span>
+    <span ng-show="loadingLocations" class="spinner spinner-xs spinner-inline"></span>
+  </div>
+</div>

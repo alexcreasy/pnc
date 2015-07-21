@@ -48,32 +48,15 @@
    */
   module.directive('pncSelect', function() {
 
-    var tmpl =
-      '<ul class="list-group" ng-show="shouldShow()">' +
-        '<li class="list-group-item" ng-repeat="item in selectedItems">' +
-          '{{ item[displayProperty] }}' +
-          '<button type="button" class="close" aria-label="Close" ng-click="removeItem(item)">' +
-            '<span aria-hidden="true">×</span>' +
-          '</button>' +
-        '</li>' +
-      '</ul>' +
-      '<div>' +
-        '<input type="text" ng-model="selectedItem" placeholder="{{ placeholder }}" ' +
-               'typeahead="item as item[displayProperty] for item in query({$viewValue: $viewValue})" ' +
-               'typeahead-editable="false" typeahead-loading="loadingLocations" class="form-control" ' +
-               'typeahead-on-select="onSelect($item, $model, $label)" typeahead-wait-ms="200">' +
-        '<span ng-show="loadingLocations" class="spinner spinner-xs spinner-inline"></span>' +
-      '</div>'
-    ;
-
     return {
       scope: {
         selectedItems: '=',
         query: '&',
         displayProperty: '@',
-        placeholder: '@'
+        placeholder: '@',
+        listTemplateUrl: '@'
       },
-      template: tmpl,
+      templateUrl: 'common/directives/views/pnc-select.html',
       controller: [
         '$log',
         '$scope',

@@ -34,7 +34,7 @@
         name: '=?',
         pncPreload: '=',
       },
-      template: '<pnc-select selected-items="ctrl.selected" display-property="name" query="ctrl.getItems($viewValue)" placeholder="Enter dependency name..."></pnc-select>',
+      templateUrl: 'common/directives/views/pnc-select-dependencies.html',
       controllerAs: 'ctrl',
       bindToController: true,
       controller: [

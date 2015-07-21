@@ -1,0 +1,45 @@
+<!-- -->
+<script type="text/ng-template" id="listDependencyPopover.html">
+  <dl>
+    <dt>Project</dt>
+    <dd>{{ item.project }}</dd>
+    <dt>Description</dt>
+    <dd>{{ item.description }}</dd>
+    <dt>Created On</dt>
+    <dd>{{ item.creationTime | date:'medium' }}</dd>
+    <dt>Last Modified</dt>
+    <dd>{{ item.lastModificationTime | date:'medium' }}</dd>
+  </dl>
+</script>
+
+<!-- Template for displaying selected BuildConfigurations -->
+<script type="text/ng-template" id="listDependencyTemplate.html">
+  <ul class="list-group" ng-show="shouldShow()">
+    <li class="list-group-item" ng-repeat="item in selectedItems">
+      <button type="button"
+              class="debutton"
+              role="button"
+              aria-label="Info"
+              popover-placement="right"
+              popover-template="'listDependencyPopover.html'"
+              popover-title="{{ item.name }}">
+        <span style="border-bottom: 2px navy dashed;">{{ item.name }}</span>
+      </button>
+      <button type="button" class="close" aria-label="Close" ng-click="removeItem(item)">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <!--<button type="button" class="close" aria-label="Info" style="float: none;">
+        <span class="pficon pficon-info"></span>
+        </button> -->
+    </li>
+  </ul>
+</script>
+
+<span>
+  <pnc-select selected-items="ctrl.selected"
+              display-property="name"
+              query="ctrl.getItems($viewValue)"
+              placeholder="Enter dependency name..."
+              list-template-url="listDependencyTemplate.html">
+  </pnc-select>
+</span>
