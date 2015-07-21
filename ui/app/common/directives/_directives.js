@@ -20,6 +20,9 @@
 
 (function() {
 
-    angular.module('pnc.common.directives', ['ui.bootstrap']);
+    angular.module('pnc.common.directives', [
+      'ui.bootstrap',
+      'pnc.common.restclient'
+    ]);
 
 })();

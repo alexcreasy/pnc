@@ -1,0 +1,103 @@
+<div>
+  <div>
+    <h1>Create New Project</h1>
+  </div>
+  <div class="well semi-responsive-well push-down">
+    <form name="projectForm" novalidate class>
+      <div class="form-group" ng-class="{ 'has-error': projectForm.name.$invalid && projectForm.name.$touched, 'has-success': projectForm.name.$valid && projectForm.name.$touched }">
+        <label for="input-name" class="control-label">Name <span class="text-danger">*</span></label>
+        <input type="text" id="input-name" class="form-control" name="name" ng-model="project.name" required>
+      </div>
+      <div class="form-group">
+        <label for="input-description" class="control-label">Description</label>
+          <textarea id="input-description" class="form-control" name="description" ng-model="project.description">
+          </textarea>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error': projectForm.projectUrl.$invalid, 'has-success': projectForm.projectUrl.$valid && project.projectUrl }">
+        <label for="input-url" class="control-label">Project URL</label>
+        <input type="url" id="input-url" class="form-control" name="projectUrl" ng-model="project.projectUrl">
+      </div>
+      <div class="form-group" ng-class="{ 'has-error': projectForm.issueTrackerUrl.$invalid, 'has-success': projectForm.issueTrackerUrl.$valid && project.issueTrackerUrl }">
+        <label for="input-issue-tracker" class="control-label">Issue Tracker URL</label>
+        <input type="url" id="input-issue-tracker" class="form-control" name="issueTrackerUrl" ng-model="project.issueTrackerUrl">
+      </div>
+      <div class="form-group">
+        <label for="input-dependencies" class="control-label">Dependencies</label>
+        <pnc-select-dependencies id="input-dependencies" name="deps"></pnc-select-dependencies>
+      </div>
+      <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Create" ng-click="createCtrl.create(project)" ng-disabled="projectForm.$invalid">
+        <input type="reset" class="btn btn-default" value="Clear" ng-click="createCtrl.reset(projectForm)">
+      </div>
+    </form>
+  </div>
+
+
+
+    <!-- <form name="projectForm" novalidate class>
+      <div class="row">
+        <div class="form-group col-sm-6 col-md-5 col-lg-4" ng-class="{ 'has-error': projectForm.name.$invalid && projectForm.name.$dirty, 'has-success': projectForm.name.$valid && projectForm.name.$dirty }">
+          <label for="input-name" class="control-label">Name <span class="text-danger">*</span></label>
+          <input type="text" id="input-name" class="form-control" name="name" ng-model="project.name" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-6 col-md-5 col-lg-4">
+          <label for="input-description" class="control-label">Description</label>
+            <textarea id="input-description" class="col-sm-1 form-control" name="description" ng-model="project.description">
+            </textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-6 col-md-5 col-lg-4">
+          <label for="input-url" class="control-label">URL</label>
+          <input type="text" id="input-url" class="form-control" name="projectUrl" ng-model="project.projectUrl">
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-6 col-md-5 col-lg-4">
+          <label for="input-issue-tracker" class="control-label">Issue tracker</label>
+          <input type="text" id="input-issue-tracker" class="form-control" name="issueTrackerUrl" ng-model="project.issueTrackerUrl">
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-6 col-md-5 col-lg-4">
+          <input type="submit" class="btn btn-primary" value="Create" ng-click="createCtrl.create(project)" ng-disabled="projectForm.$invalid">
+          <input type="reset" class="btn btn-default" value="Clear" ng-click="createCtrl.reset(projectForm)">
+        </div>
+      </div>
+    </form> -->
+    <!-- <form name="projectForm" novalidate class="form-horizontal">
+      <div class="form-group" ng-class="{ 'has-error': projectForm.name.$invalid && projectForm.name.$dirty, 'has-success': projectForm.name.$valid && projectForm.name.$dirty }">
+        <label for="input-name" class="control-label col-sm-2 col-md-1"><span class="text-danger">*</span> Name</label>
+        <div class="col-sm-6 col-md-5 col-lg-4">
+          <input type="text" id="input-name" class="form-control" name="name" ng-model="project.name" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="input-description" class="control-label col-sm-2 col-md-1">Description</label>
+        <div class="col-sm-6 col-md-5 col-lg-4">
+          <textarea id="input-description" class="col-sm-1 form-control" name="description" ng-model="project.description">
+          </textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="input-url" class="control-label col-sm-2 col-md-1">URL</label>
+        <div class="col-sm-6 col-md-5 col-lg-4">
+          <input type="text" id="input-url" class="form-control" name="projectUrl" ng-model="project.projectUrl">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="input-issue-tracker" class="control-label col-sm-2 col-md-1">Issue tracker</label>
+        <div class="col-sm-6 col-md-5 col-lg-4">
+          <input type="text" id="input-issue-tracker" class="form-control" name="issueTrackerUrl" ng-model="project.issueTrackerUrl">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-6 col-md-offset-1 col-md-6">
+          <input type="submit" class="btn btn-primary" value="Create" ng-click="createCtrl.create(project)" ng-disabled="projectForm.$invalid">
+          <input type="reset" class="btn btn-default" value="Clear" ng-click="createCtrl.reset(projectForm)">
+        </div>
+      </div>
+    </form> -->
+</div>
