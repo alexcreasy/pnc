@@ -284,7 +284,7 @@ module.exports = function (grunt) {
         src: [
           '<%= yeoman.dist %>/scripts{,*/}*.js',
           '<%= yeoman.dist %>/styles/{,*/}*.css',
-          '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg,ico}',
+          //'<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg,ico}',
           '<%= yeoman.dist %>/styles/fonts/*'
         ]
       }
@@ -311,7 +311,7 @@ module.exports = function (grunt) {
 
     // Performs rewrites based on filerev and the useminPrepare configuration
     usemin: {
-      html: ['<%= yeoman.dist %>/**/*.html'],
+      html: ['<%= yeoman.dist %>/{,*/}*.html'],
       css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
       options: {
         assetsDirs: ['<%= yeoman.dist %>','<%= yeoman.dist %>/images']
@@ -351,6 +351,8 @@ module.exports = function (grunt) {
           conservativeCollapse: true,
           collapseBooleanAttributes: true,
           removeCommentsFromCDATA: true,
+          removeComments: true,
+
           removeOptionalTags: true
         },
         files: [{
@@ -359,6 +361,22 @@ module.exports = function (grunt) {
           src: ['**/*.html'],
           dest: '<%= yeoman.dist %>'
         }]
+      }
+    },
+
+    ngtemplates: {
+      dist: {
+        options: {
+          module: 'pnc',
+          htmlmin: '<%= htmlmin.dist.options %>',
+          usemin: 'scripts/pnc.js'
+        },
+        cwd: '<%= yeoman.app %>',
+        src: [
+          '**/*.html',
+          '!index.html'
+        ],
+        dest: '.tmp/templateCache.js'
       }
     },
 
@@ -405,8 +423,8 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>',
           src: [
             '*.{ico,png,txt}',
-            '**/*.html',
-            '!index.html',
+            // '**/*.html',
+            // '!index.html',
             'images/{,*/}*.{webp}',
             'fonts/{,*/}*.*',
             'keycloak.json'
@@ -513,6 +531,7 @@ module.exports = function (grunt) {
       'useminPrepare',
       'concurrent:dist',
       'autoprefixer',
+      'ngtemplates',
       'concat',
       'ngAnnotate',
       'copy:dist',
