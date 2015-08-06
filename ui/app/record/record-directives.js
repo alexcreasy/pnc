@@ -81,13 +81,23 @@
     'eventTypes',
     function($log, $timeout, PncRestClient, eventTypes) {
 
+      var DEFAULT_TEMPLATE = 'record/views/pnc-recent-builds.html';
+
       return {
         restrict: 'E',
-        templateUrl: 'record/views/pnc-recent-builds.html',
+        template: function(elem, attrs) {
+          var tmplUrl = DEFAULT_TEMPLATE;
+          if (attrs.pncTemplate) {
+            tmplUrl = attrs.pncTemplate;
+          }
+          return '<div ng-include="\'' + tmplUrl + '\'"></div>';
+        },
         scope: {
           pncFilterBy: '=',
         },
         link: function(scope) {
+
+          scope.loaded = false;
 
           var recordMap = new buckets.Dictionary();
           var filterSpec = scope.pncFilterBy;
@@ -122,7 +132,9 @@
               // Listen after initial fetch of records to prevent duplicates.
               scope.$on(eventTypes.BUILD_FINISHED, onBuildFinished);
             }
-          );
+          ).finally(function() {
+            scope.loaded = true;
+          });
         }
       };
     }
@@ -169,9 +181,17 @@
     'eventTypes',
     function($log, PncRestClient, eventTypes) {
 
+      var DEFAULT_TEMPLATE = 'record/views/pnc-running-builds.html';
+
       return {
         restrict: 'E',
-        templateUrl: 'record/views/pnc-running-builds.html',
+        template: function(elem, attrs) {
+          var tmplUrl = DEFAULT_TEMPLATE;
+          if (attrs.pncTemplate) {
+            tmplUrl = attrs.pncTemplate;
+          }
+          return '<div ng-include="\'' + tmplUrl + '\'"></div>';
+        },
         scope: {
           pncFilterBy: '=',
         },

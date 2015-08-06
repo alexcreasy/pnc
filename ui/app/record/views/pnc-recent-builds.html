@@ -28,7 +28,6 @@
           <build-status-icon status="record.status"></build-status-icon>
         </td>
         <td><a href ui-sref="record.detail.info({recordId: record.id})"># {{ record.id }}</a></td>
-        <td>{{ record.name }}</td>
         <td>{{ record.endTime | date:'medium'}}</td>
       </tr>
       <tr ng-hide="getRecords().length">
