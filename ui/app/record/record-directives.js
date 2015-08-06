@@ -48,6 +48,8 @@
   * object will be compared against the properties of the same name on
   * any records received from HTTP queries. Unless all properties match, the
   * record will be ignored.
+  * @param {string=} pnc-template Optional: the URL of a display template to
+  * use.
   * @description
   * Displays a table of recently completed builds.
   * @example
@@ -96,13 +98,19 @@
           pncFilterBy: '=',
         },
         link: function(scope) {
-
-          scope.loaded = false;
-
+          var loaded;
           var recordMap = new buckets.Dictionary();
           var filterSpec = scope.pncFilterBy;
 
-          var onBuildFinished = function(event, payload) {
+          scope.isLoaded = function() {
+            return loaded;
+          }
+
+          scope.getRecords = function() {
+            return recordMap.values();
+          };
+
+          function onBuildFinished(event, payload) {
             if (!filtersMatch(payload, filterSpec)) {
               return;
             }
@@ -116,25 +124,26 @@
             );
           };
 
-          scope.getRecords = function() {
-            return recordMap.values();
-          };
+          function init() {
+            loaded = false;
+            // Initialise recordMap with id => record entries.
+            PncRestClient.Record.query().$promise.then(
+              function success(result) {
+                $log.debug('pnc-recent-builds: initial fetch: %O', result);
+                result.forEach(function(record) {
+                  if (filtersMatch(record, filterSpec)) {
+                    recordMap.set(record.id, record);
+                  }
+                });
+                // Listen after initial fetch of records to prevent duplicates.
+                scope.$on(eventTypes.BUILD_FINISHED, onBuildFinished);
+              }
+            ).finally(function() {
+              loaded = true;
+            });
+          }
 
-          // Initialise recordMap with id => record entries.
-          PncRestClient.Record.query().$promise.then(
-            function success(result) {
-              $log.debug('pnc-recent-builds: initial fetch: %O', result);
-              result.forEach(function(record) {
-                if (filtersMatch(record, filterSpec)) {
-                  recordMap.set(record.id, record);
-                }
-              });
-              // Listen after initial fetch of records to prevent duplicates.
-              scope.$on(eventTypes.BUILD_FINISHED, onBuildFinished);
-            }
-          ).finally(function() {
-            scope.loaded = true;
-          });
+          init();
         }
       };
     }
