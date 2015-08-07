@@ -32,9 +32,11 @@
    */
   module.factory('RunningBuild', [
     '$resource',
+    'cachedGetter',
     'REST_BASE_URL',
     'RUNNING_BUILD_ENDPOINT',
-    function($resource, REST_BASE_URL, RUNNING_BUILD_ENDPOINT) {
+    'BuildConfiguration',
+    function($resource, cachedGetter, REST_BASE_URL, RUNNING_BUILD_ENDPOINT, BuildConfiguration) {
       var ENDPOINT = REST_BASE_URL + RUNNING_BUILD_ENDPOINT;
 
       var RunningBuild = $resource(ENDPOINT, {
@@ -47,6 +49,12 @@
           transformResponse: function(data) { return { payload: data }; }
         },
       });
+
+      RunningBuild.prototype.getBuildConfiguration = cachedGetter(
+        function(runningBuild) {
+          return BuildConfiguration.get({ configurationId: runningBuild.buildConfigurationId });
+        }
+      );
 
       return RunningBuild;
     }

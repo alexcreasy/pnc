@@ -104,11 +104,15 @@
 
           scope.isLoaded = function() {
             return loaded;
-          }
+          };
 
           scope.getRecords = function() {
             return recordMap.values();
           };
+
+          // scope.getBuildConfiguration(buildRecord) {
+          //   buildRecord.getBuildConfiguration().$promise
+          // }
 
           function onBuildFinished(event, payload) {
             if (!filtersMatch(payload, filterSpec)) {
@@ -122,7 +126,7 @@
                 }
               }
             );
-          };
+          }
 
           function init() {
             loaded = false;
@@ -205,11 +209,19 @@
           pncFilterBy: '=',
         },
         link: function(scope) {
-
+          var loaded;
           var recordMap = new buckets.Dictionary();
           var filterSpec = scope.pncFilterBy;
 
-          var onBuildStarted = function(event, payload) {
+          scope.isLoaded = function() {
+            return loaded;
+          };
+
+          scope.getRecords = function() {
+            return recordMap.values();
+          };
+
+          function onBuildStarted(event, payload) {
 
             if(!filtersMatch(payload, filterSpec)) {
               return;
@@ -220,30 +232,34 @@
                 recordMap.set(result.id, result);
               }
             );
-          };
+          }
 
-          var onBuildFinished = function(event, payload) {
+          function onBuildFinished(event, payload) {
             recordMap.remove(payload.id);
-          };
+          }
 
-          scope.getRecords = function() {
-            return recordMap.values();
-          };
+          function init() {
+            loaded = false;
 
-          // Initialise recordMap with id => record entries.
-          PncRestClient.Running.query().$promise.then(
-            function success(result) {
-              $log.debug('pnc-running-builds: initial fetch: %O', result);
-              result.forEach(function(record) {
-                if(filtersMatch(record, filterSpec)) {
-                  recordMap.set(record.id, record);
-                }
-              });
-              // Listen after initial fetch of records to prevent duplicates.
-              scope.$on(eventTypes.BUILD_STARTED, onBuildStarted);
-              scope.$on(eventTypes.BUILD_FINISHED, onBuildFinished);
-            }
-          );
+            // Initialise recordMap with id => record entries.
+            PncRestClient.Running.query().$promise.then(
+              function success(result) {
+                $log.debug('pnc-running-builds: initial fetch: %O', result);
+                result.forEach(function(record) {
+                  if(filtersMatch(record, filterSpec)) {
+                    recordMap.set(record.id, record);
+                  }
+                });
+                // Listen after initial fetch of records to prevent duplicates.
+                scope.$on(eventTypes.BUILD_STARTED, onBuildStarted);
+                scope.$on(eventTypes.BUILD_FINISHED, onBuildFinished);
+              }
+            ).finally(function() {
+              loaded = true;
+            });
+          }
+
+          init();
         }
       };
     }
