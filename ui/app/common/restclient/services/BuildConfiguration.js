@@ -54,6 +54,7 @@
           method: 'POST',
           url: ENDPOINT + '/build',
           isArray: false,
+          notification: false
         },
         getProductVersions: {
           method: 'GET',

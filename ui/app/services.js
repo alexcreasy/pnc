@@ -112,18 +112,71 @@
     'Notifications',
     'keycloak',
     function($log, Notifications, keycloak) {
-      return {
 
-        response: function(response) {
+      var defaultNotifications = {
+        success: function(response) {
           if (response.config.method !== 'GET') {
-            $log.debug('HTTP response: %O', response);
             Notifications.success(response.status + ': ' + response.statusText);
+          }
+        },
+        error: function(response) {
+          Notifications.httpError('HTTP Error', response);
+        }
+      };
+
+      // Type can be either 'success' or 'error'.
+      (function notify() {
+        var test = {};
+
+        var result = _.has(test, a.b.c);
+
+        // if (response.config &&
+        //     response.config.notification &&
+        //     response.config.notification[type] &&
+        //
+        //   hasOwnProperty('notification')) {
+        //   // if (!response.config.notifictation || !response.config.notification[type]) {
+        //   //   // All default notifications are overriden if the notification
+        //   //   // property is present and falsey. If notification property is present
+        //   //   // and success property is falsey, then success notifications have
+        //   //   // been overriden.
+        //   //   return false;
+        //   // }
+        //
+        //
+        //   if (angular.isFunction(response.config.notification[type])) {
+        //     // User has requested specific function be used to override.
+        //     response.config.notification[type](response);
+        //   }
+        // } else {
+        //   // take default notification action
+        //   defaultNotifications[type](response);
+        // }
+      })();
+
+      return {
+        response: function(response) {
+          if (response.config && response.config.hasOwnProperty('notification')) {
+            if (!response.config.notifictation || !response.config.notification.success) {
+              // All default notifications are overriden if the notification
+              // property is present and falsey. If notification property is present
+              // and success property is falsey, then success notifications have
+              // been overriden.
+              return response;
+            }
+            if (angular.isFunction(response.config.notification.success)) {
+              // User has requested specific function be used to override.
+              response.config.notification.success(response);
+            }
+          } else {
+            // take default notification action
+            defaultNotifications.success(response);
           }
           return response;
         },
 
-        responseError: function(rejection) {
-          switch(rejection.status) {
+        responseError: function(response) {
+          switch(response.status) {
             case 0:
               Notifications.error('Unable to connect to server');
               break;
@@ -131,11 +184,10 @@
               keycloak.login();
               break;
             default:
-              $log.debug('HTTP response: %O', rejection);
-              Notifications.httpError('HTTP Error', rejection);
+
               break;
           }
-          return rejection;
+          return response;
         }
 
       };

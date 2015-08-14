@@ -45,6 +45,11 @@
         recordId: '@id'
       }, {
 
+        get: {
+          method: 'GET',
+          overrideNotification: true
+        },
+
         getLog: {
           method: 'GET',
           url: ENDPOINT + '/log',
