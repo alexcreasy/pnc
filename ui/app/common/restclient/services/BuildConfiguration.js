@@ -54,7 +54,12 @@
           method: 'POST',
           url: ENDPOINT + '/build',
           isArray: false,
-          notification: false
+          // notification: {
+          //   success: function(response) {
+          //     console.log('ARRRGH MOTHERLAND!!!');
+          //   },
+          //   error: false,
+          // }
         },
         getProductVersions: {
           method: 'GET',

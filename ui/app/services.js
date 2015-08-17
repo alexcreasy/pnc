@@ -124,54 +124,58 @@
         }
       };
 
-      // Type can be either 'success' or 'error'.
-      (function notify() {
-        var test = {};
+      function getNotifiers(response) {
+        // Use defaults for success and error if no notification is specified
+        if (!response.config || !response.config.hasOwnProperty('notification')) {
+          return {
+            success: function() {
+              defaultNotifications.success(response);
+            },
+            error: function() {
+              defaultNotifications.error(response);
+            }
+          };
+        }
 
-        var result = _.has(test, a.b.c);
+        // notification property is present but falsey, no notifications
+        // are to be displayed for success or error cases.
+        if (!response.config.notification) {
+          return {
+            success: function() {},
+            error: function() {}
+          };
+        }
 
-        // if (response.config &&
-        //     response.config.notification &&
-        //     response.config.notification[type] &&
-        //
-        //   hasOwnProperty('notification')) {
-        //   // if (!response.config.notifictation || !response.config.notification[type]) {
-        //   //   // All default notifications are overriden if the notification
-        //   //   // property is present and falsey. If notification property is present
-        //   //   // and success property is falsey, then success notifications have
-        //   //   // been overriden.
-        //   //   return false;
-        //   // }
-        //
-        //
-        //   if (angular.isFunction(response.config.notification[type])) {
-        //     // User has requested specific function be used to override.
-        //     response.config.notification[type](response);
-        //   }
-        // } else {
-        //   // take default notification action
-        //   defaultNotifications[type](response);
-        // }
-      })();
+        var notifiers = defaultNotifications;
+
+        if (response.config.notification.hasOwnProperty('success')) {
+          if (angular.isFunction(response.config.notification.success)) {
+            notifiers.success = function() {
+              response.config.notification.success(response);
+            }
+          }
+          if (!response.config.notification.success) {
+            notifiers.sucess = function() {};
+          }
+        }
+
+        if(response.config.notification.hasOwnProperty('error')) {
+          if (angular.isFunction(response.config.notification.error)) {
+            notifiers.error = function() {
+              response.config.notification.error(response);
+            }
+          }
+          if (!response.config.notification.error) {
+            notifiers.error = function() {};
+          }
+        }
+
+        return notifiers;
+      }
 
       return {
         response: function(response) {
-          if (response.config && response.config.hasOwnProperty('notification')) {
-            if (!response.config.notifictation || !response.config.notification.success) {
-              // All default notifications are overriden if the notification
-              // property is present and falsey. If notification property is present
-              // and success property is falsey, then success notifications have
-              // been overriden.
-              return response;
-            }
-            if (angular.isFunction(response.config.notification.success)) {
-              // User has requested specific function be used to override.
-              response.config.notification.success(response);
-            }
-          } else {
-            // take default notification action
-            defaultNotifications.success(response);
-          }
+          getNotifiers(response).success();
           return response;
         },
 
@@ -184,8 +188,8 @@
               keycloak.login();
               break;
             default:
-
-              break;
+              getNotifiers(response).error();
+            break;
           }
           return response;
         }

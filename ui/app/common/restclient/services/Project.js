@@ -42,6 +42,10 @@
       },{
         update: {
           method: 'PUT',
+          notification: {
+            success: false,
+            error: function(response) { console.log('yo') }
+          }
         },
         getAllForProductVersion: {
           method: 'GET',
