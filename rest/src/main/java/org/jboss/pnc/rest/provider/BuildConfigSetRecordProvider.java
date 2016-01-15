@@ -20,24 +20,30 @@ package org.jboss.pnc.rest.provider;
 import org.jboss.pnc.model.BuildConfigSetRecord;
 import org.jboss.pnc.rest.restmodel.BuildConfigSetRecordRest;
 import org.jboss.pnc.spi.datastore.repositories.BuildConfigSetRecordRepository;
+import org.jboss.pnc.spi.datastore.repositories.BuildRecordRepository;
 import org.jboss.pnc.spi.datastore.repositories.PageInfoProducer;
 import org.jboss.pnc.spi.datastore.repositories.SortInfoProducer;
 import org.jboss.pnc.spi.datastore.repositories.api.RSQLPredicateProducer;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.function.Function;
 
 @Stateless
 public class BuildConfigSetRecordProvider extends AbstractProvider<BuildConfigSetRecord, BuildConfigSetRecordRest> {
+
+    private BuildRecordRepository buildRecordRepository;
 
     public BuildConfigSetRecordProvider() {
     }
 
     @Inject
     public BuildConfigSetRecordProvider(BuildConfigSetRecordRepository buildConfigSetRecordRepository,
-            RSQLPredicateProducer rsqlPredicateProducer, SortInfoProducer sortInfoProducer, PageInfoProducer pageInfoProducer) {
+            RSQLPredicateProducer rsqlPredicateProducer, SortInfoProducer sortInfoProducer, PageInfoProducer pageInfoProducer,
+            BuildRecordRepository buildRecordRepository) {
         super(buildConfigSetRecordRepository, rsqlPredicateProducer, sortInfoProducer, pageInfoProducer);
+        this.buildRecordRepository = buildRecordRepository;
     }
 
     @Override
@@ -48,5 +54,9 @@ public class BuildConfigSetRecordProvider extends AbstractProvider<BuildConfigSe
     @Override
     protected Function<? super BuildConfigSetRecordRest, ? extends BuildConfigSetRecord> toDBModelModel() {
         throw new UnsupportedOperationException("Not supported by this provider");
+    }
+
+    public Collection<String> getContentIds(Integer buildConfigSetRecordId) {
+        return null;
     }
 }

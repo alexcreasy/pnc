@@ -126,5 +126,14 @@ public class BuildConfigSetRecordEndpoint extends AbstractEndpoint<BuildConfigSe
             @ApiParam(value = "Build Config set record id", required = true) @PathParam("id") Integer id) {
         return fromCollection(buildRecordProvider.getAllForBuildConfigSetRecord(pageIndex, pageSize, sort, q, id));
     }
+    @GET
+    @Path("/{id}/content-ids")
+    public Response getContentIds(@ApiParam(value = PAGE_INDEX_DESCRIPTION) @QueryParam(PAGE_INDEX_QUERY_PARAM) @DefaultValue(PAGE_INDEX_DEFAULT_VALUE) int pageIndex,
+            @ApiParam(value = PAGE_SIZE_DESCRIPTION) @QueryParam(PAGE_SIZE_QUERY_PARAM) @DefaultValue(PAGE_SIZE_DEFAULT_VALUE) int pageSize,
+            @ApiParam(value = SORTING_DESCRIPTION) @QueryParam(SORTING_QUERY_PARAM) String sort,
+            @ApiParam(value = QUERY_DESCRIPTION, required = false) @QueryParam(QUERY_QUERY_PARAM) String q,
+            @ApiParam(value = "BuildConfigSetRecord id", required = true) @PathParam("id") Integer id) {
+        return null;
+    }
 
 }
