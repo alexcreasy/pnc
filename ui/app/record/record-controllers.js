@@ -46,11 +46,34 @@
 
   module.controller('RecordLiveLogController', [
     '$log',
+    '$websocket',
     'recordDetail',
-    function($log, recordDetail) {
+    function($log, $websocket, recordDetail) {
       var self = this;
 
+      self.log = [];
+
       self.testVar = "Hello World";
+
+      $log.debug('liveLogsUri: %s', recordDetail.liveLogsUri);
+
+      var wsUrl = 'ws://' + recordDetail.liveLogsUri.substring(7, recordDetail.liveLogsUri.length - 1);
+
+      $log.debug('wsUrl: %s', wsUrl);
+
+      var websock = $websocket(wsUrl);
+
+      websock.onMessage(function(message) {
+        self.log.push(message);
+      });
+
+      websock.onClose(function() {
+        $log.debug('WebSocket connection to %s closed', wsUrl);
+      });
+
+      websock.onError(function() {
+        $log.debug('WebsocketError: %O', arguments);
+      });
     }
   ]);
 
