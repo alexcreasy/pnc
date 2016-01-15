@@ -34,6 +34,9 @@
       <li role="presentation" ui-sref-active="active" ng-hide="recordCtrl.record.status === 'BUILDING'">
         <a href ui-sref="record.detail.result">Log</a>
       </li>
+      <li role="presentation" ui-sref-active="active" ng-show="recordCtrl.hasLiveLog()">
+        <a href ui-sref="record.detail.livelog">Live Log</a>
+      </li>
       <li role="presentation" ui-sref-active="active" ng-hide="recordCtrl.record.status === 'BUILDING'">
         <a href ui-sref="record.detail.output">Output</a>
       </li>

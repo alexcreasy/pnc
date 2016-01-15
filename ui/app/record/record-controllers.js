@@ -22,18 +22,35 @@
   var module = angular.module('pnc.record');
 
   module.controller('RecordDetailController', [
+    '$log',
     '$scope',
     '$state',
     'eventTypes',
     'recordDetail',
     'configurationDetail',
-    function($scope, $state, eventTypes, recordDetail, configurationDetail) {
+    function($log, $scope, $state, eventTypes, recordDetail, configurationDetail) {
       this.record = recordDetail;
       this.configuration = configurationDetail;
 
       $scope.$on(eventTypes.BUILD_FINISHED, function() {
         $state.go($state.current, {}, {reload: true});
       });
+
+      $log.debug('recordDetail === %O', recordDetail);
+
+      this.hasLiveLog = function() {
+        return !_.isNull(recordDetail.liveLogsUri);
+      };
+    }
+  ]);
+
+  module.controller('RecordLiveLogController', [
+    '$log',
+    'recordDetail',
+    function($log, recordDetail) {
+      var self = this;
+
+      self.testVar = "Hello World";
     }
   ]);
 

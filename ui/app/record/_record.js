@@ -97,6 +97,16 @@
         }
       });
 
+      $stateProvider.state('record.detail.livelog', {
+        url: '/livelog',
+        controller: 'RecordLiveLogController',
+        controllerAs: 'ctrl',
+        templateUrl: 'record/views/record.detail.livelog.html',
+        data: {
+          displayName: '{{ recordDetail.id }}',
+        }
+      });
+
       $stateProvider.state('record.detail.output', {
         url: '/output',
         controller: 'RecordOutputController',
