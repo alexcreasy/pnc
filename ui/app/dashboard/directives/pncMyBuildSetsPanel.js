@@ -43,19 +43,26 @@
         restrict: 'E',
         templateUrl: 'dashboard/directives/pnc-my-build-sets-panel.html',
         scope: {},
-        //template: '<div></div>',
         link: function (scope) {
 
-          scope.update = function() {
-            scope.page.reload();
-          };
+          scope.page = {};
 
           scope.show = function() {
             return authService.isAuthenticated();
           };
 
-          function init() {
-            scope.page = PageFactory.build(BuildConfigurationSetRecordDAO, function (pageIndex, pageSize, searchText) {
+          function updateOnStart(event, payload) {
+            $log.debug('updateOnStart >> event=[%O], payload=[%O]', event, payload);
+            scope.page.reload();
+          }
+
+          function updateOnFinish(event, payload) {
+            $log.debug('updateOnFinish >> event=[%O], payload=[%O]', event, payload);
+            scope.page.reload();
+          }
+
+          function getPage() {
+            return PageFactory.build(BuildConfigurationSetRecordDAO, function (pageIndex, pageSize, searchText) {
               return UserDAO.getAuthenticatedUser().$promise.then(function(result) {
                 return BuildConfigurationSetRecordDAO._getByUser({
                    userId: result.id,
@@ -66,9 +73,13 @@
                 }).$promise;
               });
             });
+          }
 
-            scope.$on(eventTypes.BUILD_SET_STARTED, scope.update);
-            scope.$on(eventTypes.BUILD_SET_FINISHED, scope.update);
+          function init() {
+            scope.page = getPage();
+
+            scope.$on(eventTypes.BUILD_SET_STARTED, updateOnStart);
+            scope.$on(eventTypes.BUILD_SET_FINISHED, updateOnFinish);
           }
 
           if (authService.isAuthenticated()) {
