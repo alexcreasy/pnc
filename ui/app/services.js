@@ -123,6 +123,7 @@
    app.factory('unwrapPageResponseInterceptor', function() {
      return {
        response: function(response) {
+         console.log('Response: %O', response);
          if(response.data.content && !_.isArray(response.data.content)) {
             response.data = response.data.content;
          }
