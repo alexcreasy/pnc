@@ -17,23 +17,52 @@
  */
 'use strict';
 
-describe('Controller: MainCtrl', function () {
+describe('Controller: TodoController', function () {
 
   // load the controller's module
-  beforeEach(module('pncUiApp'));
+  beforeEach(module('root.todo'));
 
-  var MainCtrl,
-    scope;
+  var ctrl,
+      scope,
+      mockUserInput;
+
+  mockUserInput = [
+    {
+      label: 'Wash the car'
+    },
+    {
+      label: 'Clean the dishes'
+    },
+    {
+      label: 'Deploy orbital weapons platform'
+    }
+  ];
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    MainCtrl = $controller('MainCtrl', {
+    ctrl = $controller('TodoController', {
       $scope: scope
+      // place here mocked dependencies
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(scope.awesomeThings.length).toBe(3);
+  describe('method hasTodos', function () {
+    it('should return false when the todo list is empty', function () {
+      expect(ctrl.hasTodos()).toBe(false);
+    });
+
+    it('should return true when the todo list contains todos', function () {
+      ctrl.todoList.push(mockUserInput[0]);
+      expect(ctrl.hasTodos()).toBe(true);
+    });
   });
+
+  describe('method addTodo', function() {
+    it('should add a todo to the todo list', function () {
+      ctrl.addTodo(mockUserInput[0]);
+      expect(ctrl.todoList.length).toEqual(1);
+    })
+  })
+
 });

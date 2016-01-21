@@ -100,7 +100,7 @@ module.exports = function (grunt) {
         }
       },
       jsTest: {
-        files: ['test/spec/{,*/}*.js'],
+        files: ['<%= yeoman.app %>/**/*.js'],
         tasks: ['newer:jshint:test', 'karma']
       },
       html: {
@@ -280,7 +280,23 @@ module.exports = function (grunt) {
         src: ['<%= yeoman.app %>/index.html'],
         exclude: ['<%= yeoman.lib %>/bootstrap/dist/css/bootstrap.css'],
         ignorePath:  /\.\.\//
-      }
+      },
+      test: {
+        devDependencies: true,
+        src: '<%= karma.unit.configFile %>',
+        ignorePath:  /\.\.\//,
+        fileTypes:{
+          js: {
+            block: /(([\s\t]*)\/{2}\s*?bower:\s*?(\S*))(\n|\r|.)*?(\/{2}\s*endbower)/gi,
+              detect: {
+                js: /'(.*\.js)'/gi
+              },
+              replace: {
+                js: '\'{{filePath}}\','
+              }
+          }
+        }
+      },
     },
 
     // Renames files for browser caching purposes
@@ -490,7 +506,7 @@ module.exports = function (grunt) {
     // Test settings
     karma: {
       unit: {
-        configFile: 'test/karma.conf.js',
+        configFile: 'karma.conf.js',
         singleRun: true
       }
     },
@@ -529,19 +545,19 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('test', [
-    'initCORSProxy',
     'clean:server',
+    'wiredep:test',
     'concurrent:test',
     'autoprefixer',
-    'connect:test'/*,
-    'karma'*/
+    'connect:test',
+    'karma'
   ]);
 
   grunt.registerTask('build', [
     'initCORSProxy',
     'clean:dist',
     'copy:fonts',
-    'wiredep',
+    'wiredep:app',
     'includeSource:dist',
     'useminPrepare',
     'concurrent:dist',
