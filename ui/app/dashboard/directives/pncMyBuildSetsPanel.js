@@ -53,12 +53,59 @@
 
           function updateOnStart(event, payload) {
             $log.debug('updateOnStart >> event=[%O], payload=[%O]', event, payload);
-            scope.page.reload();
+
+            if (payload.userId !== authService.getPncUser().id) {
+              $log.debug('pncMyBuildSetsPanel::updateOnStart() dropping payload=[%O] as current userId [%d] does not match', payload, authService.getPncUser().id);
+              return;
+            }
+
+            if (scope.page.getPageIndex() !== 0) {
+              $log.debug('pncMyBuildSetsPanel::updateOnStart() dropping payload=[%O] as not viewing first page');
+              return;
+            }
+
+            // scope.page.data.unshift({
+            //   id: payload.id,
+            //   buildConfigurationSetId: payload.buildSetConfigurationId,
+            //   buildConfigurationSetName: payload.buildSetConfigurationName,
+            //   startTime: payload.buildSetStartTime,
+            //   endTime: payload.buildSetEndTime,
+            //   status: 'BUILDING'
+            // });
+            BuildConfigurationSetRecordDAO.get({ recordId: payload.id}).$promise.then(function(result) {
+                $log.debug('Adding content to view: [%O]', result);
+                scope.page.data.unshift(result);
+                if (scope.page.data.length > scope.page.getPageSize()) {
+                  scope.page.data.pop();
+                }
+            });
           }
 
           function updateOnFinish(event, payload) {
             $log.debug('updateOnFinish >> event=[%O], payload=[%O]', event, payload);
-            scope.page.reload();
+
+            if (payload.userId !== authService.getPncUser().id) {
+              $log.debug('pncMyBuildSetsPanel::updateOnFinish() dropping payload=[%O] as current userId [%d] does not match', payload, authService.getPncUser().id);
+              return;
+            }
+
+            var resource = _.find(scope.page.data, { id: payload.id });
+
+            if (!_.isUndefined(resource)) {
+              // resource.endTime = payload.buildSetEndTime;
+              // resource.status = payload.buildStatus;
+              BuildConfigurationSetRecordDAO.get({ recordId: payload.id}).$promise.then(function(result) {
+                  $log.debug('Adding content to view: [%O]', result);
+                  _.remove(scope.page.data, { id: payload.id });
+
+                  if (scope.page.getPageIndex() !== 0) {
+                    scope.page.data.unshift(result);
+                    if (scope.page.data.length > scope.page.getPageSize()) {
+                      scope.page.data.pop();
+                    }
+                  }
+              });
+            }
           }
 
           function getPage() {
