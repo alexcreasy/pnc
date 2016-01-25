@@ -21,6 +21,140 @@
 
   var module = angular.module('pnc.dashboard');
 
+  module.factory('PageInsertWrapper', function() {
+
+    function PageInsertWrapper(page) {
+      this.page = page;
+    }
+
+    var compare = function(itemA, itemB) {
+      return itemA.id - itemB.id;
+    };
+
+    var insertIntoPage = function(item, page) {
+      var finished = false;
+      page.data.forEach(function(value, index) {
+        if (index === 0 || finished) {
+          return;
+        }
+
+        if (compare(item, page.data[index - 1]) > 0 && compare(item, value) < 0) {
+          // Insert into the page at the current index
+          page.data.splice(index, 0, value);
+
+          // Ensure the page doesn't grow in size
+          if (page.data.length > page.getPageSize()) {
+            page.data.pop();
+          }
+
+          finished = true;
+        }
+      });
+    }
+
+    PageInsertWrapper.prototype.addIfVisible = function(item) {
+      var page = this.page;
+      // Allowing override of compare in future will enable 
+      // this to be made more generic if needed.
+
+      var index = _.findIndex(page.data, { id: item.id });
+
+      if (index > -1) {
+        // If the item is already visible on the page, replace the existing
+        // reference in the page to point to the new item.
+        page.data[index] = item;
+      }
+      else if (page.getPageIndex() === 0 && compare(item, page.data[0]) < 0)) {
+        // If the user is currently viewing the first page and the item belongs
+        // at the top of the page, add it.
+        page.data.unshift(item);
+
+        // Ensure the page doesn't grow in size
+        if (page.data.length > page.getPageSize()) {
+          page.data.pop();
+        }
+      }
+      else if (compare(item, page.data[0]) > 0 && compare(item, page.data[page.length - 1] < 0) {
+        // If the item is within the boundaries of this page add it.
+        insertIntoPage(item, page);
+      }
+    }
+
+    return PageInsertWrapper;
+  });
+
+  module.directive('pncAbstractMyBuildPanel', [
+    function() {
+      function pncAbstractMyBuildPanelCtrl($scope, authService, PageInsertWrapper) {
+        var self = this;
+        var page,
+            pageWrapper,
+            buildStartEvent,
+            buildFinishEvent,
+            getOne,
+            getPage;
+
+        self.bootstrap = function(buildStartEventType, buildFinishEventType, getOneFn, getPageFn) {
+          buildStartEvent = buildStartEventType;
+          buildFinishEvent = buildFinishEventType;
+          getOne = getOneFn;
+          getPage = getPageFn;
+        };
+
+        self.getData = function() {
+          return page.data;
+        };
+
+        self.show = function() {
+          return authService.isAuthenticated();
+        };
+
+        function updateOnStart(event, payload) {
+          $log.debug('updateOnStart >> event=[%O], payload=[%O]', event, payload);
+
+          if (payload.userId !== authService.getPncUser().id) {
+            $log.debug('pncMyBuildSetsPanel::updateOnStart() dropping payload=[%O] as current userId [%d] does not match', payload, authService.getPncUser().id);
+            return;
+          }
+
+          getOne(payload.id).then(function(result) {
+            pageWrapper.addIfVisible(result);
+          });
+        }
+
+        function updateOnFinish(event, payload) {
+          $log.debug('updateOnFinish >> event=[%O], payload=[%O]', event, payload);
+
+          if (payload.userId !== authService.getPncUser().id) {
+            $log.debug('pncMyBuildSetsPanel::updateOnFinish() dropping payload=[%O] as current userId [%d] does not match', payload, authService.getPncUser().id);
+            return;
+          }
+
+          getOne(payload.id).then(function(result) {
+            pageWrapper.addIfVisible(result);
+          });
+        }
+
+        function init() {
+          page = getPage();
+          pageWrapper = new PageInsertWrapper(page);
+          $scope.$on(buildStartEvent, updateOnStart);
+          $scope.$on(buildFinishEvent, updateOnFinish);
+        }
+
+        if (authService.isAuthenticated()) {
+          init();
+        }
+      }
+
+      return {
+        restrict: 'EA',
+        scope: {},
+        controller: 'pncAbstractMyBuildPanelCtrl',
+      }
+    }
+  ]);
+
   /**
    * @ngdoc directive
    * @name pnc.dashboard:pncMyBuildSetsPanel
@@ -43,97 +177,11 @@
         restrict: 'E',
         templateUrl: 'dashboard/directives/pnc-my-build-sets-panel.html',
         scope: {},
-        link: function (scope) {
+        require: '^pncAbstractMyBuildPanel',
+        link: function (scope, element, attrs, ctrl) {
 
-          scope.page = {};
-
-          scope.show = function() {
-            return authService.isAuthenticated();
-          };
-
-          function updateOnStart(event, payload) {
-            $log.debug('updateOnStart >> event=[%O], payload=[%O]', event, payload);
-
-            if (payload.userId !== authService.getPncUser().id) {
-              $log.debug('pncMyBuildSetsPanel::updateOnStart() dropping payload=[%O] as current userId [%d] does not match', payload, authService.getPncUser().id);
-              return;
-            }
-
-            if (scope.page.getPageIndex() !== 0) {
-              $log.debug('pncMyBuildSetsPanel::updateOnStart() dropping payload=[%O] as not viewing first page');
-              return;
-            }
-
-            // scope.page.data.unshift({
-            //   id: payload.id,
-            //   buildConfigurationSetId: payload.buildSetConfigurationId,
-            //   buildConfigurationSetName: payload.buildSetConfigurationName,
-            //   startTime: payload.buildSetStartTime,
-            //   endTime: payload.buildSetEndTime,
-            //   status: 'BUILDING'
-            // });
-            BuildConfigurationSetRecordDAO.get({ recordId: payload.id}).$promise.then(function(result) {
-                $log.debug('Adding content to view: [%O]', result);
-                scope.page.data.unshift(result);
-                if (scope.page.data.length > scope.page.getPageSize()) {
-                  scope.page.data.pop();
-                }
-            });
-          }
-
-          function updateOnFinish(event, payload) {
-            $log.debug('updateOnFinish >> event=[%O], payload=[%O]', event, payload);
-
-            if (payload.userId !== authService.getPncUser().id) {
-              $log.debug('pncMyBuildSetsPanel::updateOnFinish() dropping payload=[%O] as current userId [%d] does not match', payload, authService.getPncUser().id);
-              return;
-            }
-
-            var resource = _.find(scope.page.data, { id: payload.id });
-
-            if (!_.isUndefined(resource)) {
-              // resource.endTime = payload.buildSetEndTime;
-              // resource.status = payload.buildStatus;
-              BuildConfigurationSetRecordDAO.get({ recordId: payload.id}).$promise.then(function(result) {
-                  $log.debug('Adding content to view: [%O]', result);
-                  _.remove(scope.page.data, { id: payload.id });
-
-                  if (scope.page.getPageIndex() !== 0) {
-                    scope.page.data.unshift(result);
-                    if (scope.page.data.length > scope.page.getPageSize()) {
-                      scope.page.data.pop();
-                    }
-                  }
-              });
-            }
-          }
-
-          function getPage() {
-            return PageFactory.build(BuildConfigurationSetRecordDAO, function (pageIndex, pageSize, searchText) {
-              return UserDAO.getAuthenticatedUser().$promise.then(function(result) {
-                return BuildConfigurationSetRecordDAO._getByUser({
-                   userId: result.id,
-                   pageIndex: pageIndex,
-                   pageSize: pageSize,
-                   search: searchText,
-                   sort: 'sort=desc=id'
-                }).$promise;
-              });
-            });
-          }
-
-          function init() {
-            scope.page = getPage();
-
-            scope.$on(eventTypes.BUILD_SET_STARTED, updateOnStart);
-            scope.$on(eventTypes.BUILD_SET_FINISHED, updateOnFinish);
-          }
-
-          if (authService.isAuthenticated()) {
-            init();
-          }
         }
-      };
+      }
     }
   ]);
 
