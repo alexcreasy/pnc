@@ -11,7 +11,7 @@ module.exports = function(config) {
     autoWatch: true,
 
     // base path, that will be used to resolve files and exclude
-    basePath: '.',
+    basePath: '',
 
     // testing framework to use (jasmine/mocha/qunit/...)
     // as well as any additional frameworks (requirejs/chai/sinon/...)
@@ -43,9 +43,15 @@ module.exports = function(config) {
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/angular-scenario/angular-scenario.js',
       // endbower
+      "app/index.html",
+      "app/**/*.html",
+      {pattern: 'app/index.html', included: false, served: true},
+      {pattern: 'app/**/*.html', included: false, served: true},
       "app/**/_*.js",
       "app/**/*.js",
-      "test/**/*.js",
+      //"**/*.html"
+      // {pattern: '**/*.html', included: false, served: true},
+      //+"test/**/*.js",
     ],
 
     // list of files / patterns to exclude
@@ -81,13 +87,17 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_DEBUG,
 
     // Uncomment the following lines if you are using grunt's server to run the tests
     // proxies: {
-    //   '/': 'http://localhost:9000/'
+    //   '/': 'http://localhost:9001/'
+    // },
+
+    // proxies: {
+    //  '/app/': '/',
     // },
     // URL root prevent conflicts with the site root
-    // urlRoot: '_karma_'
+    urlRoot: '_karma_'
   });
 };

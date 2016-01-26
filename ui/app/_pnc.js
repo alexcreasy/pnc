@@ -39,18 +39,18 @@
     'pnc.import'
   ]);
 
-  var keycloak;
+  var keycloak = {};
 
-  // Bootstrap UI.
+  // // Bootstrap UI.
   angular.element(document).ready(function () {
-    keycloak = new Keycloak('keycloak.json');
-
-    keycloak.init({ onLoad: 'check-sso' }).success(function () {
+  //   keycloak = new Keycloak('keycloak.json');
+  //
+  //   keycloak.init({ onLoad: 'check-sso' }).success(function () {
       angular.bootstrap(document, ['pnc']);
-    }).error(function () {
-      $(document.body).append('<div class="page-header"><h1>Error in authentication bootstrap process</h1></div>');
-      $(document.body).append('<p>Please report this error to the system administrator.</p>');
-    });
+  //   }).error(function () {
+  //     $(document.body).append('<div class="page-header"><h1>Error in authentication bootstrap process</h1></div>');
+  //     $(document.body).append('<p>Please report this error to the system administrator.</p>');
+  //   });
   });
 
   app.config(function($stateProvider, $urlRouterProvider, $locationProvider,

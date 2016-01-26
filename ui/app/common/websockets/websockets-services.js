@@ -167,7 +167,7 @@
            * Init the WebSocket service by opening all endpoints.
            */
           endpoints.forEach(function(endpoint) {
-            endpoint.open();
+            //endpoint.open();
           });
 
           return {

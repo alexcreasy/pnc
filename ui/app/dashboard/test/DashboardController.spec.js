@@ -20,25 +20,27 @@
 describe('Controller: RecordListController', function () {
 
   // load the controller's module
-  beforeEach(module('pnc.record'));
+  beforeEach(module('pnc.dashboard'));
 
-  var ctrl,
-      scope;
+  // var ctrl,
+  //     scope;
+  //
+  // // Initialize the controller and a mock scope
+  // beforeEach(inject(function ($controller, $rootScope) {
+  //   scope = $rootScope.$new();
+  //   ctrl = $controller('DashboardController', {
+  //     $scope: scope
+  //     // place here mocked dependencies
+  //   });
+  //   ctrl.testVal = 1;
+  // }));
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
-    ctrl = $controller('RecordListController', {
-      $scope: scope
-      // place here mocked dependencies
-    });
-    ctrl.testVal = 1;
-  }));
+  var testVal = 2;
 
   describe('Test for testVal', function() {
     it('should equal 1', function () {
-      expect(ctrl.testVal).toEqual(1);
-    })
-  })
+      expect(testVal).toEqual(1);
+    });
+  });
 
 });

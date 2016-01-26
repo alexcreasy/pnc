@@ -100,8 +100,8 @@ module.exports = function (grunt) {
         }
       },
       jsTest: {
-        files: ['<%= yeoman.app %>/**/*.js'],
-        tasks: ['newer:jshint:test', 'karma']
+        files: ['<%= yeoman.app %>/**/*.spec.js'],
+        tasks: ['newer:jshint:all', 'karma']
       },
       html: {
         files: ['<%= yeoman.app %>/**/*.html'],
@@ -168,8 +168,8 @@ module.exports = function (grunt) {
             middlewares.push(connect.static('.tmp'));
             middlewares.push(connect.static('test'));
             middlewares.push(connect().use(
-              '/<%= yeoman.lib %>',
-              connect.static('./<%= yeoman.lib %>')
+              '/bower_components',
+              connect.static('./bower_components')
             ));
             middlewares.push(connect.static(appConfig.app));
             middlewares.push(require('grunt-connect-proxy/lib/utils').proxyRequest);
@@ -206,7 +206,7 @@ module.exports = function (grunt) {
       },
       test: {
         options: {
-          jshintrc: 'test/.jshintrc'
+          jshintrc: '.jshintrc'
         },
         src: ['test/spec/{,*/}*.js']
       }
@@ -507,7 +507,8 @@ module.exports = function (grunt) {
     karma: {
       unit: {
         configFile: 'karma.conf.js',
-        singleRun: true
+        singleRun: true,
+        reporters: ['progress']
       }
     },
 
