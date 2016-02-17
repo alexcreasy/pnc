@@ -68,6 +68,17 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.ws.rs.core.StreamingOutput;
+import java.lang.invoke.MethodHandles;
+import java.time.Instant;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jboss.pnc.spi.datastore.predicates.ArtifactPredicates.withIdentifierAndChecksum;
 @RunWith(Arquillian.class)
 @Category(ContainerTest.class)
 public class BuildRecordsTest {
@@ -201,6 +212,7 @@ public class BuildRecordsTest {
         buildRecord2 = buildRecordRepository.save(buildRecord2);
 
         buildRecordId = buildRecord2.getId();
+
     }
 
     @Test

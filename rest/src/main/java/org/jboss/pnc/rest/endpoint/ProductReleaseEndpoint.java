@@ -47,7 +47,7 @@ import org.jboss.pnc.rest.provider.ProductReleaseProvider;
 import org.jboss.pnc.rest.provider.collection.CollectionInfo;
 import org.jboss.pnc.rest.restmodel.ProductReleaseRest;
 import org.jboss.pnc.rest.restmodel.response.error.ErrorResponseRest;
-import org.jboss.pnc.rest.swagger.response.BuildRecordIds;
+import org.jboss.pnc.rest.swagger.response.BuildRecordSetPage;
 import org.jboss.pnc.rest.swagger.response.ProductReleasePage;
 import org.jboss.pnc.rest.swagger.response.ProductReleaseSingleton;
 import org.jboss.pnc.rest.swagger.response.SupportLevelPage;
@@ -184,13 +184,13 @@ public class ProductReleaseEndpoint extends AbstractEndpoint<ProductRelease, Pro
 
     @ApiOperation(value = "Gets all BuildRecords distributed for Product Version")
     @ApiResponses(value = {
-            @ApiResponse(code = SUCCESS_CODE, message = SUCCESS_DESCRIPTION, response = BuildRecordIds.class),
-            @ApiResponse(code = NO_CONTENT_CODE, message = NO_CONTENT_DESCRIPTION, response = BuildRecordIds.class),
+            @ApiResponse(code = SUCCESS_CODE, message = SUCCESS_DESCRIPTION, response = BuildRecordSetPage.class),
+            @ApiResponse(code = NO_CONTENT_CODE, message = NO_CONTENT_DESCRIPTION, response = BuildRecordSetPage.class),
             @ApiResponse(code = INVLID_CODE, message = INVALID_DESCRIPTION, response = ErrorResponseRest.class),
             @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_DESCRIPTION, response = ErrorResponseRest.class)
     })
     @GET
-    @Path("/{id}/distributed-build-records-ids")
+    @Path("/{id}/allDistributedBuildIds")
     public Response getAllBuildsInDistributedRecordsetOfProductRelease(
             @ApiParam(value = "Product Release id", required = true) @PathParam("id") Integer id) {
         ProductReleaseRest release = basicProvider.getSpecific(id);
@@ -198,7 +198,7 @@ public class ProductReleaseEndpoint extends AbstractEndpoint<ProductRelease, Pro
             return fromSingleton(null);
         }
         Collection<Integer> ids = buildRecordProvider.getAllBuildsInDistributedRecordsetOfProductMilestone(release.getProductMilestoneId());
-        return fromCollection(new CollectionInfo<>(0, ids.size(), 1, ids));
+        return fromCollection(new CollectionInfo<>(1, ids.size(), 1, ids));
     }
 
 }
