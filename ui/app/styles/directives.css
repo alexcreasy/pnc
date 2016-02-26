@@ -99,3 +99,7 @@
 .build-panel {
 	min-height: 539px;
 }
+
+.running-build-panel {
+	min-height: 71px;
+}
