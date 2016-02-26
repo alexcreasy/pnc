@@ -80,3 +80,9 @@
   resize:both;
 }
 
+/**
+ * my-builds-panel
+ */
+.build-panel {
+	min-height: 539px;
+}
