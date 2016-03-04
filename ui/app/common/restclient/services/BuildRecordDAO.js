@@ -55,14 +55,17 @@
         },
         _getArtifacts: {
           method: 'GET',
+          catch: true,
           url: ENDPOINT + '/artifacts'
         },
         _getDependencyArtifacts: {
           method: 'GET',
+          cache: true,
           url: ENDPOINT + '/dependency-artifacts'
         },
         _getBuiltArtifacts: {
           method: 'GET',
+          cache: true,
           url: ENDPOINT + '/built-artifacts'
         },
         _getByConfiguration: {
@@ -84,6 +87,7 @@
         },
         getAuditedBuildConfiguration: {
           method: 'GET',
+          cache: true,
           url: ENDPOINT + '/build-configuration-audited'
         },
         getCompletedOrRunning: {

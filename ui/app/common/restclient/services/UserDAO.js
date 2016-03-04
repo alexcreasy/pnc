@@ -31,15 +31,21 @@
     '$resource',
     'REST_BASE_URL',
     'USER_ENDPOINT',
-    'PageFactory',
-    function ($resource, REST_BASE_URL, USER_ENDPOINT, PageFactory) {
+    function ($resource, REST_BASE_URL, USER_ENDPOINT) {
       var ENDPOINT = REST_BASE_URL + USER_ENDPOINT;
 
       var resource = $resource(ENDPOINT, {
         userId: '@id'
       }, {
-        _getAll: {
-          method: 'GET'
+        query: {
+          method: 'GET',
+          isArray: true,
+          cache: true
+        },
+        get: {
+          method: 'GET',
+          isArray: false,
+          cache: true
         },
         getAuthenticatedUser: {
           method: 'POST',
@@ -49,8 +55,6 @@
           successNotification: false
         }
       });
-
-      PageFactory.decorateNonPaged(resource, '_getAll', 'query');
 
       return resource;
     }
