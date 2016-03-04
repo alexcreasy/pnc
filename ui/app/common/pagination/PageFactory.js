@@ -176,7 +176,10 @@
           return page.loadPageIndex(0);
         };
 
-        page._refresh(initialIndex, pageSize, '');
+        page.$resolved = false;
+        page.$promise = page._refresh(initialIndex, pageSize, '').then(function() {
+          page.$resolved = true;
+        });
 
         return page;
       };
