@@ -1,0 +1,50 @@
+<!--
+
+    JBoss, Home of Professional Open Source.
+    Copyright 2014 Red Hat, Inc., and individual contributors
+    as indicated by the @author tags.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<div class="panel panel-default build-panel">
+  <div class="panel-heading">
+    <div class="spinner spinner-sm pull-right" ng-hide="ctrl.getPage().isLoaded"></div>
+    <h3 class="panel-title">{{ ctrl.getTitle() }}</h3>
+  </div>
+
+  <table class="table table-striped table-hover" ng-show="ctrl.getPage().data.length">
+    <thead>
+      <td>Status</td>
+      <td>ID</td>
+      <td>Build Config</td>
+      <td>User</td>
+      <td>Start Time</td>
+      <td>End Time</td>
+    </thead>
+    <tbody>
+      <tr ng-repeat="record in ctrl.getPage().data">
+        <td><build-status-icon status="record.status"></build-status-icon> {{ record.status }}</td>
+        <td><a href ui-sref="record.detail.info({ recordId: record.id })"># {{ record.id }}</a></td>
+        <td><a href ui-sref="configuration.detail.show({ configurationId: record.buildConfigurationId })">{{ record.buildConfigurationName }}</a></td>
+        <td>{{record.username }}</td>
+        <td>{{ record.startTime | date:'medium' }}</td>
+        <td>{{ record.endTime | date:'medium' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="panel-body" ng-hide="ctrl.getPage().data.length || !ctrl.getPage().isLoaded">
+    No recent builds
+  </div>
+  <pnc-pager class="pull-right" page="ctrl.getPage()"></pnc-pager>
+</div>
