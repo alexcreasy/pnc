@@ -25,7 +25,8 @@
     'pnc.common.restclient',
     'pnc.util.date_utils',
     'angularUtils.directives.uiBreadcrumbs',
-    'pnc.util.confirmClick'
+    'pnc.util.confirmClick',
+    'angular-websocket'
   ]);
 
 
