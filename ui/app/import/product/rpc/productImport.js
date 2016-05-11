@@ -23,18 +23,27 @@
   module.factory('productImportClient', [
     'jsonRpcWebSocket',
     function (jsonRpcWebSocket) {
-      var URL = '';
+
       var rpc = jsonRpcWebSocket(URL);
       var service = {};
 
+      /**
+       *
+       */
       service.start = function (params) {
         return rpc.invoke('buildConfiguration.product.start', params);
       };
 
+      /**
+       *
+       */
       service.nextLevel = function (params) {
         return rpc.invoke('buildConfiguration.product.nextLevel', params);
       };
 
+      /**
+       *
+       */
       service.finish = function (params) {
         return rpc.invoke('buildConfiguration.product.finish', params);
       };

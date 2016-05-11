@@ -37,7 +37,7 @@
          */
 
         var socket;
-        var promiseMap = {};
+        var deferrals = {}; // Map of id => deferred
 
         /*
          * Instance private methods
@@ -57,7 +57,12 @@
           var deferred = $q.defer();
 
           request.id = _.uniqueId(ID_PREFIX);
-          promiseMap[request.id] = deferred;
+
+          // As rpc invocations are asynchronous and request -> response may
+          // interleave with other requests we store the id => deferred entry
+          // in the map so we can resolve / reject  the correct promise
+          // when we receive the rpc response.
+          deferrals[request.id] = deferred;
 
           sendOnSocket(request).catch(function () {
             deferred.reject({
@@ -70,13 +75,13 @@
         }
 
         function handleRpcResponse(response) {
-          if (!promiseMap.hasOwnProperty(response.id)) {
+          if (!deferrals.hasOwnProperty(response.id)) {
             // This code path should be unreachable!
             throw new Error('Illegal State: Received JSON-RPC response with ' +
                 'unknown id: ' + response.id);
           }
 
-          var deferred = promiseMap[response.id];
+          var deferred = deferrals[response.id];
 
           if (response.hasOwnProperty('error')) {
             deferred.reject(response.error);
