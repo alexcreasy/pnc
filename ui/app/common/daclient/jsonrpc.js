@@ -18,9 +18,9 @@
 (function () {
   'use strict';
 
-  var module = angular.module('pnc.import.product');
+  var module = angular.module('pnc.common.daclient');
 
-  module.factory('jsonRpcWebSocket', [
+  module.factory('jsonrpc', [
     '$log',
     '$q',
     '$websocket',
@@ -29,7 +29,7 @@
       var JSON_RPC_VERSION = '2.0';
       var ID_PREFIX = 'request_';
 
-      function createJsonRpcWebSocket(url) {
+      function wsClient(url) {
         var instance = {};
 
         /*
@@ -165,7 +165,9 @@
         return instance;
       }
 
-      return createJsonRpcWebSocket;
+      return {
+        wsClient: wsClient
+      };
     }
   ]);
 

@@ -18,13 +18,13 @@
 (function () {
   'use strict';
 
-  var module = angular.module('pnc.import.product');
+  var module = angular.module('pnc.common.daclient');
 
-  module.factory('productImportClient', [
-    'jsonRpcWebSocket',
-    function (jsonRpcWebSocket) {
+  module.factory('productImport', [
+    'jsonrpc',
+    function (jsonrpc) {
 
-      var rpc = jsonRpcWebSocket(URL);
+      var rpc = jsonrpc.wsClient(URL);
       var service = {};
 
       /**
