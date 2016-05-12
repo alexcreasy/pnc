@@ -51,7 +51,7 @@
                return socket.send(msg);
              });
            }
-         }
+        }
 
         function makeRpcRequest(request) {
           var deferred = $q.defer();

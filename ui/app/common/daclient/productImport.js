@@ -25,30 +25,30 @@
     function (jsonrpc) {
 
       var rpc = jsonrpc.wsClient(URL);
-      var service = {};
+      var productImport = {};
 
       /**
        *
        */
-      service.start = function (params) {
+      productImport.start = function (params) {
         return rpc.invoke('buildConfiguration.product.start', params);
       };
 
       /**
        *
        */
-      service.nextLevel = function (params) {
+      productImport.nextLevel = function (params) {
         return rpc.invoke('buildConfiguration.product.nextLevel', params);
       };
 
       /**
        *
        */
-      service.finish = function (params) {
+      productImport.finish = function (params) {
         return rpc.invoke('buildConfiguration.product.finish', params);
       };
 
-      return service;
+      return productImport;
     }
   ]);
 
