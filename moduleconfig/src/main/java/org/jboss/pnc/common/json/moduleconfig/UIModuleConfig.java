@@ -19,6 +19,8 @@ package org.jboss.pnc.common.json.moduleconfig;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jboss.pnc.common.json.AbstractModuleConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Alex Creasy
