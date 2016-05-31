@@ -46,7 +46,7 @@
   app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
     $httpProvider, NotificationsProvider) {
 
-    $locationProvider.html5Mode(false);
+    $locationProvider.html5Mode({ enabled: true, requireBase: false });
 
     // Redirects URLS with the old '#!' URL prefix to the newer
     // format without the !. This should be removed after 0.7.

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE urlrewrite
+        PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<urlrewrite>
+    <rule enabled="true">
+        <name>Generic Pretty URLs Pass-through</name>
+        <condition type="request-uri" operator="notequal">^/pnc-web/index.html$</condition>
+        <condition type="request-uri" operator="notequal">^/pnc-web/scripts/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/pnc-web/images/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/pnc-web/styles/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/pnc-web/fonts/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/pnc-web/apidocs/.*$</condition>
+        <from>^/.*$</from>
+        <to type="passthrough">/index.html</to>
+    </rule>
+
+    <!--<rule match-type="wildcard">-->
+        <!--<from>/blog/archive/**</from>-->
+        <!--<to type="redirect">/roller/history/$1</to>-->
+    <!--</rule>-->
+
+</urlrewrite>
