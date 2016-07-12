@@ -40,7 +40,8 @@
     'pnc.import',
     'pnc.report',
     'pnc.properties',
-    'pnc.common.authentication'
+    'pnc.common.authentication',
+    'pnc.common.pnc-client'
   ]);
 
   app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
@@ -111,7 +112,8 @@
       daConfigProvider.setDaUrl(pncProperties.daUrl);
       daConfigProvider.setDaImportUrl(pncProperties.daImportUrl);
       daConfigProvider.setDaImportRpcUrl(pncProperties.daImportRpcUrl);
-  }]);
+    }
+  ]);
 
   app.run(function($rootScope, $log, $state, authService, keycloak) {
 
