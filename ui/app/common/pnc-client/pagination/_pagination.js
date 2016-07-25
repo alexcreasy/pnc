@@ -27,13 +27,6 @@
     '$resourceProvider',
     function ($provide, $resourceProvider) {
 
-      function isPage(object) {
-        return angular.isDefined(object.pageIndex) &&
-            angular.isDefined(object.pageSize) &&
-            angular.isDefined(object.totalPages) &&
-            angular.isDefined(object.content);
-      }
-
       /**
        * Decorate the $resource service to register pagination interceptors with
        * correct resource actions. This also allows us to grab the resource
@@ -43,69 +36,79 @@
         return function (url, paramDefaults, actions, options) {
           var Resource;
 
-          // Add all default actions that haven't been explicitly overridden (they
-          // will already be in `actions` if they have). So that we can add
-          // a pagination interceptor where appropriate.
+          var pagedActions = [];
+
           Object.keys($resourceProvider.defaults.actions).forEach(function (key) {
             if (!actions.hasOwnProperty(key)) {
               actions[key] = $resourceProvider.defaults.actions[key];
             }
           });
 
-          // Add the response interceptor to the required actions as it lets us
-          // grab the original resource object and the method the user invoked
-          //    so we can make requests for new pages.
           Object.keys(actions).forEach(function (key) {
             var action = actions[key];
+            var delegateInterceptor;
 
-            if ((action.method === 'GET' || !action.method) && action.isArray) {
+            if(action.isPaged) {
+              pagedActions.push(key);
 
-              // Transform the object response into an array with additional
-              // meta data properties. This stops ngResource throwing an exception
-              // because it got an Object when it expected an Array.
-              action.transformResponse = function (data) {
-                var jsonData,
-                    response;
-
-                // If the intercepted response isn't JSON leave it alone.
-                try {
-                  jsonData = JSON.parse(data);
-                } catch (e) {
-                  return data;
-                }
-
-                // Likewise if it's not a page leave it alone.
-                if (isPage(jsonData)) {
-                  response = jsonData.content;
-                  response.pageIndex = jsonData.pageIndex;
-                  response.pageSize = jsonData.pageSize;
-                  response.totalPages = jsonData.totalPages;
-
-                  return response;
-                }
-
-                return jsonData;
-              };
+              // If the dev provided an interceptor save it so we can apply it after ours.
+              if (action.interceptor && angular.isFunction(action.interceptor.response)) {
+                delegateInterceptor = action.interceptor.response;
+              }
 
               action.interceptor = action.interceptor || {};
               action.interceptor.response = function (response) {
-                var pageService = angular
-                    .injector(['pnc.common.pnc-client.pagination'])
-                    .get('pageService');
-
-                var meta = {
-                  pageIndex: response.data.pageIndex,
-                  pageSize: response.data.pageSize,
-                  totalPages: response.data.totalPages,
-                  Resource: Resource
-                };
-
-                pageService.pagify(meta, response.config, response.resource);
+                if (delegateInterceptor) {
+                  delegateInterceptor.apply(delegateInterceptor, arguments);
+                }
+                return response;
               };
             }
           });
 
           Resource = $delegate(url, paramDefaults, actions, options);
+
+          // Decorate the paged action methods
+          pagedActions.forEach(function(action) {
+            var delegate = Resource[action];
+
+            Resource[action] = function () {
+              var response = delegate.apply(delegate, arguments);
+
+              var Page = angular.injector(['pnc.common.pnc-client.pagination']).get('Page');
+
+              var spec = {
+                pageIndex: 0,
+                pageSize: 1,
+                totalPages: 1,
+                config: {},
+                Resource: Resource,
+                data: []
+              };
+              var page = new Page(spec);
+
+              page.$promise = response.$promise;
+              page.$resolved = false;
+
+              response.$promise.then(function(response) {
+                var content = response.data.content;
+                for (var i = 0; i < content.length; i++) {
+                  content[i] = new Resource(content[i]);
+                }
+
+                spec.pageIndex = response.data.pageIndex;
+                spec.pageSize = response.data.pageSize;
+                spec.totalPages = response.data.totalPages;
+                spec.config = response.config;
+                page.data = content;
+                page.$resolved = true;
+              });
+
+              return page;
+
+            };
+          });
+
           return Resource;
         };
       });

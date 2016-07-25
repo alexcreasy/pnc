@@ -36,19 +36,17 @@
         id: '@id',
       }, {
         getArtifacts: {
-          isArray: true,
-          isPaginated: true,
+          isPaged: true,
           method: 'GET',
           url: ENDPOINT + '/artifacts'
         },
         getDependencyArtifacts: {
-          isArray: true,
-          isPaginated: true,
+          isPaged: true,
           method: 'GET',
           url: ENDPOINT + '/dependency-artifacts' //+ qh.searchOnly(['identifier', 'filename', 'checksum'])
         },
         getBuiltArtifacts: {
-          isArray: true,
+          isPaged: true,
           method: 'GET',
           url: ENDPOINT + '/built-artifacts', //+ qh.searchOnly(['identifier', 'filename', 'checksum'])
         },

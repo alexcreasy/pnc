@@ -21,6 +21,22 @@
   angular.module('pnc.common.pnc-client', [
     'pnc.common.pnc-client.pagination',
     'pnc.common.pnc-client.resources'
+  ])
+
+  .run([
+    '$log',
+    'BuildRecord',
+    function ($log, BuildRecord) {
+      var br = BuildRecord.getDependencyArtifacts({ id: 112, pageSize: 2 });
+      $log.debug('BuildRecord.getDependencyArtifacts(112) >> %O', br);
+
+      br.$promise.then(function() {
+        $log.debug('br.getTotalPages == %O // br.getConfig() == %O', br.getTotalPages(), br.getConfig());
+        br.getPage(br.getPageIndex() + 1).then(function (response) {
+          $log.debug('the next page == %O', response);
+        });
+      });
+    }
   ]);
 
 })();
