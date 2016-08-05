@@ -31,6 +31,7 @@ import org.jboss.pnc.spi.datastore.repositories.SortInfoProducer;
 import org.jboss.pnc.spi.datastore.repositories.api.PageInfo;
 import org.jboss.pnc.spi.datastore.repositories.api.RSQLPredicateProducer;
 import org.jboss.pnc.spi.datastore.repositories.api.SortInfo;
+import org.jboss.pnc.spi.datastore.repositories.api.impl.DefaultPageInfo;
 import org.jboss.pnc.spi.executor.BuildExecutionSession;
 import org.jboss.pnc.spi.executor.BuildExecutor;
 import org.slf4j.Logger;
@@ -43,11 +44,9 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static org.jboss.pnc.rest.utils.StreamHelper.nullableStreamOf;
@@ -260,6 +259,57 @@ public class BuildRecordProvider extends AbstractProvider<BuildRecord, BuildReco
             return null;
         }
         return toRESTModel().apply(buildRecords.get(0));
+    }
+
+    public CollectionInfo<BuildRecordRest> getRunningandCompletedBuildRecords(Integer pageIndex, Integer pageSize, String search, String sort) {
+        Set<BuildRecordRest> running = nullableStreamOf(buildCoordinator.getSubmittedBuildTasks())
+                .filter(rsqlPredicateProducer.getStreamPredicate(BuildTask.class, search))
+                .sorted(sortInfoProducer.getSortInfo(sort).getComparator())
+                .map(this::createNewBuildRecordRest)
+                .collect(Collectors.toSet());
+
+        int totalRunning = running.size();
+
+        CollectionInfo<BuildRecordRest> result = null;
+
+        for (int i = 0; i <= pageIndex; i++) {
+            int offset = totalRunning - running.size();
+
+            // Performance optimization
+            if (offset == totalRunning) {
+                result = createInterleavedPage(pageIndex, pageSize, offset, totalRunning, sort, search, running);
+                break;
+            }
+
+            result = createInterleavedPage(i, pageSize, offset, totalRunning, sort, search, running);
+        }
+
+        return result;
+    }
+
+    private CollectionInfo<BuildRecordRest> createInterleavedPage(int index, int size, int offset,
+                int totalRunning, String sort, String search, Set<BuildRecordRest> running) {
+
+        PageInfo pageInfo = new DefaultPageInfo(index * size - offset, size);
+        SortInfo sortInfo = sortInfoProducer.getSortInfo(sort);
+
+        List<BuildRecordRest> result = nullableStreamOf(((BuildRecordRepository) repository).queryWithPredicatesUsingCursor(pageInfo, sortInfo, rsqlPredicateProducer.getPredicate(BuildRecord.class, search))) //rsqlPredicateProducer.getPredicate(BuildRecord.class, search)
+                .map(toRESTModel())
+                .collect(Collectors.toList());
+
+        result.addAll(running);
+
+        result = result.stream()
+                .sorted(sortInfoProducer.getSortInfo(sort).getComparator())
+                .limit(size)
+                .collect(Collectors.toList());
+
+        running.removeAll(result);
+
+        double totalCompleted = (double) repository.count(rsqlPredicateProducer.getPredicate(BuildRecord.class, search));
+        int totalPages = (int) Math.ceil((totalCompleted + (double) totalRunning) / size);
+
+        return new CollectionInfo<>(index, size, totalPages, result);
     }
 
     public CollectionInfo<BuildRecordRest> getRunningAndArchivedBuildRecords(Integer pageIndex, Integer pageSize, String search, String sort) {
