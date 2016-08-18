@@ -23,7 +23,7 @@
   </div>
 
   <div>
-    <pnc-search-field class="search" page="outputCtrl.builtArtifacts" text="artifacts"></pnc-search-field>
+    <pnc-search-field class="search" page="artifactsCtrl.builtArtifacts" text="artifacts"></pnc-search-field>
   </div>
   <table class="table table-bordered table-striped">
     <thead>
@@ -33,7 +33,7 @@
       <th>Actions</th>
     </thead>
     <tbody>
-      <tr ng-repeat="artifact in outputCtrl.builtArtifacts.data">
+      <tr ng-repeat="artifact in artifactsCtrl.builtArtifacts.data">
         <td>{{ artifact.identifier }}</td>
         <td>{{ artifact.filename }}</td>
         <td>{{ artifact.checksum }}</td>
@@ -41,5 +41,5 @@
       </tr>
     </tbody>
   </table>
-  <pnc-pager class="pull-right" page="outputCtrl.builtArtifacts"></pnc-pager>
+  <pnc-pager class="pull-right" page="artifactsCtrl.builtArtifacts"></pnc-pager>
 </div>

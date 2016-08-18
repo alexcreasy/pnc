@@ -18,7 +18,7 @@
 (function () {
   'use strict';
 
-  angular.module('pnc.record').controller('RecordOutputController', [
+  angular.module('pnc.record').controller('RecordArtifactsController', [
     'artifacts',
     function(artifacts) {
       var self = this;

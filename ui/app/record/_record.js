@@ -91,11 +91,11 @@
         }
       });
 
-      $stateProvider.state('record.detail.output', {
-        url: '/output',
-        controller: 'RecordOutputController',
-        controllerAs: 'outputCtrl',
-        templateUrl: 'record/views/record.detail.output.html',
+      $stateProvider.state('record.detail.artifacts', {
+        url: '/artifacts',
+        controller: 'RecordArtifactsController',
+        controllerAs: 'artifactsCtrl',
+        templateUrl: 'record/views/record.detail.artifacts.html',
         data: {
           displayName: '{{ recordDetail.id }}',
         },
