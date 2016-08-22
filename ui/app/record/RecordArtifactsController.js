@@ -25,7 +25,6 @@
     function ($log, artifacts, filteringPaginator) {
       var self = this;
       self.artifacts = filteringPaginator(artifacts);
-      $log.debug('>>> RecordArtifactsController: %O', self);
     }
   ]);
 
