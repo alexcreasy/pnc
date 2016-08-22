@@ -19,11 +19,13 @@
   'use strict';
 
   angular.module('pnc.record').controller('RecordArtifactsController', [
+    '$log',
     'artifacts',
-    function(artifacts) {
+    'filteringPaginator',
+    function ($log, artifacts, filteringPaginator) {
       var self = this;
-
-      self.builtArtifacts = artifacts;
+      self.artifacts = filteringPaginator(artifacts);
+      $log.debug('>>> RecordArtifactsController: %O', self);
     }
   ]);
 

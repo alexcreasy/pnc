@@ -100,10 +100,8 @@
           displayName: '{{ recordDetail.id }}',
         },
         resolve: {
-          artifacts: function (BuildRecordDAO, recordDetail) {
-            return BuildRecordDAO.getPagedBuiltArtifacts({
-              recordId: recordDetail.id
-            });
+          artifacts: function (recordDetail) {
+            return recordDetail.$getBuiltArtifacts();
           }
         }
       });

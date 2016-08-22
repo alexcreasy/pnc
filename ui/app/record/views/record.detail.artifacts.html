@@ -22,24 +22,32 @@
     <h2>Built Artifacts</h2>
   </div>
 
-  <div>
-    <pnc-search-field class="search" page="artifactsCtrl.builtArtifacts" text="artifacts"></pnc-search-field>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div>&nbsp;</div>
+    </div>
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <th>Identifier</th>
+        <th>File Name</th>
+        <th>Checksum</th>
+        <th>Actions</th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="artifact in artifactsCtrl.artifacts.data">
+          <td>{{ artifact.identifier }}</td>
+          <td>{{ artifact.filename }}</td>
+          <td>{{ artifact.checksum }}</td>
+          <td class="text-center"><a ng-href="{{ artifact.deployUrl }}" target="_self" class="btn btn-default btn-block">Download</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="panel-footer clearfix">
+      <div class="pull-right">
+        <div pnc-page-controls pnc-page="artifactsCtrl.artifacts"></div>
+        <div class="spinner spinner-sm" ng-hide="artifactsCtrl.artifacts.isLoaded"></div>
+      </div>
+    </div>
   </div>
-  <table class="table table-bordered table-striped">
-    <thead>
-      <th>Identifier</th>
-      <th>File Name</th>
-      <th>Checksum</th>
-      <th>Actions</th>
-    </thead>
-    <tbody>
-      <tr ng-repeat="artifact in artifactsCtrl.builtArtifacts.data">
-        <td>{{ artifact.identifier }}</td>
-        <td>{{ artifact.filename }}</td>
-        <td>{{ artifact.checksum }}</td>
-        <td class="text-center"><a ng-href="{{ artifact.deployUrl }}" target="_self" class="btn btn-primary">Download</a></td>
-      </tr>
-    </tbody>
-  </table>
-  <pnc-pager class="pull-right" page="artifactsCtrl.builtArtifacts"></pnc-pager>
 </div>
