@@ -24,6 +24,7 @@ import org.commonjava.indy.client.core.module.IndyContentClientModule;
 import org.commonjava.indy.folo.client.IndyFoloAdminClientModule;
 import org.commonjava.indy.folo.dto.TrackedContentDTO;
 import org.commonjava.indy.folo.dto.TrackedContentEntryDTO;
+import org.commonjava.indy.model.core.AccessChannel;
 import org.commonjava.indy.model.core.StoreKey;
 import org.commonjava.indy.model.core.StoreType;
 import org.commonjava.indy.promote.client.IndyPromoteClientModule;
@@ -239,7 +240,7 @@ public class MavenRepositorySession implements RepositorySession {
                 Artifact.Builder artifactBuilder = Artifact.Builder.newBuilder().checksum(download.getMd5())
                         .deployUrl(content.contentUrl(download.getStoreKey(), download.getPath()))
                         .originUrl(originUrl).importDate(Date.from(Instant.now())).filename(new File(path).getName())
-                        .identifier(aref.toString()).repoType(ArtifactRepo.Type.MAVEN);
+                        .identifier(aref.toString()).repoType(convertAccessChannel(download.getAccessChannel()));
 
                 Artifact artifact = validateArtifact(artifactBuilder.build());
                 deps.add(artifact);
@@ -404,4 +405,14 @@ public class MavenRepositorySession implements RepositorySession {
         return false;
     }
 
+    private ArtifactRepo.Type convertAccessChannel(AccessChannel accessChannel) {
+        switch (accessChannel) {
+            case MAVEN_REPO:
+                return ArtifactRepo.Type.MAVEN;
+            case GENERIC_PROXY:
+                return ArtifactRepo.Type.GENERIC_PROXY;
+            default:
+                return ArtifactRepo.Type.GENERIC_PROXY;
+        }
+    }
 }
