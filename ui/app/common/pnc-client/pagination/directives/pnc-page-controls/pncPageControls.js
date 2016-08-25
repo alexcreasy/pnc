@@ -42,40 +42,29 @@
        },
        bindToController: true,
        controllerAs: 'ctrl',
-       controller: [
-         '$scope',
-         'paginator',
-         function ($scope, paginator) {
-           var self = this;
+       controller: function () {
+         var self = this;
 
-           function refresh() {
-             self.index = self.page.index + 1;
-             self.size = self.page.size;
-             self.total = self.page.total;
-             console.log('isLoaded? ' + self.page.isLoaded);
-             self.isLoaded = self.page.isLoaded;
-             console.log('self==%O', self);
-           }
-
-           self.pageSizes = PAGESIZE_OPTIONS;
-
-           self.getPageIfExists = function (index) {
-             console.log('Enter hit! index == ' + index);
-             if (self.page.has(index - 1)) {
-              //  $scope.$apply(function () {
-                 self.page.get(index - 1);
-              //  });
-             }
-           };
-
-           self.page.onUpdate(function () {
-            //  $scope.$apply(refresh);
-              refresh();
-           });
-
-           refresh();
+         function refresh() {
+           self.index = self.page.index + 1;
+           self.size = self.page.size;
+           self.total = self.page.total;
          }
-      ]
+
+         self.pageSizes = PAGESIZE_OPTIONS;
+
+         self.getPageIfExists = function (index) {
+           if (self.page.has(index - 1)) {
+              self.page.get(index - 1);
+           }
+         };
+
+         self.page.onUpdate(function () {
+            refresh();
+         });
+
+         refresh();
+       }
      };
   });
 
