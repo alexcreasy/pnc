@@ -27,19 +27,24 @@
       <div>&nbsp;</div>
     </div>
 
-    <table class="table table-bordered table-striped">
+
+    <table class="table table-bordered table-striped table-hover">
       <thead>
         <th>Identifier</th>
         <th>File Name</th>
         <th>Checksum</th>
-        <th>Actions</th>
+        <th>&nbsp;</th>
       </thead>
       <tbody>
         <tr ng-repeat="artifact in artifactsCtrl.artifacts.data">
           <td>{{ artifact.identifier }}</td>
           <td>{{ artifact.filename }}</td>
           <td>{{ artifact.checksum }}</td>
-          <td class="text-center"><a ng-href="{{ artifact.deployUrl }}" target="_self" class="btn btn-default btn-block">Download</a></td>
+          <td class="td-actions">
+            <div class="btn-group" role="group" aria-label="Row Actions">
+              <a ng-href="{{ artifact.deployUrl }}" target="_self" class="btn btn-default">Download</a>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
