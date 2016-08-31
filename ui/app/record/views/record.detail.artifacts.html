@@ -24,16 +24,15 @@
 
   <div class="panel panel-default">
     <div class="panel-heading">
-      <div>&nbsp;</div>
+      <div pf-filter id="filter" config="artifactsCtrl.filterConfig"></div>
     </div>
-
 
     <table class="table table-bordered table-striped table-hover">
       <thead>
         <th>Identifier</th>
         <th>File Name</th>
         <th>Checksum</th>
-        <th>&nbsp;</th>
+        <th>Actions</th>
       </thead>
       <tbody>
         <tr ng-repeat="artifact in artifactsCtrl.artifacts.data">

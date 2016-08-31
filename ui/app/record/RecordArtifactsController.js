@@ -22,9 +22,58 @@
     '$log',
     'artifacts',
     'filteringPaginator',
-    function ($log, artifacts, filteringPaginator) {
+    'pfFilterAdaptor',
+    function ($log, artifacts, filteringPaginator, pfFilterAdaptor) {
       var self = this;
       self.artifacts = filteringPaginator(artifacts);
+
+      var adaptor = pfFilterAdaptor(self.artifacts);
+
+      // function onFilterChange(filters) {
+      //   $log.debug('onFilterChange :: arguments = %O', arguments);
+      //   self.artifacts.clearFilters();
+      //   filters.forEach(function (filter) {
+      //     self.artifacts.addFilter({
+      //       field: filter.id,
+      //       value: filter.value
+      //     });
+      //   });
+      //   self.artifacts.apply();
+      // }
+      //
+      // function resultsCount(page) {
+      //   if (page.total === 1) {
+      //     return page.data.length;
+      //   }
+      //
+      //   return page.total * page.size;
+      // }
+
+      self.filterConfig = {
+        fields: [
+          {
+            id: 'identifier',
+            title: 'Identifier',
+            placeholder: 'Filter by Identifier',
+            filterType: 'text'
+          },
+          {
+            id: 'filename',
+            title:  'Filename',
+            placeholder: 'Filter by Filename',
+            filterType: 'text'
+          },
+          {
+            id: 'checksum',
+            title:  'Checksum',
+            placeholder: 'Filter by Checksum',
+            filterType: 'text'
+          }
+        ],
+        resultsCount: adaptor.resultsCount(),
+        appliedFilters: [],
+        onFilterChange: adaptor.onFilterChange
+      };
     }
   ]);
 

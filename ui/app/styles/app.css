@@ -144,6 +144,10 @@ td.td-actions .btn-group {
   display: flex;
 }
 
+.panel-heading hr {
+  max-width: 100% !important;
+}
+
 @media (min-width: 768px) {
   .dl-horizontal dt {
     padding-top: 1px;
