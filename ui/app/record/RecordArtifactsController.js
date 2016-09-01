@@ -29,26 +29,6 @@
 
       var adaptor = pfFilterAdaptor(self.artifacts);
 
-      // function onFilterChange(filters) {
-      //   $log.debug('onFilterChange :: arguments = %O', arguments);
-      //   self.artifacts.clearFilters();
-      //   filters.forEach(function (filter) {
-      //     self.artifacts.addFilter({
-      //       field: filter.id,
-      //       value: filter.value
-      //     });
-      //   });
-      //   self.artifacts.apply();
-      // }
-      //
-      // function resultsCount(page) {
-      //   if (page.total === 1) {
-      //     return page.data.length;
-      //   }
-      //
-      //   return page.total * page.size;
-      // }
-
       self.filterConfig = {
         fields: [
           {
@@ -68,6 +48,16 @@
             title:  'Checksum',
             placeholder: 'Filter by Checksum',
             filterType: 'text'
+          },
+          {
+            id: 'repoType',
+            title: 'Repo Type',
+            placeholder: 'Filter by Repo Type',
+            filterType: 'select',
+            filterValues: [
+              'MAVEN',
+              'GENERIC_PROXY'
+            ]
           }
         ],
         resultsCount: adaptor.resultsCount(),

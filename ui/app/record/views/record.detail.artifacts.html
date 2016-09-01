@@ -23,7 +23,10 @@
   </div>
 
   <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading clearfix">
+      <div class="pull-right">
+        <span class="spinner spinner-sm spinner-inline" ng-hide="artifactsCtrl.artifacts.isLoaded"></span>
+      </div>
       <div pf-filter id="filter" config="artifactsCtrl.filterConfig"></div>
     </div>
 
@@ -31,6 +34,7 @@
       <thead>
         <th>Identifier</th>
         <th>File Name</th>
+        <th>Repository Type</th>
         <th>Checksum</th>
         <th>Actions</th>
       </thead>
@@ -38,6 +42,7 @@
         <tr ng-repeat="artifact in artifactsCtrl.artifacts.data">
           <td>{{ artifact.identifier }}</td>
           <td>{{ artifact.filename }}</td>
+          <td>{{ artifact.repoType }}</td>
           <td>{{ artifact.checksum }}</td>
           <td class="td-actions">
             <div class="btn-group" role="group" aria-label="Row Actions">
@@ -47,11 +52,12 @@
         </tr>
       </tbody>
     </table>
-    <div class="panel-footer clearfix">
+    <div class="panel-footer">
       <div class="pull-right">
         <div pnc-page-controls pnc-page="artifactsCtrl.artifacts"></div>
-        <div class="spinner spinner-sm" ng-hide="artifactsCtrl.artifacts.isLoaded"></div>
+        <span class="spinner spinner-sm spinner-inline text-left" ng-hide="artifactsCtrl.artifacts.isLoaded"></span>
       </div>
+      <div class="clearfix"></div>
     </div>
   </div>
 </div>
