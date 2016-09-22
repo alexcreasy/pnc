@@ -24,7 +24,10 @@
     'ui.bootstrap',
     'pnc.common.restclient',
     'angularUtils.directives.uiBreadcrumbs',
-    'pnc.common.authentication'
+    'pnc.common.authentication',
+    'pnc.common.pnc-client',
+    'patternfly',
+    'patternfly.views'
   ]);
 
   module.config(['$stateProvider', function($stateProvider) {

@@ -95,7 +95,38 @@
             }, {});
           };
 
-        }
+        },
+        controllerAs: 'ctrl',
+        controller: ['$scope', '$modal', function ($scope, $modal) {
+          var ctrl = this;
+
+          ctrl.addGroupsToVersion = function () {
+            var modalInstance = $modal.open({
+              animation: true,
+              templateUrl: 'product/directives/pncProductVersionBCSets/add-group-to-version.html',
+              controller: 'AddGroupToVersionController',
+              controllerAs: 'ctrl',
+              bindToController: true,
+              resolve: {
+                product: function () {
+                  return $scope.product.$promise;
+                },
+                version: function () {
+                  return $scope.version.$promise;
+                }
+              },
+              size: 'lg'
+            });
+
+            modalInstance.result.then(function (result) {
+              $log.info('Selected Build Groups: %O', result);
+            },
+          function () {
+            $log.info('Cancelled edit build groups');
+          });
+
+          };
+        }]
       };
     }
   ]);

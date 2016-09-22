@@ -20,8 +20,11 @@
 <pnc-header>
   <pnc-header-title><small>Build Group Configs</small></pnc-header-title>
   <pnc-header-buttons>
-    <button type="button" class="btn btn-lg btn-default" data-toggle="tooltip" title="Create Build Group" ui-sref="configuration-set.create({ productId: product.id, versionId: version.id })">
+    <button type="button" class="btn btn-default" tooltip="Create a new build group and add it to this product version" tooltip-popup-delay="2500" tooltip-placement="top" tooltip-append-to-body="true" ui-sref="configuration-set.create({ productId: product.id, versionId: version.id })">
       <i class="pficon pficon-add"></i> Create
+    </button>
+    <button type="button" class="btn btn-default" tooltip="Create a new build group and add it to this product version" tooltip-popup-delay="2500" tooltip-placement="top" tooltip-append-to-body="true" ng-click="ctrl.addGroupsToVersion()">
+      Add
     </button>
   </pnc-header-buttons>
 </pnc-header>
