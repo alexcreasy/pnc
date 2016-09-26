@@ -17,9 +17,12 @@
  */
 package org.jboss.pnc.rest.provider;
 
+import org.jboss.pnc.model.BuildConfigurationSet;
 import org.jboss.pnc.model.ProductVersion;
 import org.jboss.pnc.rest.provider.collection.CollectionInfo;
+import org.jboss.pnc.rest.restmodel.BuildConfigurationSetRest;
 import org.jboss.pnc.rest.restmodel.ProductVersionRest;
+import org.jboss.pnc.rest.validation.exceptions.ValidationException;
 import org.jboss.pnc.spi.datastore.repositories.PageInfoProducer;
 import org.jboss.pnc.spi.datastore.repositories.ProductVersionRepository;
 import org.jboss.pnc.spi.datastore.repositories.SortInfoProducer;
@@ -27,7 +30,10 @@ import org.jboss.pnc.spi.datastore.repositories.api.RSQLPredicateProducer;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.jboss.pnc.spi.datastore.predicates.ProductVersionPredicates.withBuildConfigurationId;
 import static org.jboss.pnc.spi.datastore.predicates.ProductVersionPredicates.withProductId;
@@ -53,6 +59,22 @@ public class ProductVersionProvider extends AbstractProvider<ProductVersion, Pro
     public CollectionInfo<ProductVersionRest> getAllForBuildConfiguration(int pageIndex, int pageSize, String sortingRsql, String query,
             Integer buildConfigurationId){
         return queryForCollection(pageIndex, pageSize, sortingRsql, query, withBuildConfigurationId(buildConfigurationId));
+    }
+
+    public void updateBuildConfigurationSets(Integer id, List<BuildConfigurationSetRest> buildConfigurationSetRests) throws ValidationException {
+        ProductVersionRest version = getSpecific(id);
+        version.setBuildConfigurationSets(buildConfigurationSetRests);
+        validateBeforeUpdating(id, version);
+        repository.save(toDBModel().apply(version));
+
+
+
+//        getSpecific(id).
+//        ProductVersion version = toDBModel().apply(getSpecific(id));
+//        Set<BuildConfigurationSet> bcSets = buildConfigurationSetRests.stream().map(set -> set.toDBEntityBuilder().build()).collect(Collectors.toSet());
+//        version.setBuildConfigurationSets(bcSets);
+//        repository.save(version);
+
     }
 
     @Override

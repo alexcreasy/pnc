@@ -31,6 +31,8 @@ public class ProductVersionRestClient extends AbstractRestClient<ProductVersionR
 
     public static final String PRODUCT_VERSION_REST_ENDPOINT = "/pnc-rest/rest/product-versions/";
 
+    public static final String BUILD_CONFIGURATION_SETS_SUB_ENDPOINT = "/build-configuration-sets/";
+
     public ProductVersionRestClient() {
         super(PRODUCT_VERSION_REST_ENDPOINT, ProductVersionRest.class);
     }
@@ -46,7 +48,7 @@ public class ProductVersionRestClient extends AbstractRestClient<ProductVersionR
 //    }
 
     public RestResponse<List<BuildConfigurationSetRest>> updateBuildConfigurationSets(int id, List<BuildConfigurationSetRest> buildConfigurationSetRests) {
-        Response response = put(null, buildConfigurationSetRests);
+        Response response = put(PRODUCT_VERSION_REST_ENDPOINT + id + BUILD_CONFIGURATION_SETS_SUB_ENDPOINT, buildConfigurationSetRests);
 
         response.then().statusCode(200);
 

@@ -72,7 +72,7 @@ public class ProductVersion implements GenericEntity<Integer> {
     @Index(name="idx_productversion_product")
     private Product product;
 
-    @OneToMany(mappedBy = "productVersion")
+    @OneToMany(mappedBy = "productVersion", cascade = { CascadeType.MERGE })
     private Set<BuildConfigurationSet> buildConfigurationSets;
 
     @OneToMany(mappedBy = "productVersion")
@@ -273,6 +273,16 @@ public class ProductVersion implements GenericEntity<Integer> {
 
         public Builder product(Product.Builder productBuilder) {
             this.product = productBuilder.build();
+            return this;
+        }
+
+        public Builder buildConfigurationSets(Set<BuildConfigurationSet> buildConfigurationSets) {
+            this.buildConfigurationSets = buildConfigurationSets;
+            return this;
+        }
+
+        public Builder buildConfigurationSet(BuildConfigurationSet buildConfigurationSet) {
+            this.buildConfigurationSets.add(buildConfigurationSet);
             return this;
         }
     }
