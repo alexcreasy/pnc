@@ -19,12 +19,22 @@ package org.jboss.pnc.integration;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit.InSequence;
+import org.jboss.pnc.AbstractTest;
+import org.jboss.pnc.integration.client.AbstractRestClient;
 import org.jboss.pnc.integration.client.ProductVersionRestClient;
 import org.jboss.pnc.integration.client.util.RestResponse;
 import org.jboss.pnc.integration.deployments.Deployments;
+import org.jboss.pnc.integration.env.IntegrationTestEnv;
+import org.jboss.pnc.integration.utils.AuthUtils;
+import org.jboss.pnc.model.BuildConfigurationSet;
+import org.jboss.pnc.rest.provider.ProductVersionProvider;
 import org.jboss.pnc.rest.restmodel.ProductVersionRest;
+import org.jboss.pnc.spi.datastore.repositories.BuildConfigurationSetRepository;
+import org.jboss.pnc.spi.datastore.repositories.ProductVersionRepository;
 import org.jboss.pnc.test.category.ContainerTest;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -32,6 +42,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.lang.invoke.MethodHandles;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,9 +55,26 @@ public class ProductVersionRestTest {
 
     private static ProductVersionRestClient productVersionRestClient;
 
-    @Deployment(testable = false)
+    @Inject
+    private ProductVersionProvider productVersionProvider;
+
+    @Inject
+    private ProductVersionRepository productVersionRepository;
+
+    @Inject
+    private BuildConfigurationSetRepository buildConfigurationSetRepository;
+
+    @Deployment
     public static EnterpriseArchive deploy() {
-        EnterpriseArchive enterpriseArchive = Deployments.baseEar();
+        EnterpriseArchive enterpriseArchive = Deployments.baseEarWithTestDependencies();
+        WebArchive war = enterpriseArchive.getAsType(WebArchive.class, AbstractTest.REST_WAR_PATH);
+        war.addClass(ProductVersionRestTest.class);
+        war.addClass(ProductVersionRestClient.class);
+        war.addClass(AbstractRestClient.class);
+        war.addClass(IntegrationTestEnv.class);
+        war.addClass(RestResponse.class);
+        war.addPackage(AuthUtils.class.getPackage());
+
         logger.info(enterpriseArchive.toString(true));
         return enterpriseArchive;
     }
@@ -56,6 +84,16 @@ public class ProductVersionRestTest {
         if(productVersionRestClient == null) {
             productVersionRestClient = new ProductVersionRestClient();
         }
+    }
+
+    @Test
+    @InSequence(-1)
+    public void shouldAddtoDB() {
+        BuildConfigurationSet bcset1 = BuildConfigurationSet.Builder.newBuilder().name("product-version-test-bcset-1").build();
+        BuildConfigurationSet bcset2 = BuildConfigurationSet.Builder.newBuilder().name("product-version-test-bcset-2").build();
+
+        buildConfigurationSetRepository.save(bcset1);
+        buildConfigurationSetRepository.save(bcset2);
     }
 
     @Test
