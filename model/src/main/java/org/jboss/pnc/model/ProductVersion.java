@@ -72,7 +72,7 @@ public class ProductVersion implements GenericEntity<Integer> {
     @Index(name="idx_productversion_product")
     private Product product;
 
-    @OneToMany(mappedBy = "productVersion", cascade = { CascadeType.ALL }, orphanRemoval = true)
+    @OneToMany(mappedBy = "productVersion")
     private Set<BuildConfigurationSet> buildConfigurationSets;
 
     @OneToMany(mappedBy = "productVersion")
