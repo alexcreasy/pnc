@@ -64,17 +64,10 @@ public class ProductVersionProvider extends AbstractProvider<ProductVersion, Pro
     public void updateBuildConfigurationSets(Integer id, List<BuildConfigurationSetRest> buildConfigurationSetRests) throws ValidationException {
         ProductVersionRest version = getSpecific(id);
         version.setBuildConfigurationSets(buildConfigurationSetRests);
-        validateBeforeUpdating(id, version);
+
+        // TODO validate before saving
+
         repository.save(toDBModel().apply(version));
-
-
-
-//        getSpecific(id).
-//        ProductVersion version = toDBModel().apply(getSpecific(id));
-//        Set<BuildConfigurationSet> bcSets = buildConfigurationSetRests.stream().map(set -> set.toDBEntityBuilder().build()).collect(Collectors.toSet());
-//        version.setBuildConfigurationSets(bcSets);
-//        repository.save(version);
-
     }
 
     @Override
