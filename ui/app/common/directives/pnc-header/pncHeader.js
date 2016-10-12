@@ -15,9 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
-
-(function() {
+(function () {
+  'use strict';
 
   var module = angular.module('pnc.common.directives');
 
@@ -52,9 +51,13 @@
         });
 
         transclude(scope.$new(), function(clone) {
-          element.find('.btn-group').append(clone.filter('pnc-header-buttons'));
-          element.find('pnc-header-buttons').addClass('btn-group');
-          element.find('pnc-header-buttons').find('button').removeClass('btn-lg btn-sm').addClass('btn-lg');
+          if (attrs.toolbarMode) {
+            element.find('.pnc-header-toolbar').append(clone.filter('pnc-header-buttons'));
+          } else {
+            element.find('.pnc-header-toolbar').append(clone.filter('pnc-header-buttons').addClass('btn-group'));
+          }
+
+          element.find('.pnc-header-toolbar').find('button').removeClass('btn-lg btn-sm').addClass('btn-lg');
         });
 
         if (subHeader) {
@@ -62,7 +65,7 @@
             return '<h3>' + angular.element(this).html() + '</h3>';
           });
 
-          element.find('pnc-header-buttons').find('button').removeClass('btn-lg btn-sm').addClass('btn');
+          element.find('.pnc-header-toolbar').find('button').removeClass('btn-lg btn-sm').addClass('btn');
         }
       }
     };
