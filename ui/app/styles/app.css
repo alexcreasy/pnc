@@ -208,3 +208,17 @@ label.required::before {
 .panel.pnc-data-panel .filter-pf .toolbar-pf-results > .col-sm-12 {
   min-height: 41px;
 }
+
+/*.panel.panel-default.pnc-panel {
+  border-left: 0;
+  border-right: 0;
+  border-color: #f1f1f1;
+}*/
+
+.panel.panel-default.pnc-panel .control-label {
+  text-align: left;
+}
+
+.panel.panel-default.pnc-panel .control-label:after {
+  content: ":";
+}

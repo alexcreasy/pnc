@@ -17,6 +17,23 @@
     limitations under the License.
 
 -->
-<div class="push-down">
-  <pnc-builds-panel pnc-configuration-id="sidebarCtrl.buildConfigurationId"></pnc-builds-panel>
-</div>
+<div style="margin-top: 40px;" class="row example-container">
+  <div class="col-md-12">
+  <!-- <pnc-builds-panel pnc-configuration-id="sidebarCtrl.buildConfigurationId"></pnc-builds-panel> -->
+    <accordion close-others="false">
+      <accordion-group is-open="true" heading="Recent Builds">
+        Recent Builds
+      </accordion-group>
+      <accordion-group is-open="false" heading="Dependencies">
+        Dependencies
+      </accordion-group>
+      <accordion-group is-open="false" heading="Build Groups">
+        Product Versions
+      </accordion-group>
+      <accordion-group is-open="false" heading="Product Versions">
+        Product Versions
+      </accordion-group>
+    </accordion>
+    </div>
+  </div>
+  
