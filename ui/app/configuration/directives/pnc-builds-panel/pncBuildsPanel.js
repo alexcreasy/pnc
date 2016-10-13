@@ -36,6 +36,8 @@
   module.directive('pncBuildsPanel', [
     function () {
 
+      var DEFAULT_TEMPLATE = 'configuration/directives/pnc-builds-panel/pnc-builds-panel.html';
+
       function PncBuildsPanelCtrl($log, $scope, BuildsDAO, eventTypes) {
         $scope.page = BuildsDAO.getByConfiguration({
           id: $scope.pncConfigurationId
@@ -54,7 +56,9 @@
 
       return {
         restrict: 'E',
-        templateUrl: 'configuration/directives/pnc-builds-panel/pnc-builds-panel.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.pncTemplate || DEFAULT_TEMPLATE;
+        },
         scope: {
           pncConfigurationId: '='
         },

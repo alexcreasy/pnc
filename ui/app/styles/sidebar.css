@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 .sidebar {
   position: static;
 }
 @media (min-width: 768px) {
   .sidebar {
     position: absolute;
-    top: 111px;
+    top: 110px;
     bottom: 60px;
   }
   .sidebar.sidebar-right {

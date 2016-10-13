@@ -15,9 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
-
-(function() {
+(function () {
+  'use strict';
 
   var module = angular.module('pnc.configuration');
 
@@ -51,7 +50,7 @@
       linkedProductVersions, dependencies, configurations, configurationSetList, linkedConfigurationSetList) {
 
       var that = this;
-
+      $log.debug('dependencies == %O', dependencies);
       that.configuration = configurationDetail;
       that.environment = configurationDetail.environment;
       that.environments = environments;
@@ -64,9 +63,9 @@
       };
 
       // Selection of dependencies
-      that.dependencies = {
+      that.dependencies = dependencies;/*{
         selected: dependencies
-      };
+      };*/
 
       // Selection of environments
       that.environmentSelection = {
@@ -177,12 +176,14 @@
   module.controller('ConfigurationSidebarController', [
     '$log',
     '$stateParams',
-    function($log, $stateParams) {
+    'dependencies',
+    function($log, $stateParams, dependencies) {
       this.buildConfigurationId = $stateParams.configurationId;
       this.filterBy = {
         buildConfigurationId: $stateParams.configurationId
       };
-
+      this.dependencies = dependencies;
+      $log.debug('Sidebar:: dependencies = %O', dependencies);
     }
   ]);
 

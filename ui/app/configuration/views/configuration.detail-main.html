@@ -131,7 +131,7 @@
 
         <div class="panel panel-default pnc-panel">
           <div class="panel-heading">
-            <strong>Build Info</strong>
+            <strong>Build Parameters</strong>
           </div>
           <div class="panel-body">
 
@@ -208,6 +208,27 @@
           </div>
         </div>
       </form>
+
+    </div>
+  </div> <!-- /row -->
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#">Dependencies</a></li>
+        <li><a href="#">Build Groups</a></li>
+        <li><a href="#">Product Versions</a></li>
+        <li><a href="#">Revisions</a></li>
+      </ul>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="list-group">
+        <li class="list-group-item" ng-repeat="bc in detailCtrl.dependencies">
+          <a href ui-sref="configuration.detail.show({ configurationId: bc.id })">{{ bc.project.name }}: {{ bc.name }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
 </div>

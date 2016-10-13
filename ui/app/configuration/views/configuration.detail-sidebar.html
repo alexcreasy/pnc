@@ -17,15 +17,46 @@
     limitations under the License.
 
 -->
+<style>
+accordion table.table {
+  margin-bottom: 0;
+}
+
+accordion table.table tr:first-child > td {
+  border-top: 0;
+}
+
+accordion .remove-padding {
+  margin: -6px -20px
+}
+
+accordion ul.list-group {
+  margin-bottom: 0;
+}
+
+accordion ul.list-group li.list-group-item:first-child {
+  border-top: 0;
+}
+
+</style>
 <div style="margin-top: 40px;" class="row example-container">
   <div class="col-md-12">
   <!-- <pnc-builds-panel pnc-configuration-id="sidebarCtrl.buildConfigurationId"></pnc-builds-panel> -->
     <accordion close-others="false">
       <accordion-group is-open="true" heading="Recent Builds">
-        Recent Builds
+        <div class="remove-padding">
+          <pnc-builds-panel pnc-configuration-id="sidebarCtrl.buildConfigurationId"
+                            pnc-template="configuration/directives/pnc-builds-panel/pnc-builds-panel-lite.html"></pnc-builds-panel>
+        </div>
       </accordion-group>
       <accordion-group is-open="false" heading="Dependencies">
-        Dependencies
+        <div class="remove-padding">
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="bc in sidebarCtrl.dependencies">
+              <a href ui-sref="configuration.detail.show({ configurationId: bc.id })">{{ bc.name }}</a>
+            </li>
+          </ul>
+        </div>
       </accordion-group>
       <accordion-group is-open="false" heading="Build Groups">
         Product Versions
@@ -36,4 +67,3 @@
     </accordion>
     </div>
   </div>
-  
