@@ -54,6 +54,7 @@
           </li>
           <li><a ng-click="detailSetCtrl.linkWithProductVersion()" ng-hide="detailSetCtrl.set.productVersionId" href><i class="fa fa-link" aria-hidden="true"></i> Link With Product Version</a></li>
           <li><a ng-show="detailSetCtrl.set.productVersionId" pnc-confirm-click="detailSetCtrl.unlinkFromProductVersion()" pnc-confirm-message="{{ 'Are you sure you want to unlink ' + detailSetCtrl.set.name + ' from its product version?' }}" href><i class="fa fa-chain-broken" aria-hidden="true"></i> Unlink From Product Version</a></li>
+          <li><a ng-click="detailSetCtrl.editConfigurations()" href><i class="pficon pficon-edit"></i>&nbsp;Add / Remove Build Configs</a></li>
         </ul>
       </div>
     </pnc-header-buttons>

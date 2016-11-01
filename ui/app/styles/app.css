@@ -179,11 +179,43 @@ label.required::before {
   display: none;
 }
 
+.modal-xl {
+  width: auto;
+  margin: 30px 10px;
+}
+
 @media (min-width: 1400px) {
   .modal-xl {
-      width: 1260px;
+    width: 1260px;
+    margin: 30px auto;
   }
 }
+
+.border-before:before {
+  background: #d0d0d0;
+  bottom: 0;
+  content: " ";
+  left: 0;
+  position: absolute;
+  width: 1px;
+  top: 0;
+}
+
+/*.border-between > [class*='col-']:before {
+ background: #e3e3e3;
+ bottom: 0;
+ content: " ";
+ left: 0;
+ position: absolute;
+ width: 1px;
+ top: 0;
+}
+.border-between > [class*='col-']:first-child:before {
+ display: none;
+}*/
+
+
+
 
 .search-pf-input-group > .dropdown-menu {
   width: 100%;

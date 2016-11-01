@@ -288,6 +288,15 @@
           self.productVersion = null;
         });
       };
+
+      self.editConfigurations = function () {
+        var modal = modalSelectService.openForBuildConfigs({
+          title: 'yo sup'
+        });
+        modal.then(function (result) {
+          $log.debug('Modal closed with result: %O', result);
+        });
+      };
     }
   ]);
 
