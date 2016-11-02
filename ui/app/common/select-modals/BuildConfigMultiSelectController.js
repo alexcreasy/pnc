@@ -22,18 +22,38 @@
   angular.module('pnc.common.select-modals').controller('BuildConfigMultiSelectController', [
     '$log',
     'modalConfig',
-    function ($log, modalConfig) {
+    'Project',
+    'rsqlQuery',
+    function ($log, modalConfig, Project, rsqlQuery) {
       var ctrl = this;
 
       ctrl.title = modalConfig.title;
 
-      ctrl.save = function () {
-        ctrl.$close(ctrl.selected);
-      };
+      ctrl.save = save;
+      ctrl.close = close;
+      ctrl.search = search;
 
-      ctrl.close = function () {
+
+
+      function save() {
+        ctrl.$close(ctrl.selected);
+      }
+
+      function close() {
         ctrl.$dismiss();
-      };
+      }
+
+      function search($viewValue) {
+        var q;
+
+        $viewValue.replace('*', '%');
+        $viewValue.replace('?', '_');
+
+        q = rsqlQuery().where('name').like($viewValue + '%').end();
+
+        return Project.query({ q: q }).$promise.then((p) => p.data );
+
+      }
     }
   ]);
 
