@@ -90,12 +90,14 @@
          return asyncModal({
            animation: true,
            size: 'xl',
-           templateUrl: 'common/select-modals/build-config-multi-select.html',
-           controller: 'BuildConfigMultiSelectController',
+           template: '<build-config-multi-select modal-ctrl="ctrl"></build-config-multi-select>',
+           controller: ['config', function (config) {
+             this.config = config;
+           }],
            controllerAs: 'ctrl',
            bindToController: true,
            resolve: {
-             modalConfig: function () {
+             config: function () {
                return $q.when(config);
              }
            }

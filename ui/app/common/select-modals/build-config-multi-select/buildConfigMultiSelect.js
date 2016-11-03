@@ -15,44 +15,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 (function () {
   'use strict';
 
-  var module = angular.module('pnc.common.pnc-client.resources');
+  angular.module('pnc.common.select-modals').component('buildConfigMultiSelect', {
+    bindings: {
+      modalCtrl: '<'
+    },
+    templateUrl: 'common/select-modals/build-config-multi-select/build-config-multi-select.html',
+    controller: Controller
+  });
 
-  module.value('PROJECT_PATH', '/projects/:id');
+  function Controller() {
+    var $ctrl = this;
 
-  /**
-   *
-   * @author Alex Creasy
-   */
-  module.factory('Project', [
-    '$resource',
-    'restConfig',
-    'PROJECT_PATH',
-    function($resource, restConfig, PROJECT_PATH) {
-      var ENDPOINT = restConfig.getPncUrl() + PROJECT_PATH;
+    // API
+    $ctrl.title = $ctrl.modalCtrl.config.title;
+    $ctrl.buildConfigs = $ctrl.modalCtrl.config.buildConfigs;
 
-      var resource = $resource(ENDPOINT, {
-        id: '@id'
-      }, {
-        query: {
-          method: 'GET',
-          isPaged: true,
-        },
-        update: {
-          method: 'PUT'
-        },
-        queryBuildConfigurations: {
-          method: 'GET',
-          url: ENDPOINT + '/build-configurations',
-          isPaged: true
-        }
-      });
+    $ctrl.save = save;
+    $ctrl.cancel = cancel;
+    //
 
-      return resource;
+    function save(buildConfigs) {
+      $ctrl.modalCtrl.$close(buildConfigs);
     }
 
-  ]);
+    function cancel() {
+      $ctrl.modalCtrl.$dismiss();
+    }
+  }
 
 })();

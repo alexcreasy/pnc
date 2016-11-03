@@ -30,8 +30,8 @@
                           typeahead-on-select="$ctrl.select($item, $model, $label)"
                           typeahead-wait-ms="300"
                           typeahead-loading="$ctrl.isLoading"
-                          ng-focus="$ctrl.ngModel.$setTouched()"
-                          ng-change="$ctrl.ngModel.$setDirty()">
+                          ng-focus="$ctrl.setTouched()"
+                          ng-change="$ctrl.setDirty()">
       <button ng-if="$ctrl.isLoading" type="button" class="clear" aria-hidden="true"><span class="spinner spinner-xs spinner-inline"></span></button>
       <button ng-if="!$ctrl.isLoading && $ctrl.input" type="button" class="clear" aria-hidden="true" ng-click="$ctrl.input = ''"><span class="pficon pficon-close"></span></button>
     </div>

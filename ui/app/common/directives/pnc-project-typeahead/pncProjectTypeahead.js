@@ -22,7 +22,7 @@
   angular.module('pnc.common.directives').component('pncProjectTypeahead', {
     bindings: {
       onSelect: '&',
-      input: '=ngModel'
+      input: '=?ngModel'
     },
     require: {
       ngModel: '?ngModel'
@@ -38,15 +38,18 @@
 
     $ctrl.search = search;
     $ctrl.select = select;
+    $ctrl.setDirty = setDirty;
+    $ctrl.setTouched = setTouched;
 
     // --------------------
 
 
-    // Internal
     $ctrl.$onInit = function () {
-      $ctrl.ngModel.$validators.isValidProject = function (modelValue, viewValue) {
-        return !viewValue || (angular.isObject(modelValue) && modelValue.id);
-      };
+      if ($ctrl.ngModel) {
+        $ctrl.ngModel.$validators.isValidProject = function (modelValue, viewValue) {
+          return !viewValue || (angular.isObject(modelValue) && modelValue.id);
+        };
+      }
     };
 
     function search($viewValue) {
@@ -62,6 +65,18 @@
 
     function select($item) {
       $ctrl.onSelect()($item);
+    }
+
+    function setDirty() {
+      if ($ctrl.ngModel) {
+        $ctrl.ngModel.$setDirty();
+      }
+    }
+
+    function setTouched() {
+      if ($ctrl.ngModel) {
+        $ctrl.ngModel.$setTouched();
+      }
     }
   }
 
