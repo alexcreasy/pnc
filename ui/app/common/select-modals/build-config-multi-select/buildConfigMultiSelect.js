@@ -43,8 +43,8 @@
     // --------------------
 
 
-    function save(buildConfigs) {
-      $ctrl.modalCtrl.$close(buildConfigs);
+    function save() {
+      $ctrl.modalCtrl.$close($ctrl.buildConfigs);
     }
 
     function cancel() {
