@@ -48,6 +48,10 @@
           url: ENDPOINT + '/build-configurations',
           method: 'GET',
           isPaged: true
+        },
+        updateBuildConfigurations: {
+          url: ENDPOINT + '/build-configurations',
+          method: 'PUT'
         }
       });
 

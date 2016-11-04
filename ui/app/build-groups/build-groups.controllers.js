@@ -148,6 +148,7 @@
   module.controller('ConfigurationSetDetailController', [
     '$log',
     '$state',
+    '$scope',
     'BuildRecordDAO',
     'BuildConfigurationSetDAO',
     'ProductVersionDAO',
@@ -158,8 +159,10 @@
     'productVersion',
     'previousState',
     'modalSelectService',
-    function($log, $state, BuildRecordDAO, BuildConfigurationSetDAO, ProductVersionDAO, ProductVersion,
-        configurationSetDetail, configurations, records, productVersion, previousState, modalSelectService) {
+    'BuildConfigurationSet',
+    function($log, $state, $scope, BuildRecordDAO, BuildConfigurationSetDAO, ProductVersionDAO, ProductVersion,
+        configurationSetDetail, configurations, records, productVersion, previousState, modalSelectService,
+        BuildConfigurationSet) {
 
       var self = this;
       self.set = configurationSetDetail;
@@ -295,7 +298,14 @@
           buildConfigs: self.configurations
         });
         modal.result.then(function (result) {
-          $log.debug('Modal closed with result: %O', result);
+          $log.debug('Selected Build Configs: %O', result);
+          BuildConfigurationSet.updateBuildConfigurations({ id: self.set.id }, result).$promise.then(function () {
+            BuildConfigurationSet.queryBuildConfigurations({ id: self.set.id }).$promise.then(function (result) {
+              $scope.$applyAsync(function () {
+                self.configurations = result;
+              });
+            });
+          });
         });
       };
     }
