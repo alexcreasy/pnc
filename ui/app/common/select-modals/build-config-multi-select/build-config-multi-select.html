@@ -25,45 +25,11 @@
     <div class="row">
       <div class="col-xs-6">
         <h4>Left column</h4>
-        <build-config-select on-select="$ctrl.save(buildConfigs)"></build-config-select>
-        <!-- <form role="form" class="search-pf has-button">
-          <div class="form-group has-clear">
-            <div class="search-pf-input-group">
-              <label for="search1" class="sr-only">Search</label>
-              <input type="text"  name="selectGroup"
-                                  class="form-control combobox"
-                                  id="select-build-group"
-                                  placeholder="Enter build group name to search..."
-                                  autocomplete="off"
-                                  ng-model="$ctrl.input"
-                                  typeahead="group as group.name for group in $ctrl.search($viewValue)"
-                                  typeahead-on-select="$ctrl.onSelect($item, $model, $label)"
-                                  typeahead-wait-ms="300"
-                                  typeahead-loading="$ctrl.isLoading">
-              <button ng-if="$ctrl.isLoading" type="button" class="clear" aria-hidden="true"><span class="spinner spinner-xs spinner-inline"></span></button>
-              <button ng-if="!$ctrl.isLoading && $ctrl.input.length > 0" type="button" class="clear" aria-hidden="true" ng-click="$ctrl.input = ''"><span class="pficon pficon-close"></span></button>
-            </div>
-          </div>
-          <div class="form-group">
-            <button class="btn btn-default" type="button"><span class="fa fa-search"></span></button>
-          </div>
-        </form> -->
+        <add-build-config-widget on-add="$ctrl.onAdd(buildConfig)"></add-build-config-widget>
       </div>
       <div class="col-xs-6 border-before">
         <h4>Right Column</h4>
-        <!-- <div pf-list-view class="list-group list-view-pf list-view-pf-view"
-                          id="build-group-list"
-                          config="$ctrl.config"
-                          items="$ctrl.selected"
-                          action-buttons="$ctrl.actionButtons">
-
-            <div class="list-view-pf-description">
-              <div class="list-group-item-heading">
-                {{item.name}}
-            </div>
-          </div>
-        </div>
-      </div> -->
+        <remove-build-configs-widget build-configs="$ctrl.buildConfigs" on-remove="$ctrl.onRemove(buildConfig)"></remove-build-configs-widget>
     </div>
     </div>
     </div>

@@ -30,13 +30,18 @@
   function Controller() {
     var $ctrl = this;
 
-    // API
-    $ctrl.title = $ctrl.modalCtrl.config.title;
-    $ctrl.buildConfigs = $ctrl.modalCtrl.config.buildConfigs;
+    // -- Controller API --
 
     $ctrl.save = save;
     $ctrl.cancel = cancel;
-    //
+    $ctrl.onRemove = onRemove;
+    $ctrl.onAdd = onAdd;
+
+    $ctrl.title = $ctrl.modalCtrl.config.title;
+    $ctrl.buildConfigs = $ctrl.modalCtrl.config.buildConfigs;
+
+    // --------------------
+
 
     function save(buildConfigs) {
       $ctrl.modalCtrl.$close(buildConfigs);
@@ -44,6 +49,24 @@
 
     function cancel() {
       $ctrl.modalCtrl.$dismiss();
+    }
+
+    function getBcIndex(buildConfig) {
+      return $ctrl.buildConfigs.findIndex(function (x) { return buildConfig.id === x.id; });
+    }
+
+    function onAdd(buildConfig) {
+      if (getBcIndex(buildConfig) < 0) {
+        $ctrl.buildConfigs.push(buildConfig);
+      }
+    }
+
+    function onRemove(buildConfig) {
+      var index = getBcIndex(buildConfig);
+
+      if (index > -1) {
+        $ctrl.buildConfigs.splice(index, 1);
+      }
     }
   }
 

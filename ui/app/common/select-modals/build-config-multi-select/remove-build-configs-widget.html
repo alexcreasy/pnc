@@ -18,18 +18,15 @@
 
 -->
 <div>
-  <pnc-project-typeahead on-select="$ctrl.select"></pnc-project-typeahead>
-  <div>
-    <div pf-list-view class="list-group list-view-pf list-view-pf-view"
-                      id="build-group-list"
-                      config="$ctrl.config"
-                      items="ctrl.buildConfigs"
-                      action-buttons="ctrl.actionButtons">
+  <div pf-list-view class="list-group list-view-pf list-view-pf-view"
+                    id="remove-build-groups-{{::$id}}"
+                    config="$ctrl.config"
+                    items="$ctrl.buildConfigs"
+                    action-buttons="$ctrl.actionButtons">
 
-        <div class="list-view-pf-description">
-          <div class="list-group-item-heading">
-            {{ item.name }}
-        </div>
+      <div class="list-view-pf-description">
+        <div class="list-group-item-heading">
+          {{ item.name }}
       </div>
     </div>
   </div>

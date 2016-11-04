@@ -19,69 +19,61 @@
 (function () {
   'use strict';
 
-  angular.module('pnc.common.select-modals').component('buildConfigSelect', {
+  angular.module('pnc.common.select-modals').component('addBuildConfigWidget', {
     bindings: {
-      project: '<'
+      project: '<',
+      onAdd: '&'
     },
-    templateUrl: 'common/select-modals/build-config-multi-select/build-config-select.html',
+    templateUrl: 'common/select-modals/build-config-multi-select/add-build-config-widget.html',
     controller: ['Project', Controller]
   });
+
 
   function Controller(Project) {
     var $ctrl = this;
 
     // -- Controller API --
 
-    $ctrl.config = config;
-    $ctrl.actionButtons = actionButtons;
-    $ctrl.buildConfigs = [];
     $ctrl.select = select;
+    $ctrl.add = add;
 
-    // --------------------
+    $ctrl.buildConfigs = [];
 
-
-    // $ctrl.$onInit = function () {
-    //   if ($ctrl.project && $ctrl.project.id) {
-    //     fetchBuildConfigs();
-    //   }
-    // };
-    //
-    // $ctrl.onChanges = function (changes) {
-    //   if (changes.project) {
-    //     fetchBuildConfigs();
-    //   }
-    // };
-
-
-    var config = {
+    $ctrl.config = {
      selectItems: false,
      multiSelect: false,
      dblClick: false,
      selectionMatchProp: 'id',
      showSelectBox: false,
     };
-
-    var actionButtons = [
+    $ctrl.actionButtons = [
       {
         name: 'Add',
         title: 'Add this Build Config',
+        include: 'button-add-right', // <-- Template for the action button -- defined within this component's template.
         actionFn: function (action, object) {
-          if (action.name === 'Add') {
-            $ctrl.add(object);
-          }
+          $ctrl.add(object);
         }
       }
     ];
 
-    function select(item) {
-      fetchBuildConfigs(item.id);
-    }
+    // --------------------
+
 
     function fetchBuildConfigs(projectId) {
       Project.queryBuildConfigurations({ id: projectId }).$promise.then(function (page) {
         $ctrl.buildConfigs = page.data || [];
       });
     }
+
+    function select(item) {
+      fetchBuildConfigs(item.id);
+    }
+
+    function add(buildConfig) {
+      $ctrl.onAdd({ buildConfig: buildConfig});
+    }
+
   }
 
 })();

@@ -291,9 +291,10 @@
 
       self.editConfigurations = function () {
         var modal = modalSelectService.openForBuildConfigs({
-          title: 'yo sup'
+          title: 'Add / Remove Build Configs from ' + self.set.name,
+          buildConfigs: self.configurations
         });
-        modal.then(function (result) {
+        modal.result.then(function (result) {
           $log.debug('Modal closed with result: %O', result);
         });
       };

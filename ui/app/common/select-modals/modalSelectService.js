@@ -90,11 +90,11 @@
          return asyncModal({
            animation: true,
            size: 'xl',
-           template: '<build-config-multi-select modal-ctrl="ctrl"></build-config-multi-select>',
+           template: '<build-config-multi-select modal-ctrl="$ctrl"></build-config-multi-select>',
            controller: ['config', function (config) {
              this.config = config;
            }],
-           controllerAs: 'ctrl',
+           controllerAs: '$ctrl',
            bindToController: true,
            resolve: {
              config: function () {
