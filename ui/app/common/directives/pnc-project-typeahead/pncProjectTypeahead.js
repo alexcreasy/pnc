@@ -55,9 +55,6 @@
     function search($viewValue) {
       var q;
 
-      $viewValue.replace('*', '%');
-      $viewValue.replace('?', '_');
-
       q = rsqlQuery().where('name').like($viewValue + '%').end();
 
       return Project.query({ q: q }).$promise.then(function (page) { return page.data; });
