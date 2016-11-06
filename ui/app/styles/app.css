@@ -229,3 +229,7 @@ label.required::before {
   max-width: 250px;
   margin-left: 1em;
 }
+
+.dropdown-kebab-pf > .dropdown-menu-right {
+  margin-right: 10px;
+}
