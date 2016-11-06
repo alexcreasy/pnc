@@ -22,17 +22,25 @@
 </script>
 
 <div>
-  <pnc-project-typeahead on-select="$ctrl.select"></pnc-project-typeahead>
-  <div>
-    <div pf-list-view class="list-group list-view-pf list-view-pf-view"
-                      id="add-build-groups-{{::$id}}"
-                      config="$ctrl.config"
-                      items="$ctrl.buildConfigs"
-                      action-buttons="$ctrl.actionButtons">
+  <div class="row">
+    <div class="col-xs-12">
+      <pnc-project-typeahead on-select="$ctrl.select"></pnc-project-typeahead>
+      <span id="helpBlock" class="help-block">Begin typing to select a Project, then select the desired Build Config from the list below.</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div pf-list-view class="list-group list-view-pf list-view-pf-view"
+                        id="add-build-groups-{{::$id}}"
+                        config="$ctrl.config"
+                        items="$ctrl.buildConfigs"
+                        action-buttons="$ctrl.actionButtons"
+                        ng-if="$ctrl.buildConfigs.length > 0">
 
-        <div class="list-view-pf-description">
-          <div class="list-group-item-heading">
-            {{ item.name }}
+          <div class="list-view-pf-description">
+            <div class="list-group-item-heading">
+              {{ item.name }}
+          </div>
         </div>
       </div>
     </div>

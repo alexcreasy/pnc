@@ -22,7 +22,8 @@
                     id="remove-build-groups-{{::$id}}"
                     config="$ctrl.config"
                     items="$ctrl.buildConfigs"
-                    action-buttons="$ctrl.actionButtons">
+                    action-buttons="$ctrl.actionButtons"
+                    ng-if="$ctrl.buildConfigs.length > 0">
 
       <div class="list-view-pf-description">
         <div class="list-group-item-heading">
@@ -30,4 +31,5 @@
       </div>
     </div>
   </div>
+  <p ng-if="$ctrl.buildConfigs.length === 0"><em>No Build Configs selected</em></p>
 </div>
