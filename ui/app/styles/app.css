@@ -224,3 +224,8 @@ label.required::before {
 .panel.pnc-data-panel .filter-pf .toolbar-pf-results > .col-sm-12 {
   min-height: 41px;
 }
+
+.toolbar-search-right {
+  max-width: 250px;
+  margin-left: 1em;
+}
