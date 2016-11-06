@@ -38,7 +38,7 @@
     $ctrl.onAdd = onAdd;
 
     $ctrl.title = $ctrl.modalCtrl.config.title;
-    $ctrl.buildConfigs = $ctrl.modalCtrl.config.buildConfigs;
+    $ctrl.buildConfigs = angular.copy($ctrl.modalCtrl.config.buildConfigs);
 
     // --------------------
 
