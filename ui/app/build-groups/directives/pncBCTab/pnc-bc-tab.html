@@ -17,21 +17,34 @@
     limitations under the License.
 
 -->
-<div>
-  <div class="btn-group pull-right">
-    <button type="button" class="btn btn-lg btn-default" tooltip="Add an existing Build Config" tooltip-popup-delay="2500" tooltip-placement="top" tooltip-append-to-body="true" ui-sref="build-groups.add-configuration({ configurationSetId: buildConfigurationSet.id })">
-      <i class="fa fa-file-text-o"></i> Add
-    </button>
-    <button type="button" class="btn btn-lg btn-default disabled" tooltip="Create a new Build Config" tooltip-popup-delay="2500" tooltip-placement="top" tooltip-append-to-body="true">
-      <i class="fa fa-file-text-o"></i> Create
-    </button>
+<style>
+.max-width-250 {
+  max-width: 250px;
+  margin-left: 1em;
+}
+.margin-top-10 {
+  margin-top: 10px;
+}
+</style>
+<div class="row margin-top-10">
+  <div class="col-md-12">
+
+    <div class="max-width-250 pull-right">
+      <pnc-search-field page="page" text="build configs"></pnc-search-field>
+    </div>
+
+    <div class="btn-group pull-right">
+      <button type="button" class="btn btn-default" tooltip="Add an existing Build Config" tooltip-popup-delay="2500" tooltip-placement="top" tooltip-append-to-body="true" ui-sref="build-groups.add-configuration({ configurationSetId: buildConfigurationSet.id })">
+        <i class="fa fa-file-text-o"></i> Add
+      </button>
+      <button type="button" class="btn btn-default disabled" tooltip="Create a new Build Config" tooltip-popup-delay="2500" tooltip-placement="top" tooltip-append-to-body="true">
+        <i class="fa fa-file-text-o"></i> Create
+      </button>
+    </div>
+
   </div>
+</div>
 
-  <br><br><!-- TODO use CSS -->
-
-  <pnc-search-field class="search" page="page" text="build configs"></pnc-search-field>
-
-  <br><br>
 
   <table class="table table-bordered table-striped table-hover">
     <thead>
@@ -55,12 +68,10 @@
       <td>
         <pnc-configuration-build pnc-configuration-id="configuration.id"></pnc-configuration-build>
       </td>
-      <td class="text-center">
-          <span class="btn-group" role="group" aria-label="Action Tools">
-            <button class="btn btn-xs btn-default disabled">Edit</button>
-            <button class="btn btn-xs btn-default" tooltip="Remove Build Configuration from Build Configuration Set" tooltip-popup-delay="2500" tooltip-placement="top" tooltip-append-to-body="true" pnc-confirm-click="remove(configuration.id)" pnc-confirm-message="{{ 'Confirm the removal of Build Configuration: ' + configuration.name +  ' from Build Configuration Set: ' + detailSetCtrl.set.name + ' ?'}}">Remove</button>
-            <button type="button" class="btn btn-xs btn-danger" tooltip="Delete Build Configuration" tooltip-popup-delay="2500" tooltip-placement="top" tooltip-append-to-body="true" pnc-confirm-click="delete(configuration)" pnc-confirm-message="{{ 'Confirm the deletion of Build Configuration: ' + configuration.name + ' ?'}}"><i class="pficon pficon-delete"></i> Delete</button>
-          </span>
+      <td class="td-actions">
+        <div class="btn-group" role="group" aria-label="Item Actions">
+          <button class="btn btn-block btn-default" tooltip="Remove Build Configuration from Build Configuration Set" tooltip-popup-delay="2500" tooltip-placement="top" tooltip-append-to-body="true" pnc-confirm-click="remove(configuration.id)" pnc-confirm-message="{{ 'Confirm the removal of Build Configuration: ' + configuration.name +  ' from Build Configuration Set: ' + detailSetCtrl.set.name + ' ?'}}">Remove</button>
+        </div>
       </td>
     </tr>
     </tbody>
