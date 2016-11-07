@@ -133,7 +133,7 @@
               var params = {
                 configurationSetId: self.configurationSetDetail.id
               };
-              $state.go('build-groups.detail', params, {
+              $state.go('build-groups.detail.build-configs', params, {
                 reload: true,
                 inherit: false,
                 notify: true
@@ -159,10 +159,8 @@
     'productVersion',
     'previousState',
     'modalSelectService',
-    'BuildConfigurationSet',
     function($log, $state, $scope, BuildRecordDAO, BuildConfigurationSetDAO, ProductVersionDAO, ProductVersion,
-        configurationSetDetail, configurations, records, productVersion, previousState, modalSelectService,
-        BuildConfigurationSet) {
+        configurationSetDetail, configurations, records, productVersion, previousState, modalSelectService) {
 
       var self = this;
       self.set = configurationSetDetail;
@@ -229,7 +227,7 @@
         self.set.$update(
         ).then(
           function() {
-            $state.go('build-groups.detail', {
+            $state.go('build-groups.detail.build-configs', {
               configurationSetId: self.set.id
             }, {
               reload: true
@@ -289,23 +287,6 @@
         self.set.productVersionId = null;
         self.set.$update().then(function () {
           self.productVersion = null;
-        });
-      };
-
-      self.editConfigurations = function () {
-        var modal = modalSelectService.openForBuildConfigs({
-          title: 'Add / Remove Build Configs from ' + self.set.name,
-          buildConfigs: self.configurations
-        });
-        modal.result.then(function (result) {
-          $log.debug('Selected Build Configs: %O', result);
-          BuildConfigurationSet.updateBuildConfigurations({ id: self.set.id }, result).$promise.then(function () {
-            BuildConfigurationSet.queryBuildConfigurations({ id: self.set.id }).$promise.then(function (result) {
-              $scope.$applyAsync(function () {
-                self.configurations = result;
-              });
-            });
-          });
         });
       };
     }
