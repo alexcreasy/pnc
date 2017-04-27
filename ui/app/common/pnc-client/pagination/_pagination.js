@@ -18,9 +18,13 @@
 (function () {
   'use strict';
 
+  var _page;
+
   var module = angular.module('pnc.common.pnc-client.pagination', [
     'ngResource'
   ]);
+
+  module.run(['page', function (page) { _page = page; } ]);
 
   module.config([
     '$provide',
@@ -90,7 +94,7 @@
             Resource[action] = function () {
               var response = delegate.apply(delegate, arguments);
 
-              var page = angular.injector(['pnc.common.pnc-client.pagination']).get('page');
+              var page = _page; //angular.injector(['pnc.common.pnc-client.pagination']).get('page');
 
               var p = page({
                 Resource: Resource
