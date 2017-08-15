@@ -1,0 +1,52 @@
+<pf-form-group pf-label="Repository URL">
+  <!-- <div class="input-group">
+    <input type="text" class="form-control" ng-model="$ctrl.scmUrl" ng-model-options="{ debounce: 1000 }" ng-change="$ctrl.checkForRepo($ctrl.scmUrl)">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button">Select</button>
+      </span>
+  </div> -->
+  <input type="text" class="form-control" ng-model="$ctrl.scmUrl" ng-model-options="{ debounce: 1000 }" ng-change="$ctrl.checkForRepo($ctrl.scmUrl)">
+</pf-form-group>
+
+<pf-form-group pf-label="Revision">
+  <input type="text" class="form-control" ng-model="$ctrl.revision">
+</pf-form-group>
+
+<!-- Internal Repository without existing RC -->
+<div class="row">
+  <div ng-if="!ctrl.isLoading() && $ctrl.isRepoInternal($ctrl.scmUrl) && !$ctrl.repo">
+    <div class="alert alert-info">
+      <span class="pficon pficon-info"></span>
+      The URL you have entered points to an <strong>internal</strong> repository. The repository will <strong>not</strong> be created if it does not exist.
+    </div>
+  </div>
+</div>
+
+<!-- External repository that is NOT already synced -->
+<div class="row" ng-if="!$ctrl.isLoading() && !$ctrl.isRepoInternal($ctrl.scmUrl) && !$ctrl.repo">
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">Pre-build Sync
+    </label>
+  </div>
+</div>
+
+<!-- Repository that IS already synced -->
+<div class="row" ng-if="!$ctrl.isLoading() && $ctrl.repo">
+  <div class="alert alert-info">
+    <span class="pficon pficon-info"></span>
+    <p>This {{ $ctrl.isRepoInternal($ctrl.scmUrl) ? 'internal' : 'external' }} repository is already synced. </p>
+    <br>
+    <p>Internal URL: {{ $ctrl.repo.internalUrl }}</p>
+    <p>External URL: {{ $ctrl.repo.externalUrl }}</p>
+    <div class="checkbox ">
+      <label>
+        <input type="checkbox" ng-model="$ctrl.repo.preBuildSyncEnabled" disabled>Pre-build Sync
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="row text-center" ng-show="$ctrl.isLoading()">
+  <span class="spinner spinner-xl spinner-inline"></span>
+</div>
