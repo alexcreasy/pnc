@@ -39,10 +39,7 @@
     function($q, $log, pncNotify, keycloak) {
 
       function defaultSuccessNotification(response) {
-        if (response.config.method !== 'GET') {
-          $log.debug('HTTP response: %O', response);
-          pncNotify.success('Request successful');
-        }
+        angular.noop(response);
       }
 
       function handleError(rejection) {
