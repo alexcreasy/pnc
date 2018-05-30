@@ -42,3 +42,58 @@
    -o-animation: flickerAnimation 3s infinite;
     animation: flickerAnimation 3s infinite;
 }
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes disappear {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade {
+  opacity: 1;
+}
+
+.fade.ng-enter {
+  animation: 0.4s appear;
+}
+
+.fade.ng-leave-active {
+  display: none;
+}
+
+.edititable {
+
+  /* This timing applies on the way OUT */
+  transition-timing-function: ease-in;
+
+  /* Quick on the way out */
+  transition: 0.2s;
+
+  /* Hide thing by pushing it outside by default */
+  transform: translateY(130%);
+
+}
+
+.edit-is-active .edititable {
+
+  /* This timing applies on the way IN */
+  transition-timing-function: ease-out;
+
+  /* A litttttle slower on the way in */
+  transition: 0.25s;
+
+  /* Move into place */
+  transform: translateY(0);
+
+}
