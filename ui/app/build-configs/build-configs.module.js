@@ -59,6 +59,7 @@
       });
 
       $stateProvider.state('projects.detail.build-configs.detail', {
+        abstract: true,
         url: '/{configurationId:int}',
         data: {
            displayName: '{{ configurationDetail.name }}',
@@ -66,9 +67,10 @@
         },
         views: {
           '': {
-            templateUrl: 'build-configs/views/build-configs.detail-main.html',
-            controller: 'ConfigurationDetailController',
-            controllerAs: 'detailCtrl'
+            component: 'pncBuildConfigDetailMain',
+            bindings: {
+              buildConfig: 'configurationDetail'
+            }
           },
           'sidebar': {
             templateUrl: 'build-configs/views/build-configs.detail-sidebar.html',
@@ -77,37 +79,77 @@
           }
         },
         resolve: {
-          configurationDetail: function(BuildConfigurationDAO, $stateParams) {
-            return BuildConfigurationDAO.get({
-              configurationId: $stateParams.configurationId }).$promise;
-          },
-          linkedProductVersions: function(BuildConfigurationDAO, $stateParams) {
-            return BuildConfigurationDAO.getProductVersions({
-              configurationId: $stateParams.configurationId });
-          },
-          dependencies: function(BuildConfigurationDAO, $stateParams) {
-            return BuildConfigurationDAO.getDependencies({
-              configurationId: $stateParams.configurationId });
-          },
-          linkedConfigurationSetList: function(BuildConfigurationDAO, $stateParams) {
-            return BuildConfigurationDAO.getConfigurationSets({
-              configurationId: $stateParams.configurationId });
-          },
+          configurationDetail: [
+            '$stateParams',
+            'BuildConfiguration',
+            function ($stateParams, BuildConfiguration) {
+              return BuildConfiguration.get({ id: $stateParams.configurationId }).$promise;
+            }
+          ]
+        },
+        redirectTo: 'projects.detail.build-configs.detail.default'
+      });
 
-          environments: function(EnvironmentDAO) {
-            return EnvironmentDAO.getAllNotDeprecated().$promise;
-          },
-          products: function(ProductDAO) {
-            return ProductDAO.getAll().$promise;
-          },
-          configurations: function(BuildConfigurationDAO) {
-            return BuildConfigurationDAO.getAll().$promise;
-          },
-          configurationSetList: function(BuildConfigurationSetDAO) {
-            return BuildConfigurationSetDAO.getAll().$promise;
-          }
+      $stateProvider.state('projects.detail.build-configs.detail.default', {
+        url: '',
+        component: 'pncBuildConfigDetailsTab',
+        bindings: {
+          buildConfig: 'configurationDetail'
         }
       });
+
+
+
+
+      // $stateProvider.state('projects.detail.build-configs.detail', {
+      //   url: '/{configurationId:int}',
+      //   data: {
+      //      displayName: '{{ configurationDetail.name }}',
+      //   },
+      //   views: {
+      //     '': {
+      //       templateUrl: 'build-configs/views/build-configs.detail-main.html',
+      //       controller: 'ConfigurationDetailController',
+      //       controllerAs: 'detailCtrl'
+      //     },
+      //     'sidebar': {
+      //       templateUrl: 'build-configs/views/build-configs.detail-sidebar.html',
+      //       controller: 'ConfigurationSidebarController',
+      //       controllerAs: 'sidebarCtrl'
+      //     }
+      //   },
+      //   resolve: {
+      //     configurationDetail: function(BuildConfigurationDAO, $stateParams) {
+      //       return BuildConfigurationDAO.get({
+      //         configurationId: $stateParams.configurationId }).$promise;
+      //     },
+      //     linkedProductVersions: function(BuildConfigurationDAO, $stateParams) {
+      //       return BuildConfigurationDAO.getProductVersions({
+      //         configurationId: $stateParams.configurationId });
+      //     },
+      //     dependencies: function(BuildConfigurationDAO, $stateParams) {
+      //       return BuildConfigurationDAO.getDependencies({
+      //         configurationId: $stateParams.configurationId });
+      //     },
+      //     linkedConfigurationSetList: function(BuildConfigurationDAO, $stateParams) {
+      //       return BuildConfigurationDAO.getConfigurationSets({
+      //         configurationId: $stateParams.configurationId });
+      //     },
+
+      //     environments: function(EnvironmentDAO) {
+      //       return EnvironmentDAO.getAllNotDeprecated().$promise;
+      //     },
+      //     products: function(ProductDAO) {
+      //       return ProductDAO.getAll().$promise;
+      //     },
+      //     configurations: function(BuildConfigurationDAO) {
+      //       return BuildConfigurationDAO.getAll().$promise;
+      //     },
+      //     configurationSetList: function(BuildConfigurationSetDAO) {
+      //       return BuildConfigurationSetDAO.getAll().$promise;
+      //     }
+      //   }
+      // });
 
 
       /*
