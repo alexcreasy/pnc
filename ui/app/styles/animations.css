@@ -60,40 +60,14 @@
   }
 }
 
-.fade {
+.edit-container {
   opacity: 1;
 }
 
-.fade.ng-enter {
-  animation: 0.4s appear;
+.edit-container .ng-enter {
+  animation: 1s appear;
 }
 
-.fade.ng-leave-active {
+.edit-container .ng-leave-active {
   display: none;
-}
-
-.edititable {
-
-  /* This timing applies on the way OUT */
-  transition-timing-function: ease-in;
-
-  /* Quick on the way out */
-  transition: 0.2s;
-
-  /* Hide thing by pushing it outside by default */
-  transform: translateY(130%);
-
-}
-
-.edit-is-active .edititable {
-
-  /* This timing applies on the way IN */
-  transition-timing-function: ease-out;
-
-  /* A litttttle slower on the way in */
-  transition: 0.25s;
-
-  /* Move into place */
-  transform: translateY(0);
-
 }
