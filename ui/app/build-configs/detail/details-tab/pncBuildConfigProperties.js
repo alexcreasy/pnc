@@ -23,7 +23,7 @@
     bindings: {
       buildConfig: '<'
     },
-    templateUrl: 'build-configs/detail/pnc-build-config-properties.html',
+    templateUrl: 'build-configs/detail/details-tab/pnc-build-config-properties.html',
     controller: [Controller]
   });
 
