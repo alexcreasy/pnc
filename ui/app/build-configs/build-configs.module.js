@@ -59,8 +59,8 @@
       });
 
       $stateProvider.state('projects.detail.build-configs.detail', {
-        abstract: true,
         url: '/{configurationId:int}',
+        redirectTo: 'projects.detail.build-configs.detail.default',
         data: {
            displayName: '{{ configurationDetail.name }}',
            title: '{{ configurationDetail.name }} | Build Config'
@@ -86,8 +86,7 @@
               return BuildConfiguration.get({ id: $stateParams.configurationId }).$promise;
             }
           ]
-        },
-        redirectTo: 'projects.detail.build-configs.detail.default'
+        }
       });
 
       $stateProvider.state('projects.detail.build-configs.detail.default', {

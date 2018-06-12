@@ -26,7 +26,7 @@
     require : {
       mainCtrl: '^^pncBuildConfigDetailMain'
     },
-    templateUrl: 'build-configs/detail/pnc-build-config-details-tab.html',
+    templateUrl: 'build-configs/detail/details-tab/pnc-build-config-details-tab.html',
     controller: [Controller]
   });
 

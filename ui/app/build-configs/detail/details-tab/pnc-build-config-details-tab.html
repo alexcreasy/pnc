@@ -17,14 +17,14 @@
     limitations under the License.
 
 -->
-<div class="row">
-  <div class="col-md-12">
-    <div ng-if="!$ctrl.isEditModeActive()" class="fade">
+<div class="row m-t-20">
+  <div class="col-md-12 edit-container">
+    <div ng-if="!$ctrl.isEditModeActive()">
       <pnc-build-config-properties build-config="$ctrl.buildConfig"></pnc-build-config-properties>
     </div>
-    <div ng-if="$ctrl.isEditModeActive()" class="fade">
+    <div ng-if="$ctrl.isEditModeActive()">
       <div>
-        <pnc-create-build-config-general-form ng-model="$ctrl.data"></pnc-create-build-config-general-form>
+        <pnc-build-config-details-editor build-config="$ctrl.buildConfig"></pnc-build-config-details-editor>
       </div>
     </div>
   </div>
