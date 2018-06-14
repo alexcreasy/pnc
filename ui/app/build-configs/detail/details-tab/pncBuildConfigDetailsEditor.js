@@ -95,6 +95,7 @@
       formData.general.environment = buildConfig.environment;
       formData.general.buildType = buildConfig.buildType;
       formData.general.buildScript = buildConfig.buildScript;
+      formData.general.scmRevision = buildConfig.scmRevision;
 
       formData.repositoryConfiguration = buildConfig.repositoryConfiguration;
       formData.buildParameters = buildConfig.genericParameters;
@@ -116,3 +117,5 @@
   }
 
 })();
+
+//
