@@ -106,8 +106,6 @@
     function toBuildConfig(formData, buildConfig) {
       var newBc = angular.extend(angular.copy(buildConfig), formData.general);
 
-      newBc.buildType =  formData.general.buildType.id;
-
       newBc.repositoryConfiguration = formData.repositoryConfiguration;
       newBc.genericParameters = formData.buildParameters;
 
