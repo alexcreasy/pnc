@@ -38,6 +38,7 @@
     // -- Controller API --
 
     $ctrl.isEditModeActive = isEditModeActive;
+    $ctrl.onCancelEdit = onCancelEdit;
 
     // --------------------
 
@@ -47,12 +48,15 @@
     };
 
     function toggleEdit() {
-      console.log('>>> Edit Toggled <<<');
       editMode = !editMode;
     }
 
     function isEditModeActive() {
       return editMode;
+    }
+
+    function onCancelEdit() {
+      toggleEdit();
     }
   }
 
