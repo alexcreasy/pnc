@@ -27,26 +27,16 @@
       mainCtrl: '^^pncBuildConfigDetailMain'
     },
     templateUrl: 'build-configs/detail/details-tab/pnc-build-config-details-tab.html',
-    controller: ['$log', Controller]
+    controller: ['notifyInline', Controller]
   });
 
 
-  function Controller($log) {
+  function Controller(notifyInline) {
     var $ctrl = this,
-        editMode = false;
+        editMode = false,
+        notify;
 
     // -- Controller API --
-
-    $ctrl.notification = {
-      visible: false,
-      type: null,
-      message: null,
-      header: null,
-      persistant: false,
-      remove: function () {
-        $ctrl.notification.visible = false;
-      }
-    };
 
     $ctrl.isEditModeActive = isEditModeActive;
     $ctrl.onCancelEdit = onCancelEdit;
@@ -57,15 +47,8 @@
 
     $ctrl.$onInit = function () {
       $ctrl.mainCtrl.registerOnEdit(toggleEdit);
+      notify = notifyInline('edit-build-config');
     };
-
-    function notify(type, header, message, isPersistant) {
-      $ctrl.notification.type = type;
-      $ctrl.notification.header = header;
-      $ctrl.notification.message = message;
-      $ctrl.notification.persistant = isPersistant;
-      $ctrl.notification.visible = true;
-    }
 
     function toggleEdit() {
       editMode = !editMode;

@@ -32,11 +32,11 @@
        */
       name: '@'
     },
-    templateUrl: 'common/components/pnc-inline-notification/pnc-linline-notification.html',
-    controller: ['notifyInline', Controller]
+    templateUrl: 'common/components/pnc-inline-notification/pnc-inline-notification.html',
+    controller: ['$log', '$scope', 'notifyInline', Controller]
   });
 
-  function Controller(notifyInline) {
+  function Controller($log, $scope, notifyInline) {
     var $ctrl = this;
 
     // -- Controller API --
@@ -60,11 +60,14 @@
     };
 
     function notify(type, header, message, isPersistant) {
-      $ctrl.notification.type = type;
-      $ctrl.notification.header = header;
-      $ctrl.notification.message = message;
-      $ctrl.notification.persistant = isPersistant;
-      $ctrl.notification.visible = true;
+      $log.debug('Inline Notification: %O', arguments);
+      $scope.$applyAsync(function () {
+        $ctrl.notification.type = type;
+        $ctrl.notification.header = header;
+        $ctrl.notification.message = message;
+        $ctrl.notification.persistant = isPersistant;
+        $ctrl.notification.visible = true;
+      });
     }
   }
 })();
