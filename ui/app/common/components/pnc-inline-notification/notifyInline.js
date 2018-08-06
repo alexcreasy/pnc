@@ -45,13 +45,13 @@
         components[name] = notifyFn;
       }
 
-      function notify(component, type, header, message, isPersistant) {
-        components[component](type, header, message, isPersistant);
+      function notify(component, type, header, message, isPersistent) {
+        components[component](type, header, message, isPersistent);
       }
 
       function createNotifier(name) {
         return function (args) {
-          notify(name, args.type, args.header, args.message, args.persistant);
+          notify(name, args.type, args.header, args.message, args.persistent);
         };
       }
 
