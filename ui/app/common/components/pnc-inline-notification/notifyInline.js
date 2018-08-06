@@ -34,8 +34,8 @@
       }
 
       function createNotifier(name) {
-        return function (type, header, message, isPersistant) {
-          notify(name, type, header, message, isPersistant);
+        return function (args) {
+          notify(name, args.type, args.header, args.message, args.isPersistant);
         };
       }
 
