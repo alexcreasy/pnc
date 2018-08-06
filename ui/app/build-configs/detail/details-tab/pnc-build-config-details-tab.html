@@ -19,13 +19,7 @@
 -->
 <div class="row m-t-20">
   <div class="col-md-12 edit-container">
-    <pf-inline-notification ng-if="$ctrl.notification.visible"
-                            pf-notification-type="$ctrl.notification.type"
-                            pf-notification-header="$ctrl.notification.header"
-                            pf-notification-message="$ctrl.notification.message"
-                            pf-notification-persistent="$ctrl.notification.persistant"
-                            pf-notification-remove="$ctrl.notification.remove()">
-    </pf-inline-notification>
+    <pnc-inline-notification name="edit-build-config"></pnc-inline-notification>
 
     <div ng-if="!$ctrl.isEditModeActive()">
       <pnc-build-config-properties build-config="$ctrl.buildConfig"></pnc-build-config-properties>
