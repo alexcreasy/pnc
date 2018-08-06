@@ -15,25 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 (function () {
   'use strict';
 
-  angular.module('pnc.build-configs').component('pncBuildConfigDetailsTab', {
+  /**
+   * Used for displaying inline notifications, see the complementary notifyInline service.
+   * This is a thin abstraction over the patternfly pf-inline-notification component
+   * that, in conjunction with the notifyInline service, removes the majority of
+   * the boilerplate code required to use it.
+   */
+  angular.module('pnc.common.components').component('pncInlineNotification', {
     bindings: {
-      buildConfig: '<'
+      /**
+       * String: The name of the topic for this component. This is used with the
+       * notifyInline service to display a specific inline notification.
+       */
+      name: '@'
     },
-    require : {
-      mainCtrl: '^^pncBuildConfigDetailMain'
-    },
-    templateUrl: 'build-configs/detail/details-tab/pnc-build-config-details-tab.html',
-    controller: ['$log', Controller]
+    templateUrl: 'common/components/pnc-inline-notification/pnc-linline-notification.html',
+    controller: ['notifyInline', Controller]
   });
 
-
-  function Controller($log) {
-    var $ctrl = this,
-        editMode = false;
+  function Controller(notifyInline) {
+    var $ctrl = this;
 
     // -- Controller API --
 
@@ -48,15 +52,11 @@
       }
     };
 
-    $ctrl.isEditModeActive = isEditModeActive;
-    $ctrl.onCancelEdit = onCancelEdit;
-    $ctrl.onSuccess = onSuccess;
-
     // --------------------
 
 
-    $ctrl.$onInit = function () {
-      $ctrl.mainCtrl.registerOnEdit(toggleEdit);
+    $ctrl.$postLink = function () {
+      notifyInline.registerComponent($ctrl.name, notify);
     };
 
     function notify(type, header, message, isPersistant) {
@@ -66,23 +66,5 @@
       $ctrl.notification.persistant = isPersistant;
       $ctrl.notification.visible = true;
     }
-
-    function toggleEdit() {
-      editMode = !editMode;
-    }
-
-    function isEditModeActive() {
-      return editMode;
-    }
-
-    function onCancelEdit() {
-      toggleEdit();
-    }
-
-    function onSuccess(buildConfig) {
-      toggleEdit();
-      notify('success', null, 'Update Successful', true);
-    }
   }
-
 })();
