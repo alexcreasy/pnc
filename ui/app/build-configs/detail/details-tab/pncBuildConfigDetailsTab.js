@@ -27,11 +27,11 @@
       mainCtrl: '^^pncBuildConfigDetailMain'
     },
     templateUrl: 'build-configs/detail/details-tab/pnc-build-config-details-tab.html',
-    controller: [Controller]
+    controller: ['$log', Controller]
   });
 
 
-  function Controller() {
+  function Controller($log) {
     var $ctrl = this,
         editMode = false;
 
@@ -39,6 +39,7 @@
 
     $ctrl.isEditModeActive = isEditModeActive;
     $ctrl.onCancelEdit = onCancelEdit;
+    $ctrl.onSuccess = onSuccess;
 
     // --------------------
 
@@ -56,6 +57,11 @@
     }
 
     function onCancelEdit() {
+      toggleEdit();
+    }
+
+    function onSuccess(buildConfig) {
+      $log.debug('pncBuildConfigDetailsTab::onSuccess \nbuildConfig: %O', buildConfig);
       toggleEdit();
     }
   }
