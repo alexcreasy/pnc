@@ -19,7 +19,7 @@
   'use strict';
 
   /**
-
+   *
    */
   angular.module('pnc.common.components').factory('notifyInline', [
     function () {
@@ -35,7 +35,7 @@
 
       function createNotifier(name) {
         return function (args) {
-          notify(name, args.type, args.header, args.message, args.isPersistant);
+          notify(name, args.type, args.header, args.message, args.persistant);
         };
       }
 
