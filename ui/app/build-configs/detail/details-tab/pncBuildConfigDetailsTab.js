@@ -64,7 +64,11 @@
 
     function onSuccess(buildConfig) {
       toggleEdit();
-      notify('success', null, 'Update Successful', true);
+      notify({
+        type: 'success',
+        message: 'Update Successful',
+        persistent: true
+      });
     }
   }
 
