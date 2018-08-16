@@ -1,0 +1,25 @@
+{
+    "dependencies": [
+        "jquery",
+        "lodash",
+        "angular",
+        "bootstrap",
+        "@uirouter/angularjs",
+        "angular-patternfly",
+        "angular-resource",
+        "angular-animate",
+        "angular-touch",
+        "angular-loading-bar",
+        "angular-ui-bootstrap",
+        "angular-xeditable",
+        "angular-websocket",
+        "patternfly-bootstrap-treeview",
+        "ng-infinite-scroll",
+        "angular-utils-pagination"
+    ],
+    "sourceFiles": [
+        "./src/pnc/**/*.module.js",
+        "./src/pnc/**/!(*.module).js",
+        "./src/index.js"
+    ]
+}

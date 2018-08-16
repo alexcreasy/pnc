@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 
- var pnc = pnc || {}; // jshint ignore: line
+ window.pnc = window.pnc || {};
 
 (function(pnc) {
   'use strict';
+
 
   // Toast notifications to be delivered to the user after UI bootstraps.
   // Push either a string or an object with the following properties, to the desired array:
@@ -104,14 +105,17 @@
              .constant('pncProperties', config)
              .constant('onBootNotifications', onBootNotifications);
 
+      function bootstrap() {
+        angular.bootstrap(document, ['pnc'], { strictDi: true });
+      }
+
       // Bootstrap application
       if (isKeycloakEnabled(config)) {
         keycloak.init(kcInitParams).success(function () {
-          angular.bootstrap(document, ['pnc']);
+          bootstrap();
         });
-
       } else {
-        angular.bootstrap(document, ['pnc']);
+        bootstrap();
       }
 
     });
@@ -152,4 +156,4 @@
 
   loadServerKeycloak(bootstrap, pnc.config);
 
-})(pnc);
+})(window.pnc);
