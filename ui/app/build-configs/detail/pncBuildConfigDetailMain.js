@@ -47,10 +47,10 @@
     };
 
     function clone() {
-      $ctrl.buildConfig.$clone().then(function(result) {
+      $ctrl.buildConfig.$clone().then(function (resp) {
         $state.go('projects.detail.build-configs.detail', {
-          configurationId: result.id,
-          projectId: result.project.id
+          configurationId: resp.id,
+          projectId: resp.project.id
         }, {
           reload: true
         });
@@ -62,6 +62,13 @@
     }
 
     function deleteBc() {
+      $ctrl.buildConfig.$delete().then(function (resp) {
+        $state.go('projects.detail', {
+          configurationId: resp.id        
+        }, {
+          reload: true
+        });
+      });
     }
 
     function registerOnEdit(func) {
