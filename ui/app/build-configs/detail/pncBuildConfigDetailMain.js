@@ -24,11 +24,11 @@
       buildConfig: '<'
     },
     templateUrl: 'build-configs/detail/pnc-build-config-detail-main.html',
-    controller: [Controller]
+    controller: ['$scope', Controller]
   });
 
 
-  function Controller() {
+  function Controller($scope) {
     var $ctrl = this,
         onEditFn;
 
@@ -38,6 +38,7 @@
     $ctrl.edit = edit;
     $ctrl.delete = deleteBc;
     $ctrl.registerOnEdit = registerOnEdit;
+    $ctrl.updateBuildConfig = updateBuildConfig;
 
     // --------------------
 
@@ -57,6 +58,10 @@
 
     function registerOnEdit(func) {
       onEditFn = func;
+    }
+
+    function updateBuildConfig(buildConfig) {
+      $scope.$applyAsync(function () { $ctrl.buildConfig = buildConfig; });
     }
   }
 
