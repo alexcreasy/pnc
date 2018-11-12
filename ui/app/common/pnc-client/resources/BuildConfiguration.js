@@ -54,6 +54,11 @@
           url: ENDPOINT + '/clone',
           successNotification: 'Build Config successfully cloned'
         },
+        getDependencies: {
+          method: 'GET',
+          url: ENDPOINT + '/dependencies',
+          isPaged: true
+        }
       });
 
       resource.getSupportedGenericParameters = function() {
