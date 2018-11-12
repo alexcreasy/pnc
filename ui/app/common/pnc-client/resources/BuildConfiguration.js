@@ -44,7 +44,12 @@
         update: {
           method: 'PUT',
           successNotification: false
-        }
+        },
+        clone: {
+          method: 'POST',
+          url: ENDPOINT + '/clone',
+          successNotification: 'Build Config successfully cloned'
+        },
       });
 
       resource.getSupportedGenericParameters = function() {
