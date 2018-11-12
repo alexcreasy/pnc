@@ -24,11 +24,11 @@
       buildConfig: '<'
     },
     templateUrl: 'build-configs/detail/pnc-build-config-detail-main.html',
-    controller: ['$scope', Controller]
+    controller: ['$scope', '$state', Controller]
   });
 
 
-  function Controller($scope) {
+  function Controller($scope, $state) {
     var $ctrl = this,
         onEditFn;
 
@@ -47,6 +47,14 @@
     };
 
     function clone() {
+      $ctrl.buildConfig.$clone().then(function(result) {
+        $state.go('projects.detail.build-configs.detail', {
+          configurationId: result.id,
+          projectId: result.project.id
+        }, {
+          reload: true
+        });
+      });
     }
 
     function edit() {
