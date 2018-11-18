@@ -28,16 +28,20 @@
       mainCtrl: '^^pncBuildConfigDetailMain'
     },
     templateUrl: 'build-configs/detail/dependencies-tab/pnc-build-config-dependencies-tab.html',
-    controller: [Controller]
+    controller: ['paginator', Controller]
   });
 
 
-  function Controller() {
+  function Controller(paginator) {
     var $ctrl = this;
 
     // -- Controller API --
 
+    $ctrl.page = paginator($ctrl.dependencies);
     $ctrl.displayFields = ['name', 'project', 'buildStatus'];
+
+    $ctrl.onRemove = onRemove;
+    $ctrl.onEdit = onEdit;
 
     // --------------------
 
@@ -45,6 +49,14 @@
     $ctrl.$onInit = function () {
 
     };
+
+    function onRemove(dependency) {
+      return $ctrl.buildConfig.$removeDependency({ dependencyId: dependency.id });
+    }
+
+    function onEdit(dependencies) {
+      console.log('New dependencies: %O', dependencies);
+    }
   }
 
 })();
