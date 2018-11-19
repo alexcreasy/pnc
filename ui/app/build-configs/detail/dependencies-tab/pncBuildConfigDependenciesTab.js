@@ -55,7 +55,11 @@
     }
 
     function onEdit(dependencies) {
-      console.log('New dependencies: %O', dependencies);
+      $ctrl.buildConfig.dependencyIds = dependencies.map(function (dep) {
+        return dep.id;
+      });
+
+      return $ctrl.buildConfig.$update();
     }
   }
 
