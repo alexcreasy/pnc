@@ -23,8 +23,7 @@
     bindings: {
       page: '<',
       onRemove: '&',
-      onEdit: '&',
-      onSearch: '<'
+      onEdit: '&'
     },
     templateUrl: 'build-configs/directives/pnc-related-build-configs-editable-table/pnc-related-build-configs-editable-table.html',
     controller: ['$q', 'modalSelectService', Controller]
@@ -52,10 +51,9 @@
 
 
     function remove(buildConfig) {
-      $q.when($ctrl.onRemove()(buildConfig))
-        .then(function () {
-          $ctrl.page.refresh();
-        });
+      $q.when($ctrl.onRemove()(buildConfig)).then(function () {
+        $ctrl.page.refresh();
+      });
     }
 
     function edit() {
@@ -64,7 +62,7 @@
           if ($ctrl.page.total === 1) {
             return $ctrl.page.data;
           } else {
-            return $ctrl.page.getWithNewSize($ctrl.page.total * $ctrl.page.count).then(function (resp) { return resp.data; }); // This is a hack that needs to be resolved by implementation of proper PATCH endpoint with atomic insert / remove semantics.
+            return $ctrl.page.getWithNewSize($ctrl.page.total * $ctrl.page.count).then(function (resp) { return resp.data; });
           }
         })
         .then(function (buildConfigs) {
@@ -74,33 +72,11 @@
           }).result;
         })
         .then(function (editedBuildConfigs) {
-          $ctrl.onEdit()(editedBuildConfigs);
+          $q.when($ctrl.onEdit()(editedBuildConfigs)).then(function () {
+            $ctrl.page.refresh();
+          });
         });
     }
-
-    // function edit() {
-    //   var buildConfigs;
-
-    //   if ($ctrl.page.total === 1) {
-    //     buildConfigs = $ctrl.page.data;
-    //   } else {
-    //     buildConfigs = BuildConfigurationSet.queryBuildConfigurations({
-    //       id: $ctrl.buildGroup.id
-    //     }, {
-    //       pageSize: $ctrl.page.getPageCount() * $ctrl.page.getPageSize()
-    //     }).$promise.then(function (response) {
-    //       return response.data;
-    //     });
-    //   }
-
-    //   $q.when(buildConfigs).then(function (buildConfigs) {
-    //     modalEditService
-    //       .editBuildGroupBuildConfigs($ctrl.buildGroup, buildConfigs)
-    //       .then(function () {
-    //         tableReload();
-    //       });
-    //   });
-    // }
 
   }
 
