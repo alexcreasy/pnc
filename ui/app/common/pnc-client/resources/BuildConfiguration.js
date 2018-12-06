@@ -67,6 +67,11 @@
         removeDependency: {
           method: 'DELETE',
           url: ENDPOINT + '/dependencies/:dependencyId'
+        },
+        getRevisions: {
+          method: 'GET',
+          url: ENDPOINT + '/revisions',
+          isPaged: true
         }
       });
 
