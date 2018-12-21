@@ -20,8 +20,6 @@
 
 <nav>
   <ul class="list-unstyled">
-      <li ng-repeat="" ui-sref-active="active"><a href ui-sref="projects.detail.build-configs.detail.revisions({ revisionId:  })">Details</a></li>
-
-    <li role="presentation" class="active"><a href="#">Nov 27, 2018 11:03:08 AM</a></li>
+    <li ng-repeat="revision in $ctrl.revisions.data" ui-sref-active="active"><pnc-build-config-revision-link revision="revision"></pnc-build-config-revision-link></li>
   </ul>
 </nav>

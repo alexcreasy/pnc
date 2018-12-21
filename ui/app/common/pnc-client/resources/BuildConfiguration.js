@@ -72,6 +72,10 @@
           method: 'GET',
           url: ENDPOINT + '/revisions',
           isPaged: true
+        },
+        getRevision: {
+          method: 'GET',
+          url: ENDPOINT + '/revisions/:revisionId'
         }
       });
 

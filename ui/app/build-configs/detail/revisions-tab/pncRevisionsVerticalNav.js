@@ -21,6 +21,7 @@
 
   angular.module('pnc.build-configs').component('pncRevisionsVerticalNav', {
     bindings: {
+      revisions: '<'
     },
     templateUrl: 'build-configs/detail/revisions-tab/pnc-revisions-vertical-nav.html',
     controller: [Controller]

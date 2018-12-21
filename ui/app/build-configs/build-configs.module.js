@@ -158,7 +158,20 @@
 
       $stateProvider.state('projects.detail.build-configs.detail.revisions', {
         url: '/revisions',
-        redirectTo: 'projects.detail.build-configs.detail.revisions.detail',
+        redirectTo: function (trans) {
+          //'projects.detail.build-configs.detail.revisions.detail',
+          return trans.injector().getAsync('revisions').then(function (revisions) {
+            var revision = revisions.data[0];
+            return {
+              state: 'projects.detail.build-configs.detail.revisions.detail',
+              params: {
+                projectId: revision.project.id,
+                configurationId: revision.id,
+                revisionId: revision.rev
+              }
+            };
+          });
+        },
         component: 'pncBuildConfigRevisionsTab',
         bindings: {
           buildConfig: 'configurationDetail'
@@ -174,7 +187,7 @@
       });
       
       $stateProvider.state('projects.detail.build-configs.detail.revisions.detail', {
-        url: '',
+        url: '/{revisionId:int}',
         views: {
           'master': {
             component: 'pncRevisionsVerticalNav',
@@ -184,11 +197,17 @@
             }
           },
           'detail': {
-            component: 'pncRevisionsDetails',
-            bindings: {
-
-            }
+            component: 'pncRevisionsDetails'
           }
+        },
+        resolve: {
+          revision : [
+            'configurationDetail', 
+            '$stateParams', 
+            function (configurationDetail, $stateParams) {
+              return configurationDetail.$getRevision({ revisionId: $stateParams.revisionId });
+            } 
+          ]  
         }
       });
 
