@@ -55,7 +55,7 @@
     }
 
     function onEdit() {
-      
+      $log.debug('Table action: Edit product versions');
     }
   }
 
