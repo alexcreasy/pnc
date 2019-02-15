@@ -22,47 +22,25 @@
     <h3 class="modal-title">{{ $ctrl.title }}</h3>
   </div>
   <div class="modal-body">
-    <!-- <div class="row">
+    <div class="row">
       <div class="col-md-12">
-        <form role="form" class="search-pf has-button">
-          <div class="form-group has-clear">
-            <div class="search-pf-input-group">
-              <label for="search1" class="sr-only">Search</label>
-              <input type="text"  name="selectGroup"
-                                  class="form-control combobox"
-                                  id="select-build-group"
-                                  placeholder="Enter build group name to search..."
-                                  autocomplete="off"
-                                  ng-model="$ctrl.input"
-                                  uib-typeahead="group as group.name for group in $ctrl.fetchGroups($viewValue)"
-                                  typeahead-on-select="$ctrl.onSelect($item, $model, $label)"
-                                  typeahead-wait-ms="300"
-                                  typeahead-loading="$ctrl.isLoading">
-              <button type="button" class="clear" aria-hidden="true"><span ng-show="$ctrl.isLoading" class="spinner spinner-xs spinner-inline"></span></button>
-            </div>
-          </div>
-          <div class="form-group">
-            <button class="btn btn-default" type="button"><span class="fa fa-search"></span></button>
-          </div>
-        </form>
+          <pnc-product-version-combobox ng-model="$ctrl.productVersion" ng-change="$ctrl.onSelect($ctrl.productVersion)"></pnc-product-version-combobox>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <pf-list-view class="list-group list-view-pf list-view-pf-view"
-                          id="build-group-list"
+                          id="product-version-list"
                           config="$ctrl.config"
                           items="$ctrl.selected"
                           action-buttons="$ctrl.actionButtons">
 
             <div class="list-view-pf-description">
-              <div class="list-group-item-heading">
-                {{item.name}}
-            </div>
+              {{ item.productName }} - v{{ item.version }}
           </div>
         </pf-list-view>
       </div>
-    </div> -->
+    </div>
   </div>
   <div class="modal-footer">
       <button class="btn btn-primary" type="button" ng-click="$ctrl.save()">Save</button>

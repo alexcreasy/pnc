@@ -43,12 +43,12 @@
       onRemove: '&'
     },
     templateUrl: 'product/directives/pnc-product-versions-data-table/pnc-product-versions-data-table.html',
-    controller: ['$log', '$q', 'modalSelectService', Controller]
+    controller: ['$log', '$q', 'modalSelectService', 'utils', Controller]
   });
 
 
-  function Controller($log, $q, modalSelectService) {
-    var $ctrl = this;
+  function Controller($log, $q, modalSelectService, utils) {
+    const $ctrl = this;
 
     // -- Controller API --
 
@@ -61,34 +61,22 @@
     // --------------------
 
 
-    $ctrl.$onInit = function () {
+    $ctrl.$onInit = () => {
     };
 
 
     function edit() {
-      modalSelectService.openForProductVersions({
-        title: 'Insert / Remove Product Versions',
-        productVersions: $ctrl.page.data
-      });
-      // $q.when()
-      //   .then(function () {
-      //     if ($ctrl.page.total === 1) {
-      //       return $ctrl.page.data;
-      //     } else {
-      //       return $ctrl.page.getWithNewSize($ctrl.page.total * $ctrl.page.count).then(resp => resp.data);
-      //     }
-      //   })
-      //   .then(function (productVersions) {
-      //     return openForProductVersions.openForBuildConfigs({
-      //       title: 'Insert / Remove Product Versions',
-      //       productVersions: productVersions
-      //     }).result;
-      //   })
-      //   .then(function (editedProductVersions) {
-      //     $q.when($ctrl.onEdit()(editedProductVersions)).then(function () {
-      //       $ctrl.page.refresh();
-      //     });
-      //   });
+      utils
+          .dePaginate($ctrl.page)
+          .then(productVersions => {
+            return modalSelectService.openForProductVersions({
+              title: 'Insert / Remove Product Versions',
+              productVersions: productVersions
+            })
+            .result;
+          })
+          .then(newProductVersions => $ctrl.onEdit()(newProductVersions))
+          .then(() => $ctrl.page.refresh());
     }
     
     function remove(productVersion) {

@@ -54,8 +54,8 @@
       $log.debug('Table action: remove ProductVersion %O', productVersion);
     }
 
-    function onEdit() {
-      $log.debug('Table action: Edit product versions');
+    function onEdit(newProductVersions) {
+      $log.debug('<pnc-build-config-products-tab>::onEdit newProductVersions: %O', newProductVersions);
     }
   }
 

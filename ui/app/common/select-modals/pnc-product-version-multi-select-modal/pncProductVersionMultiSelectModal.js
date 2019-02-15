@@ -39,20 +39,39 @@
     $ctrl.cancel = cancel;
     $ctrl.onRemove = onRemove;
     $ctrl.onAdd = onAdd;
+    $ctrl.onSelect = onSelect;
 
     $ctrl.title = $ctrl.resolve.config.title;
-    $ctrl.productVersions = null;
+    $ctrl.selected = [];
+    
+    $ctrl.config = {
+      selectItems: false,
+      multiSelect: false,
+      dblClick: false,
+      selectionMatchProp: 'id',
+      showSelectBox: false,
+     };
+
+     $ctrl.actionButtons = [
+       {
+         name: 'Remove',
+         title: 'Remove this Product Version',
+         actionFn: function (action, object) {
+           $ctrl.onRemove(object);
+         }
+       }
+     ];
 
     // --------------------
 
 
     $ctrl.$onInit = () => {
-      $ctrl.productVersions = angular.copy($ctrl.resolve.productVersions);
+      $ctrl.selected.concat($ctrl.resolve.productVersions);
     }
 
 
     function save() {
-      $ctrl.close({ $value: $ctrl.productVersions });
+      $ctrl.close({ $value: $ctrl.selected });
     }
 
     function cancel() {
@@ -60,11 +79,29 @@
     }
 
     function onAdd(productVersion) {
-
+      if (indexOf(productVersion) === -1) {
+        $ctrl.selected.push(productVersion);
+      }
+      console.log('Add %O / selected: %O', productVersion, $ctrl.selected);
     }
 
     function onRemove(productVersion) {
-      
+      const index = indexOf(productVersion);
+
+      if (index >= 0) {
+        $ctrl.selected.splice(index , 1);
+      }
+      console.log('Remove %O / selected: %O', productVersion, $ctrl.selected);
+    }
+
+    function onSelect(productVersion) {
+      if (angular.isDefined(productVersion)) {
+        onAdd(productVersion);
+      }
+    }
+
+    function indexOf(productVersion) {
+      return $ctrl.selected.findIndex(p => p.id === productVersion.id);
     }
   }
 

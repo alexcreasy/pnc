@@ -120,8 +120,8 @@
            resolve: {
             config: () => $q.when(config)
            }
-         })
-       }
+         });
+       };
     }
   ]);
 
