@@ -43,48 +43,19 @@
       onRemove: '&'
     },
     templateUrl: 'product/directives/pnc-product-versions-data-table/pnc-product-versions-data-table.html',
-    controller: ['$log', '$q', 'modalSelectService', 'utils', Controller]
+    controller: ['paginator', Controller]
   });
 
 
-  function Controller($log, $q, modalSelectService, utils) {
+  function Controller(paginator) {
     const $ctrl = this;
 
     // -- Controller API --
 
-    $ctrl.edit = edit;
-
-    $ctrl.actions = {
-      remove: remove
-    };
+    $ctrl.paginator = paginator($ctrl.page);
 
     // --------------------
 
-
-    $ctrl.$onInit = () => {
-    };
-
-
-    function edit() {
-      utils
-          .dePaginate($ctrl.page)
-          .then(productVersions => {
-            return modalSelectService.openForProductVersions({
-              title: 'Insert / Remove Product Versions',
-              productVersions: productVersions
-            })
-            .result;
-          })
-          .then(newProductVersions => $ctrl.onEdit()(newProductVersions))
-          .then(() => $ctrl.page.refresh());
-    }
-    
-    function remove(productVersion) {
-      $log.debug('Table action: remove Product Version: %O', productVersion);
-      $q.when($ctrl.onRemove()(productVersion)).then(function () {
-        $ctrl.page.refresh();
-      });
-    }
   }
 
 })();

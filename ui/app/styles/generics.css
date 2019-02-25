@@ -104,3 +104,8 @@
 .c-info   { color:      #00659c; }
 
 .border-t-w-1 { border-top-width: 1px !important;}
+
+td.shrink-to-fit {
+  width:0.1%;
+  white-space: nowrap;
+}
