@@ -440,7 +440,6 @@ public class BuildConfigurationRestTest extends AbstractTest {
 
     @Test
     public void shouldRestoreAuditedBuildConfiguration() throws Exception {
-
         // given
         String updatedName = UUID.randomUUID().toString();
 
@@ -483,7 +482,6 @@ public class BuildConfigurationRestTest extends AbstractTest {
 
 
         // when
-
         Response restoreResponse = given().headers(testHeaders)
                 .contentType(ContentType.JSON).port(getHttpPort()).when()
                 .post(String.format(CONFIGURATION_SPECIFIC_REST_ENDPOINT + "/revisions/%d/restore", configurationId, revIdToRestore));
@@ -492,7 +490,6 @@ public class BuildConfigurationRestTest extends AbstractTest {
 
 
         // then
-
         Response bcAfterRestoreResponse = given().headers(testHeaders)
                 .contentType(ContentType.JSON).port(getHttpPort()).when()
                 .get(String.format(CONFIGURATION_SPECIFIC_REST_ENDPOINT, configurationId));
