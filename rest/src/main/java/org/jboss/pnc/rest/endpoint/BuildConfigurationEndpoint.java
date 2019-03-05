@@ -568,6 +568,21 @@ public class BuildConfigurationEndpoint extends AbstractEndpoint<BuildConfigurat
         return fromSingleton(buildConfigurationProvider.getRevision(id, rev));
     }
 
+    @ApiOperation(value = "Restores a specific revision of a Build Configuration")
+    @ApiResponses(value = {
+            @ApiResponse(code = SUCCESS_CODE, message = SUCCESS_DESCRIPTION),
+            @ApiResponse(code = NOT_FOUND_CODE, message = NOT_FOUND_DESCRIPTION),
+            @ApiResponse(code = INVALID_CODE, message = INVALID_DESCRIPTION, response = ErrorResponseRest.class),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_DESCRIPTION, response = ErrorResponseRest.class)
+    })
+    @POST
+    @Path("/{id}/revisions/{rev}/restore")
+    public Response restoreRevision(@ApiParam(value = "Build Configuration id", required = true) @PathParam("id") Integer id,
+                                   @ApiParam(value = "Revision of a Build Configuration", required = true) @PathParam("rev") Integer rev) {
+        return Response.ok().build();
+    }
+
+
     @ApiOperation(value = "Get all build record associated with this build configuration, returns empty list if no build records are found")
     @ApiResponses(value = {
             @ApiResponse(code = SUCCESS_CODE, message = SUCCESS_DESCRIPTION, response = BuildRecordPage.class),
