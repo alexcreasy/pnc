@@ -475,10 +475,10 @@ public class BuildConfigurationRestTest extends AbstractTest {
         ResponseAssertion.assertThat(revisionsResponse).hasStatus(Status.OK.getStatusCode());
 
         int revIdToRestore = revisionsResponse.jsonPath().<Integer>get("content[1].rev");
-        String revName = revisionsResponse.jsonPath().<String>get("content[1].name");
+        String revNameToRestore = revisionsResponse.jsonPath().<String>get("content[1].name");
 
         assertThat(revIdToRestore).isGreaterThan(0);
-        assertThat(revName).isNotEmpty();
+        assertThat(revNameToRestore).isNotEmpty();
 
 
         // when
@@ -495,7 +495,7 @@ public class BuildConfigurationRestTest extends AbstractTest {
                 .get(String.format(CONFIGURATION_SPECIFIC_REST_ENDPOINT, configurationId));
 
         ResponseAssertion.assertThat(bcAfterRestoreResponse).hasStatus(Status.OK.getStatusCode());
-        ResponseAssertion.assertThat(bcAfterRestoreResponse).hasJsonValueEqual("content.name", revName);
+        ResponseAssertion.assertThat(bcAfterRestoreResponse).hasJsonValueEqual("content.name", revNameToRestore);
     }
 
     @Test
