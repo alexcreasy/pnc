@@ -440,6 +440,20 @@ public class BuildConfigurationRestTest extends AbstractTest {
     }
 
     @Test
+    public void shouldReturn404WhenRevisionDoesNotExist() throws Exception {
+        // given
+        int rev = 70313;
+
+        // when
+        Response response = given().headers(testHeaders)
+                .contentType(ContentType.JSON).port(getHttpPort()).when()
+                .get(String.format(CONFIGURATION_SPECIFIC_REST_ENDPOINT + "/revisions/%d", configurationId, rev));
+
+        // then
+        ResponseAssertion.assertThat(response).hasStatus(Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
     public void shouldAddDependencyBuildConfiguration() throws Exception {
         // given
         RestResponse<ProjectRest> projectRestClient = BuildConfigurationRestTest.projectRestClient.firstNotNull();
