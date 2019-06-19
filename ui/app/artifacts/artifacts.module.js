@@ -26,7 +26,6 @@
       function ($stateProvider) {
 
         $stateProvider.state('artifacts', {
-          abstract: true,
           url: '/artifacts',
           views: {
             'content@': {
@@ -35,7 +34,8 @@
           },
           data: {
             proxy: 'artifacts.list'
-          }
+          },
+          redirectTo: 'artifacts.list'
         });
 
 

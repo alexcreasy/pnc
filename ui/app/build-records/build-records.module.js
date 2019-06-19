@@ -38,45 +38,84 @@
       }]);
 
       $stateProvider.state('build-records', {
-        abstract: true,
         url: '/build-records',
         views: {
           'content@': {
             templateUrl: 'common/templates/single-col.tmpl.html'
           }
         },
+        redirectTo: 'build-records.list',
         data: {
           proxy: 'build-records.list',
         }
       });
 
-      $stateProvider.state('build-records.detail', {
-        abstract: true,
-        url: '/{recordId:int}',
-        resolve: {
-          recordDetail: ['BuildRecord', '$stateParams', function (BuildRecord, $stateParams) {
-            return BuildRecord.get({ id: $stateParams.recordId }).$promise;
-          }]
-        }
+      $stateProvider.state('build-records.list', {
+        url: '',
+        templateUrl: 'build-records/views/build-records.list.html',
+        data: {
+          displayName: 'Build Records',
+          title: 'Build Records'
+        },
+        controller: 'RecordListController',
+        controllerAs: 'ctrl'
       });
 
-      $stateProvider.state('build-records.detail.default', {
-        url: '',
-        onEnter: [
-          '$state',
-          '$timeout',
-          'recordDetail',
-          function ($state, $timeout, recordDetail) {
-            $timeout(function () { // Works around bug in ui.router https://github.com/angular-ui/ui-router/issues/1434
-              $state.go('projects.detail.build-configs.detail.build-records.detail.default', {
-                projectId: recordDetail.projectId,
-                configurationId: recordDetail.buildConfigurationId,
-                recordId: recordDetail.id
-              });
-            });
-          }
-        ]
-      });
+
+      // $stateProvider.state('build-records', {
+      //   abstract: true,
+      //   url: '/build-records',
+      //   views: {
+      //     'content@': {
+      //       templateUrl: 'common/templates/single-col.tmpl.html'
+      //     }
+      //   },
+      //   data: {
+      //     proxy: 'build-records.list',
+      //   }
+      // });
+
+      // $stateProvider.state('build-records.detail', {
+      //   abstract: true,
+      //   url: '/{recordId:int}',
+      //   resolve: {
+      //     recordDetail: ['BuildRecord', '$stateParams', function (BuildRecord, $stateParams) {
+      //       return BuildRecord.get({ id: $stateParams.recordId }).$promise;
+      //     }]
+      //   }
+      // });
+
+      // $stateProvider.state('build-records.detail.default', {
+      //   url: '',
+      //   onEnter: [
+      //     '$state',
+      //     '$timeout',
+      //     'recordDetail',
+      //     function ($state, $timeout, recordDetail) {
+      //       $timeout(function () { // Works around bug in ui.router https://github.com/angular-ui/ui-router/issues/1434
+      //         $state.go('projects.detail.build-configs.detail.build-records.detail.default', {
+      //           projectId: recordDetail.projectId,
+      //           configurationId: recordDetail.buildConfigurationId,
+      //           recordId: recordDetail.id
+      //         });
+      //       });
+      //     }
+      //   ]
+      // });
+
+      // $stateProvider.state('build-records.list', {
+      //   url: '',
+      //   templateUrl: 'build-records/views/build-records.list.html',
+      //   data: {
+      //     displayName: 'Build Records',
+      //     title: 'Build Records'
+      //   },
+      //   controller: 'RecordListController',
+      //   controllerAs: 'ctrl'
+      // });
+
+
+
 
       // $stateProvider.state('build-records.detail.result', {
       //   url: '/result',
@@ -127,17 +166,6 @@
       //       }
       //     }
       //   });
-
-      $stateProvider.state('build-records.list', {
-        url: '',
-        templateUrl: 'build-records/views/build-records.list.html',
-        data: {
-          displayName: 'Build Records',
-          title: 'Build Records'
-        },
-        controller: 'RecordListController',
-        controllerAs: 'ctrl'
-      });
 
       $stateProvider.state('projects.detail.build-configs.detail.build-records', {
         abstract: true,
@@ -263,6 +291,34 @@
           buildRecordPushResult: ['BuildRecord', '$stateParams', function (BuildRecord, $stateParams) {
             return BuildRecord.getLatestPushStatus($stateParams.recordId);
           }]
+        }
+      });
+
+
+      $stateProvider.state('build-records.detail', {
+        url: '/{id:int}',
+        resolve: {
+          buildRecord: [
+            'BuildRecord', 
+            '$stateParams', 
+            function (BuildRecord, $stateParams) {
+              return BuildRecord.get({ id: $stateParams.id }).$promise;
+            }
+          ]
+        },
+        redirectTo: trans => {
+          let resolvePromise = trans.injector().getAsync('buildRecord');
+
+          return resolvePromise.then(buildRecord => {
+            return { 
+              state: 'projects.detail.build-configs.detail.build-records.detail.default',
+              params: {
+                recordId: buildRecord.id,
+                configurationId: buildRecord.buildConfigurationId,
+                projectId: buildRecord.projectId
+              }
+            };
+          });
         }
       });
 
