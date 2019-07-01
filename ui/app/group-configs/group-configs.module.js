@@ -23,7 +23,6 @@
   var module = angular.module('pnc.group-configs', [
     'ui.router',
     'xeditable',
-    'pnc.common.restclient',
     'pnc.common.events',
     'pnc.common.authentication',
     'pnc.common.pnc-client'
