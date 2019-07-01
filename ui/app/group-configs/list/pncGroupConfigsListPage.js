@@ -19,7 +19,7 @@
 (function () {
   'use strict';
 
-  angular.module('pnc.group-builds').component('pncGroupConfigsListPage', {
+  angular.module('pnc.group-configs').component('pncGroupConfigsListPage', {
     bindings: {
       page: '<'
     },
