@@ -18,7 +18,9 @@
 (function () {
   'use strict';
 
-  var module = angular.module('pnc.build-groups', [
+  angular.module('pnc.build-groups', []);
+
+  var module = angular.module('pnc.group-configs', [
     'ui.router',
     'xeditable',
     'pnc.common.restclient',
@@ -32,11 +34,41 @@
     '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
 
-      // NCL-2401 changed the module base URL, this redirect should
-      // be removed at some point in the future.
-      $urlRouterProvider.when(/^\/configuration-set\/.*/, ['$location', function ($location) {
-        return $location.url().replace('/configuration-set/', '/build-groups/');
+      // NCL-4200 renamed build-groups to group-configs, this forwarder should be removed at some point in the future
+      $urlRouterProvider.when(/^\/build-groups\/.*/, ['$location', function ($location) {
+        return $location.url().replace('/build-groups/', '/group-configs/');
       }]);
+
+      $stateProvider('group-configs', {
+        url: '/group-configs',
+        redirectTo: 'group-configs.list',
+        views: {
+          'content@': {
+            templateUrl: 'common/templates/single-col.tmpl.html'
+          }
+        },
+        data: {
+          displaName: false
+        }
+      });
+
+      $stateProvider('group-configs.list', {
+        url: '',
+        component: 'pncGroupConfigsListPage',
+        resolve: {
+          groupConfigs: [
+            'GroupConfig',
+            (GroupConfig) => {
+              return GroupConfig.query().$promise;
+            }
+          ]
+        },
+        data: {
+          displayName: 'Group Configs',
+          title: 'Group Configs'
+        }
+      });
+
 
       $stateProvider.state('build-groups', {
         abstract: true,
@@ -48,22 +80,6 @@
         },
         data: {
           proxy: 'build-groups.list',
-        }
-      });
-
-      $stateProvider.state('build-groups.list', {
-        url: '',
-        templateUrl: 'build-groups/views/build-groups.list.html',
-        data: {
-          displayName: 'Build Groups',
-          title: 'Build Groups'
-        },
-        controller: 'ConfigurationSetListController',
-        controllerAs: 'setlistCtrl',
-        resolve: {
-          configurationSetList: ['BuildConfigurationSetDAO', function(BuildConfigurationSetDAO) {
-            return BuildConfigurationSetDAO.getAll().$promise;
-          }]
         }
       });
 
