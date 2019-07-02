@@ -21,6 +21,10 @@
 
   angular.module('pnc.group-configs').component('pncGroupConfigLink', {
     bindings: {
+      /**
+       * GroupConfig resource object to link to, or alternatively pass an object literal
+       * with the id of the GroupConfig to link to... e.g. { id: 5 }
+       */
       groupConfig: '<'
     },
     transclude: true, 
