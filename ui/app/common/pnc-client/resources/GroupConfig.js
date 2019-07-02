@@ -26,7 +26,7 @@
    *
    * @author Alex Creasy
    */
-  module.factory('Project', [
+  module.factory('GroupConfig', [
     '$resource',
     'restConfig',
     'GROUP_CONFIGS_PATH',
