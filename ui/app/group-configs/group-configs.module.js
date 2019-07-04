@@ -37,6 +37,7 @@
       }]);
 
       $stateProvider.state('group-configs', {
+        abstract: true,
         url: '/group-configs',
         redirectTo: 'group-configs.list',
         views: {
@@ -45,7 +46,7 @@
           }
         },
         data: {
-          displayName: false
+          proxy: 'group-configs.list'
         }
       });
 
@@ -63,6 +64,115 @@
           title: 'Group Configs'
         }
       });
+
+      $stateProvider.state('group-configs.detail', {
+        url: '/{groupConfigId:int}',
+        component: 'pncGroupConfigDetailPage',
+        resolve: {
+          groupConfig: [
+            '$stateParams',
+            'GroupConfigResource',
+            ($stateParams, GroupConfigResource) => GroupConfigResource.get({ id: $stateParams.groupConfigId }).$promise
+          ],
+          productVersion: [
+            'groupConfig',
+            'ProductVersion',
+            (groupConfig, ProductVersion) => ProductVersion.get({ id: groupConfig.productVersion.id }).$promise
+          ]
+        },
+        data: {
+          displayName: '{{ groupConfig.name }}',
+          title: '{{ groupConfig.name }} | Group Configs'
+        }
+      });
+      
+      $stateProvider.state('group-configs.create', {
+        url: '/create',
+        component: 'pncGroupConfigCreatePage',
+        // resolve: {
+        //   productVersion: [
+        //     '$stateParams',
+        //     'ProductVersion',
+        //     ($stateParams, ProductVersion) => {
+        //       if (!$stateParams.productVersionId) {
+        //         return null;
+        //       }
+
+        //       return ProductVersion.get({ id: $stateParams.productVersionId }).$promise;
+        //     }
+        //   ],
+        // },
+        data: {
+          requireAuth: true,
+          displayName: false,
+          title: 'Create | Group Configs'
+        }
+      });
+
+
+      /*
+       *       $stateProvider.state('build-groups.create', {
+        url: '/create/:productId/:versionId',
+        templateUrl: 'build-groups/views/build-groups.create.html',
+        data: {
+          displayName: 'Create Build Group',
+          title: 'Create Build Group',
+          requireAuth: true
+        },
+        controller: 'ConfigurationSetCreateController',
+        controllerAs: 'createSetCtrl',
+        resolve: {
+          products: ['ProductDAO', function(ProductDAO) {
+            return ProductDAO.getAll();
+          }],
+        },
+      });
+       */
+      /*
+            $stateProvider.state('build-groups.detail', {
+        abstract: true,
+        url: '/{configurationSetId:int}',
+        templateUrl: 'build-groups/views/build-groups.detail.html',
+        data: {
+          displayName: '{{ configurationSetDetail.name }}',
+          title: '{{ configurationSetDetail.name }} | Build Group'
+        },
+        controller: 'ConfigurationSetDetailController',
+        controllerAs: 'detailSetCtrl',
+        resolve: {
+          configurationSetDetail: ['BuildConfigurationSet', '$stateParams', function(BuildConfigurationSet, $stateParams) {
+            return BuildConfigurationSet.get({
+              id: $stateParams.configurationSetId }).$promise;
+          }],
+          productVersion: ['$q', 'ProductVersion', 'configurationSetDetail', function ($q, ProductVersion, configurationSetDetail) {
+            return $q.when(configurationSetDetail.productVersionId).then(function (id) {
+              if (id) {
+                return ProductVersion.get({ id: id }).$promise;
+              }
+            });
+          }],
+          configurations: ['BuildConfigurationSetDAO', '$stateParams', function(BuildConfigurationSetDAO, $stateParams) {
+            return BuildConfigurationSetDAO.getConfigurations({
+              configurationSetId: $stateParams.configurationSetId });
+          }],
+          previousState: ['$state', '$q', function ($state, $q) {
+            var currentStateData = {
+              Name: $state.current.name,
+              Params: $state.params,
+              URL: $state.href($state.current.name, $state.params)
+            };
+            return $q.when(currentStateData);
+          }],
+          buildConfigsPage: ['$stateParams', 'BuildConfigurationSetDAO', function ($stateParams, BuildConfigurationSetDAO) {
+            return BuildConfigurationSetDAO.getPagedConfigurations({
+              configurationSetId: $stateParams.configurationSetId }).$promise;
+
+          }]
+        }
+      });
+      */
+
+
     }
   ]);
 
