@@ -25,15 +25,16 @@
       originalProductVersion: '<productVersion'
     },
     templateUrl: 'group-configs/detail/pnc-group-config-detail-page.html',
-    controller: [Controller]
+    controller: ['$state', 'previousState', Controller]
   });
 
-  function Controller() {
+  function Controller($state, previousState) {
     const $ctrl = this;
 
     // -- Controller API --
 
     $ctrl.update = update;
+    $ctrl.delete = deleteGroupConfig;
 
     // --------------------
 
@@ -50,6 +51,13 @@
       $ctrl.groupConfig
           .$update()
           .catch(() => $ctrl.groupConfig = angular.copy($ctrl.originalGroupConfig));
+    }
+
+    function deleteGroupConfig() {
+      $ctrl.originalGroupConfig
+          .$delete()
+          .then(() => $state.go(previousState.Name, previousState.Params)
+                            .catch(() => $state.go('group-configs.list')));
     }
 
   }

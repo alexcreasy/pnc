@@ -83,7 +83,19 @@
               }
               return ProductVersion.get({ id: groupConfig.productVersion.id }).$promise;
             }
-          ]
+          ],
+          previousState: [
+            '$state', 
+            '$q', 
+            ($state, $q) => {
+              const currentStateData = {
+                Name: $state.current.name,
+                Params: $state.params,
+                URL: $state.href($state.current.name, $state.params)
+              };
+              return $q.when(currentStateData);
+            }
+          ],
         },
         data: {
           displayName: '{{ groupConfig.name }}',
