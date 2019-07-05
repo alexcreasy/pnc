@@ -77,7 +77,12 @@
           productVersion: [
             'groupConfig',
             'ProductVersion',
-            (groupConfig, ProductVersion) => ProductVersion.get({ id: groupConfig.productVersion.id }).$promise
+            (groupConfig, ProductVersion) => {
+              if (!groupConfig.productVersion) {
+                return null;
+              }
+              return ProductVersion.get({ id: groupConfig.productVersion.id }).$promise;
+            }
           ]
         },
         data: {

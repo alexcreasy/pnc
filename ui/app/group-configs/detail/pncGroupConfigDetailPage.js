@@ -47,21 +47,9 @@
 
 
     function update() {
-      $ctrl.groupConfig.$update()
+      $ctrl.groupConfig
+          .$update()
           .catch(() => $ctrl.groupConfig = angular.copy($ctrl.originalGroupConfig));
-
-      // update = function() {
-      //   $log.debug('Updating BuildConfigurationSet: %s', JSON.stringify(self.set));
-      //   self.set.$update(
-      //   ).then(
-      //     function() {
-      //       $state.go('build-groups.detail.build-configs', {
-      //         configurationSetId: self.set.id
-      //       }, {
-      //         reload: true
-      //       });
-      //     }
-      //   )
     }
 
   }
