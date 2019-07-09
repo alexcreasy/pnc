@@ -21,45 +21,92 @@
 
   angular.module('pnc.group-configs').component('pncGroupConfigDetailPage', {
     bindings: {
-      originalGroupConfig: '<groupConfig',
-      originalProductVersion: '<productVersion'
+      groupConfig: '<',
+      productVersion: '<'
     },
     templateUrl: 'group-configs/detail/pnc-group-config-detail-page.html',
-    controller: ['$state', 'previousState', Controller]
+    controller: ['$state', 'modalSelectService', 'GroupConfigResource', Controller]
   });
 
-  function Controller($state, previousState) {
+  function Controller($state, modalSelectService, GroupConfigResource) {
     const $ctrl = this;
 
     // -- Controller API --
 
     $ctrl.update = update;
     $ctrl.delete = deleteGroupConfig;
+    $ctrl.linkWithProductVersion = linkWithProductVersion;
+    $ctrl.unlinkFromProductVersion = unlinkFromProductVersion;
 
     // --------------------
 
     $ctrl.$onInit = () => {
-      $ctrl.groupConfig = angular.copy($ctrl.originalGroupConfig);
-      $ctrl.productVersion = angular.copy($ctrl.originalProductVersion);
-
+      $ctrl.formModel = $ctrl.groupConfig.toJSON();
+      
       console.log('$ctrl.groupConfig == %O', $ctrl.groupConfig);
       console.log('$ctrl.productVersion == %O', $ctrl.productVersion);
     };
 
 
-    function update() {
-      $ctrl.groupConfig
-          .$update()
-          .catch(() => $ctrl.groupConfig = angular.copy($ctrl.originalGroupConfig));
+    function update(data) {
+      console.log('Update -> data: %O / $ctrl.groupConfig: %O', data, $ctrl.groupConfig);
+      const patch = createPatch($ctrl.groupConfig, data);
+      console.log('Update patch: %O', patch);
+
+      return GroupConfigResource.patch($ctrl.groupConfig, patch).then(
+          res => console.log('res = %O', res),
+          // String response signals to x-editable component that the request failed and to rollback the local view model.
+          err => err.data.errorMessage 
+      );
     }
 
     function deleteGroupConfig() {
-      $ctrl.originalGroupConfig
+      $ctrl.groupConfig
           .$delete()
-          .then(() => $state.go(previousState.Name, previousState.Params)
-                            .catch(() => $state.go('group-configs.list')));
+          .then(() => $state.go('group-configs.list'));
     }
 
+    function linkWithProductVersion() {
+      
+      const modal = modalSelectService.openForProductVersion({
+        title: 'Link ' + $ctrl.groupConfig.name + ' with a product version'
+      });
+
+      modal.result.then(res => {
+        const patch = createPatch($ctrl.groupConfig, { productVersion: { id: res.id }});
+      
+        console.log('patch = %O', patch);
+
+        GroupConfigResource.patch($ctrl.groupConfig, patch).then(
+            res => console.log ('Patch request result: %O', res),
+            err => console.log('Patch request error: %O', err)
+        );
+      });
+    }
+
+    function unlinkFromProductVersion() {
+      const patch = createPatch($ctrl.groupConfig, { productVersion: null });
+
+      GroupConfigResource.patch($ctrl.groupConfig, patch).then(
+        res => console.log ('Patch request result: %O', res),
+        err => console.log('Patch request error: %O', err)
+      );
+    }
+
+    function createPatch(original, modified) {
+      const left = normalize(original);
+      const right = normalize(modified);
+
+      return jsonpatch.compare(left, Object.assign({}, left, right));
+    }
+
+    function normalize(resource) {
+      return isResource(resource) ? resource.toJSON() : resource;
+    }
+
+    function isResource(obj) {
+      return obj.hasOwnProperty('$promise') && obj.hasOwnProperty('$resolved') && angular.isFunction(obj.toJSON);
+    }
   }
 
 })();
