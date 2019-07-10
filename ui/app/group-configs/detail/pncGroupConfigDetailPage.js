@@ -48,7 +48,7 @@
     };
 
 
-    function update(data) {
+    function update(data) {      
       console.log('Update -> data: %O / $ctrl.groupConfig: %O', data, $ctrl.groupConfig);
       const patch = createPatch($ctrl.groupConfig, data);
       console.log('Update patch: %O', patch);
