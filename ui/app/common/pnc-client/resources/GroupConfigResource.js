@@ -74,6 +74,7 @@
         }
       });
 
+      console.log('resource = %O', resource);
       //resource.patch = (groupConfig, patch) => $http.patch(ENDPOINT.replace(':id', groupConfig.id), patch);
       //resource.prototype.$patch = patch => resource.patch(this, patch);
 
