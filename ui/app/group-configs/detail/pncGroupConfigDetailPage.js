@@ -25,10 +25,10 @@
       productVersion: '<'
     },
     templateUrl: 'group-configs/detail/pnc-group-config-detail-page.html',
-    controller: ['$state', 'modalSelectService', 'GroupConfigResource', Controller]
+    controller: ['$state', 'modalSelectService', 'GroupConfigResource', 'resourceHelper', Controller]
   });
 
-  function Controller($state, modalSelectService, GroupConfigResource) {
+  function Controller($state, modalSelectService, GroupConfigResource, resourceHelper) {
     const $ctrl = this;
 
     // -- Controller API --
@@ -51,7 +51,7 @@
     function update(data) {      
       console.log('Update -> data: %O / $ctrl.groupConfig: %O', data, $ctrl.groupConfig);
 
-      return GroupConfigResource.patch($ctrl.groupConfig, data).$promise.then(
+      return GroupConfigResource.patch($ctrl.groupConfig, data).then(
           res => console.log('res = %O', res),
           // String response signals to x-editable component that the request failed and to rollback the local view model.
           err => err.data.errorMessage 
@@ -60,7 +60,7 @@
 
     function deleteGroupConfig() {
 
-      $ctrl.groupConfig.$patch({ productVersion: { id: 1 }});
+      $ctrl.groupConfig.$patch($ctrl.groupConfig, { productVersion: { id: 1 }});
       // $ctrl.groupConfig
       //     .$delete()
       //     .then(() => $state.go('group-configs.list'));
@@ -73,17 +73,30 @@
       });
 
       modal.result.then(res => {
-        GroupConfigResource.patch($ctrl.groupConfig, { productVersion: { id: res.id } }).then(
+        // GroupConfigResource.patch($ctrl.groupConfig, { productVersion: { id: res.id } }).$promise.then(
+        //     res => console.log ('Patch request result: %O', res),
+        //     err => console.log('Patch request error: %O', err)
+        // );
+        const patch = resourceHelper.createNonDestructivePatch($ctrl.groupConfig, { productVersion: { id: res.id }});
+        console.log('patch = %O', patch);
+        GroupConfigResource.patch({ id: $ctrl.groupConfig.id }, patch).$promise.then(
             res => console.log ('Patch request result: %O', res),
-            err => console.log('Patch request error: %O', err)
+            err => console.log('Patch request error: %O', err)        
         );
       });
     }
 
     function unlinkFromProductVersion() {
-      GroupConfigResource.patch($ctrl.groupConfig, { productVersion: null }).then(
-        res => console.log ('Patch request result: %O', res),
-        err => console.log('Patch request error: %O', err)
+      // GroupConfigResource.patch($ctrl.groupConfig, { productVersion: null }).$promise.then(
+      //   res => console.log ('Patch request result: %O', res),
+      //   err => console.log('Patch request error: %O', err)
+      // );
+
+      const patch = resourceHelper.createNonDestructivePatch($ctrl.groupConfig, { productVersion: null });
+      console.log('patch: %O', patch);
+      GroupConfigResource.patch({ id: $ctrl.groupConfig.id }, patch).$promise.then(
+          res => console.log ('Patch request result: %O', res),
+          err => console.log('Patch request error: %O', err)        
       );
     }
   }
