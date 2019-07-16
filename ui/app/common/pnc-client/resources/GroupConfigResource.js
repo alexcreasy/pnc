@@ -31,7 +31,8 @@
     '$http',
     'restConfig',
     'GROUP_CONFIG_PATH',
-    ($resource, $http, restConfig, GROUP_CONFIG_PATH) => {
+    'resourceHelper',
+    ($resource, $http, restConfig, GROUP_CONFIG_PATH, resourceHelper) => {
       const ENDPOINT = restConfig.getPncRestUrl() + GROUP_CONFIG_PATH;
 
       const resource = $resource(ENDPOINT, {
@@ -75,8 +76,19 @@
       });
 
       console.log('resource = %O', resource);
-      //resource.patch = (groupConfig, patch) => $http.patch(ENDPOINT.replace(':id', groupConfig.id), patch);
-      //resource.prototype.$patch = patch => resource.patch(this, patch);
+      // resource.patch = (original, modified) => {
+      //   const patch = resourceHelper.createNonDestructivePatch(original, modified);  
+      //   return $http.patch(ENDPOINT.replace(':id', original.id), patch);
+      // };
+
+      // resource.prototype.$patch = patch => resource.patch(this, patch);
+
+      // resource.patch = function (...args) {
+      //   console.log('patch time: %O', args);
+      // };
+      // resource.prototype.$patch = function (... args) {
+      //   console.log('prototype patch time: %O', args);
+      // };
 
       return resource;
     }
