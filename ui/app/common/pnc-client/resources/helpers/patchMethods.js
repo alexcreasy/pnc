@@ -19,62 +19,105 @@
   'use strict';
 
   angular.module('pnc.common.pnc-client.resources').factory('patchHelper', [
+    '$log',
     'resourceHelper',
     '$http',
-    function (resourceHelper, $http) {
+    function ($log, resourceHelper) {
 
-      const { createNonDestructivePatch, normalize } = resourceHelper;
+      const { normalize } = resourceHelper;
 
+      function createJsonPatch(original, modified, destructive = false) {
+        $log.debug('createJsonPatch -> destructive: %s | original: %O | modified: %O', destructive, original, modified);
 
-      function transcludeUrl(resource, urlTemplate) {
-        return urlTemplate.replace(':id', resource.id);
-      }
+        const left = normalize(original);
+        const right = normalize(modified);
 
-      function patch(url, original, modified, config, destructive = false) {
-        const _original = normalize(original);
-        const _modified = normalize(modified);
         let patch; 
 
         if (destructive) {
-          patch = jsonpatch.compare(_original, _modified);
+          patch = jsonpatch.compare(left, right);
         } else {
-          patch = createNonDestructivePatch(_original, _modified);
+          patch = jsonpatch.compare(left, _.merge({}, left, right));
         }
 
-        return doPatchRequest(url, patch, config);
+        $log.debug('createJsonPatch -> patch: %O', patch);
+
+        return patch;
       }
 
-      function doPatchRequest(url, patch, config = {}) {
-        const _config = Object.assign({
-          method: 'PATCH',
-          url: url,
-          data: patch
-        },
-        config);
+      function doPatch(resource, original, modified, destructive) {
+        const patch = createJsonPatch(original, modified, destructive);
 
-        return $http(_config);
+        return resource.patch({ id: original.id }, patch);
       }
 
-      function assignPatchMethods(resource, urlTemplate) {
-        const url = transcludeUrl(resource, urlTemplate);
-
-        resource.patch = function (original, modified, config) {
-          return patch(url, original, modified, config);
+      function assignPatchMethods(resource) {    
+        resource.safePatch = function (original, modified) {
+          return doPatch(resource, original, modified, false);
         };
 
-        resource.destructivePatch = function (original, modified, config) {
-          return patch(url, original, modified, config, true);
+        resource.destructivePatch = function (original, modified) {
+          return doPatch(resource, original, modified, true);
         };
-
-        resource.rawPatch = function (patch, config) {
-          return doPatchRequest(url, patch, config);
-        };
-
       }
 
       return Object.freeze({
         assignPatchMethods
       });
+ 
+
+
+
+
+
+
+
+
+      // function transcludeUrl(resource, urlTemplate) {
+      //   return urlTemplate.replace(':id', resource.id);
+      // }
+
+      // function patch(url, original, modified, config, destructive = false) {
+      //   const _original = normalize(original);
+      //   const _modified = normalize(modified);
+      //   let patch; 
+
+      //   if (destructive) {
+      //     patch = jsonpatch.compare(_original, _modified);
+      //   } else {
+      //     patch = createNonDestructivePatch(_original, _modified);
+      //   }
+
+      //   return doPatchRequest(url, patch, config);
+      // }
+
+      // function doPatchRequest(url, patch, config = {}) {
+      //   const _config = Object.assign({
+      //     method: 'PATCH',
+      //     url: url,
+      //     data: patch
+      //   },
+      //   config);
+
+      //   return $http(_config);
+      // }
+
+      // function assignPatchMethods(resource, urlTemplate) {
+      //   const url = transcludeUrl(resource, urlTemplate);
+
+      //   resource.patch = function (original, modified, config) {
+      //     return patch(url, original, modified, config);
+      //   };
+
+      //   resource.destructivePatch = function (original, modified, config) {
+      //     return patch(url, original, modified, config, true);
+      //   };
+
+      //   resource.rawPatch = function (patch, config) {
+      //     return doPatchRequest(url, patch, config);
+      //   };
+
+      // }
     }
   ]);
 

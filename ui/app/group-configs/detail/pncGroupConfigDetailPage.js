@@ -51,11 +51,17 @@
     function update(data) {      
       console.log('Update -> data: %O / $ctrl.groupConfig: %O', data, $ctrl.groupConfig);
 
-      return GroupConfigResource.patch($ctrl.groupConfig, data).then(
-          res => console.log('res = %O', res),
-          // String response signals to x-editable component that the request failed and to rollback the local view model.
-          err => err.data.errorMessage 
+      return GroupConfigResource.safePatch($ctrl.groupConfig, data).$promise.then(
+        result => console.log('result = %O', result),
+        // String retval signals to x-editable component that the request failed and to rollback the changes in the view.
+        error => error.data.errorMessage
       );
+
+      // return GroupConfigResource.patch($ctrl.groupConfig, data).then(
+      //     res => console.log('res = %O', res),
+      //     // String response signals to x-editable component that the request failed and to rollback the local view model.
+      //     err => err.data.errorMessage 
+      // );
     }
 
     function deleteGroupConfig() {
