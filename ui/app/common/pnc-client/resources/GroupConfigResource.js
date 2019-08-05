@@ -20,7 +20,7 @@
 
   const module = angular.module('pnc.common.pnc-client.resources');
 
-  module.value('GROUP_CONFIG_PATH', '/group-configurations/:id');
+  module.value('GROUP_CONFIG_PATH', '/group-configs/:id');
 
   /**
    *
@@ -31,8 +31,8 @@
     '$http',
     'restConfig',
     'GROUP_CONFIG_PATH',
-    'resourceHelper',
-    ($resource, $http, restConfig, GROUP_CONFIG_PATH, resourceHelper) => {
+    'patchHelper',
+    ($resource, $http, restConfig, GROUP_CONFIG_PATH, patchHelper) => {
       const ENDPOINT = restConfig.getPncRestUrl() + GROUP_CONFIG_PATH;
 
       const resource = $resource(ENDPOINT, {
@@ -74,6 +74,8 @@
           url: ENDPOINT + '/builds'
         }
       });
+
+      patchHelper.assignPatchMethods(resource);
 
       console.log('resource = %O', resource);
       // resource.patch = (original, modified) => {
