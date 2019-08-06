@@ -25,10 +25,10 @@
       productVersion: '<'
     },
     templateUrl: 'group-configs/detail/pnc-group-config-detail-page.html',
-    controller: ['$scope', '$state', 'modalSelectService', 'GroupConfigResource', Controller]
+    controller: ['$log', '$state', 'modalSelectService', 'GroupConfigResource', Controller]
   });
 
-  function Controller($scope, $state, modalSelectService, GroupConfigResource) {
+  function Controller($log, $state, modalSelectService, GroupConfigResource) {
     const $ctrl = this;
 
     // -- Controller API --
@@ -42,26 +42,23 @@
 
     $ctrl.$onInit = () => {
       $ctrl.formModel = $ctrl.groupConfig.toJSON();
-      
-      console.log('$ctrl.groupConfig == %O', $ctrl.groupConfig);
-      console.log('$ctrl.productVersion == %O', $ctrl.productVersion);
     };
 
 
     function resetState(groupConfig, productVersion) {
+      $log.debug('pncGroupConfigDetailPage::resetState -> groupConfig: %O | productVersion: %O', groupConfig, productVersion);
       $ctrl.groupConfig = groupConfig;
       $ctrl.productVersion = productVersion;
-      $ctrl.formModel = $ctrl.groupConfig.toJSON();
+      $ctrl.formModel = groupConfig.toJSON();
     }
 
     function update(data) {      
-      console.log('Update -> data: %O / $ctrl.groupConfig: %O', data, $ctrl.groupConfig);
-
-      return GroupConfigResource.safePatch($ctrl.groupConfig, data).$promise.then(
-        response => console.log('response = %O', response),
-        // String retval signals to x-editable lib that the request failed and to rollback the changes in the view.
-        error => error.data.errorMessage
-      );
+      return GroupConfigResource.safePatch($ctrl.groupConfig, data)
+          .$promise
+          .catch(
+            // String retval signals to x-editable lib that the request failed and to rollback the changes in the view.
+            error => error.data.errorMessage
+          );
     }
 
     function deleteGroupConfig() {
@@ -71,49 +68,21 @@
     }
 
     function linkWithProductVersion() {
-      
-      const modal = modalSelectService.openForProductVersion({
+
+      modalSelectService.openForProductVersion({
         title: 'Link ' + $ctrl.groupConfig.name + ' with a product version'
-      });
-
-      modal.result.then(result => {
-
-        GroupConfigResource.safePatch($ctrl.groupConfig, { productVersion: { id: result.id }}).$promise.then(
-            response => {
-              console.log('response: %O, result: %O', response, result);
-              $scope.$applyAsync(() => resetState(response, result));
-            },
-            err => console.log('Patch request error: %O', err));  
-
-        // GroupConfigResource.patch($ctrl.groupConfig, { productVersion: { id: res.id } }).$promise.then(
-        //     res => console.log ('Patch request result: %O', res),
-        //     err => console.log('Patch request error: %O', err)
-        // );
-      //   const patch = resourceHelper.createNonDestructivePatch($ctrl.groupConfig, { productVersion: { id: res.id }});
-      //   console.log('patch = %O', patch);
-      //   GroupConfigResource.patch({ id: $ctrl.groupConfig.id }, patch).$promise.then(
-      //       res => console.log ('Patch request result: %O', res),
-      //       err => console.log('Patch request error: %O', err)        
-      //   );
+      })
+          .result
+          .then(productVersion => {
+              GroupConfigResource
+                  .linkWithProductVersion($ctrl.groupConfig, productVersion)
+                  .then(patchedGroupConfig => resetState(patchedGroupConfig, productVersion));
       });
     }
 
     function unlinkFromProductVersion() {
-      // GroupConfigResource.patch($ctrl.groupConfig, { productVersion: null }).$promise.then(
-      //   res => console.log ('Patch request result: %O', res),
-      //   err => console.log('Patch request error: %O', err)
-      // );
-
-      // const patch = resourceHelper.createNonDestructivePatch($ctrl.groupConfig, { productVersion: null });
-      // console.log('patch: %O', patch);
-      // GroupConfigResource.patch({ id: $ctrl.groupConfig.id }, patch).$promise.then(
-      //     res => console.log ('Patch request result: %O', res),
-      //     err => console.log('Patch request error: %O', err)        
-      // );
-
-      GroupConfigResource.safePatch($ctrl.groupConfig, { productVersion: null }).$promise.then(
-          res => console.log ('Patch request result: %O', res),
-          err => console.log('Patch request error: %O', err));
+      GroupConfigResource.unlinkFromProductVersion($ctrl.groupConfig)
+          .then(patchedGroupConfig => resetState(patchedGroupConfig, null));
     }
   }
 

@@ -76,6 +76,14 @@
 
       patchHelper.assignPatchMethods(resource);
 
+      resource.linkWithProductVersion = function (groupConfig, productVersion) {
+        return resource.safePatch(groupConfig, { productVersion: { id: productVersion.id }}).$promise;
+      };
+
+      resource.unlinkFromProductVersion = function (groupConfig) {
+        return resource.safePatch(groupConfig, { productVersion: null }).$promise;
+      };
+
       return resource;
     }
 
