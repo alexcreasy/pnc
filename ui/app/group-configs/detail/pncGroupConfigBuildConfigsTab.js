@@ -32,7 +32,7 @@
 
     // -- Controller API --
 
-
+    $ctrl.hello = 'world';
 
     // --------------------
 
