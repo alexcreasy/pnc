@@ -102,6 +102,19 @@
           title: '{{ groupConfig.name }} | Group Configs'
         }
       });
+
+      $stateProvider.state('group-configs.detail.build-configs', {
+        url: '',
+        component: 'pncGroupConfigBuildConfigsTab',
+        resolve: {
+          buildConfigs: [
+            'groupConfig',
+            (groupConfig) => {
+              return groupConfig.queryBuildConfigs().$promise;
+            }
+          ]
+        }
+      });
       
       $stateProvider.state('group-configs.create', {
         url: '/create',
