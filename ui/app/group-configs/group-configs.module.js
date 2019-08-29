@@ -100,7 +100,8 @@
         data: {
           displayName: '{{ groupConfig.name }}',
           title: '{{ groupConfig.name }} | Group Configs'
-        }
+        },
+        redirectTo: 'group-configs.detail.build-configs'
       });
 
       $stateProvider.state('group-configs.detail.build-configs', {
@@ -110,9 +111,12 @@
           buildConfigs: [
             'groupConfig',
             (groupConfig) => {
-              return groupConfig.queryBuildConfigs().$promise;
+              return groupConfig.$queryBuildConfigs();
             }
           ]
+        },
+        data: {
+          displayName: false
         }
       });
       

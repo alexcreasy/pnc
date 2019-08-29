@@ -61,12 +61,12 @@
         },
         queryBuildConfigs: {
           method: 'GET',
-          url: ENDPOINT + '/build-configurations',
+          url: ENDPOINT + '/build-configs',
           isPaged: true
         },
-        deleteBuildConfig: {
+        removeBuildConfig: {
           method: 'DELETE',
-          url: ENDPOINT + '/build-configurations/:buildConfigId',
+          url: ENDPOINT + '/build-configs/:buildConfigId',
         },
         queryBuilds: {
           method: 'GET',

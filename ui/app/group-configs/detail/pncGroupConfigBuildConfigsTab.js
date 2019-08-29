@@ -24,19 +24,19 @@
       buildConfigs: '<'
     },
     templateUrl: 'group-configs/detail/pnc-group-config-build-configs-tab.html',
-    controller: [Controller]
+    controller: ['paginator', Controller]
   });
 
-  function Controller() {
+  function Controller(paginator) {
     const $ctrl = this;
 
     // -- Controller API --
 
-    $ctrl.hello = 'world';
 
     // --------------------
 
     $ctrl.$onInit = () => {
+      $ctrl.paginator = paginator($ctrl.buildConfigs);
     };
   }
 

@@ -1,0 +1,108 @@
+<!--
+
+    JBoss, Home of Professional Open Source.
+    Copyright 2014-2019 Red Hat, Inc., and individual contributors
+    as indicated by the @author tags.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<div class="row">
+  <div class="col-md-12">
+
+    <div>
+      
+      <div class="toolbar-search-right pull-right" ng-if="::$ctrl.searchEnabled()">
+        <div class="search-field">
+          <div class="form-group">
+            <div class="input-group" role="search">
+              <label class="sr-only" for="data-table-search-{{$id}}">Filter Results</label>
+              <input id="data-table-search-{{$id}}" type="search" name="searchField" class="form-control" ng-model="$ctrl.searchString" ng-change="$ctrl.search(searchField)" placeholder="Search">
+              <div class="input-group-addon" ng-class="{'active' : $ctrl.filteringPaginator.isLoaded }">
+                <i class="fa fa-search display-when-active"></i>
+                <div class="spinner spinner-xs pull-right hide-when-active"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-toolbar pull-right">
+        <button type="button"
+          class="btn btn-default"
+          uib-tooltip="Add an existing Build Config"
+          tooltip-popup-delay="2500"
+          tooltip-placement="top"
+          tooltip-append-to-body="true"
+          ng-click="$ctrl.edit()">
+          <i class="pficon pficon-edit"></i> Edit
+        </button>
+      </div>
+
+
+    </div>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div ng-transclude="table"></div>
+    <!-- <pnc-build-configs-list build-configs="$ctrl.paginator.data" display-fields="$ctrl.displayFields" actions-data="$ctrl.actionsData" actions-template-url="pnc-build-group-build-config-actions-template"></pnc-build-configs-list> -->
+    <pnc-pager class="pull-right" page="$ctrl.paginator"></pnc-pager>
+  </div>
+</div>
+
+<!-- Normal State -->
+<!-- <div ng-show="$ctrl.showTable">
+  <div>
+    <div class="toolbar-search-right pull-right">
+      <pnc-search-field page="$ctrl.page" text="build configs"></pnc-search-field>
+    </div>
+
+    <div class="btn-group pull-right">
+      <button type="button"
+              class="btn btn-default"
+              uib-tooltip="Add an existing Build Config"
+              tooltip-popup-delay="2500"
+              tooltip-placement="top"
+              tooltip-append-to-body="true"
+              ng-click="$ctrl.edit()">
+        <i class="pficon pficon-edit"></i> Edit
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <pnc-build-configs-list build-configs="$ctrl.page.data" display-fields="$ctrl.displayFields" actions-data="$ctrl.actionsData" actions-template-url="pnc-build-group-build-config-actions-template"></pnc-build-configs-list>
+      <pnc-pager class="pull-right" page="$ctrl.page"></pnc-pager>
+    </div>
+  </div>
+</div> -->
+
+<!-- Empty State -->
+<!-- <div ng-hide="$ctrl.showTable">
+  <div class="blank-slate-pf">
+    <div class="blank-slate-pf-icon">
+      <span class="pficon pficon pficon-add-circle-o"></span>
+    </div>
+    <h2>Empty Build Group</h2>
+    <p>
+      This Build Group does not contain any Build Configs, click below to add some.
+    </p>
+    <div class="blank-slate-pf-main-action">
+      <button class="btn btn-primary btn-lg" ng-click="$ctrl.edit()" pnc-requires-auth><span class="fa fa-plus"></span>&nbsp;Add Build Configs</button>
+    </div>
+  </div>
+</div> -->
