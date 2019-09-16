@@ -32,12 +32,17 @@
 
     // -- Controller API --
 
+    $ctrl.onEdit = onEdit;
 
     // --------------------
 
     $ctrl.$onInit = () => {
       $ctrl.paginator = paginator($ctrl.buildConfigs);
     };
+
+    function onEdit(buildConfigs) {
+      console.log('onEdit -> buildConfigs = %O', buildConfigs);
+    }
   }
 
 })();

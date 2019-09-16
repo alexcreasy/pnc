@@ -27,16 +27,16 @@
       onEdit: '&'
     },
     templateUrl: 'build-configs/directives/pnc-build-configs-data-table/pnc-build-configs-data-table.html',
-    controller: ['$q', 'modalSelectService', Controller]
+    controller: ['$q', 'modalSelectService', 'filteringPaginator', Controller]
   });
 
 
-  function Controller($q, modalSelectService) {
+  function Controller($q, modalSelectService, filteringPaginator) {
     var $ctrl = this;
     const DEFAULT_FIELDS = ['name', 'project', 'buildStatus'];
 
     // -- Controller API --
-    
+
     $ctrl.actions = {
       remove: remove
     };
@@ -49,6 +49,19 @@
     $ctrl.$onInit = function () {
       // set if bindings are empty
       $ctrl.displayFields = $ctrl.displayFields || DEFAULT_FIELDS;
+
+      $ctrl.filterPage = filteringPaginator($ctrl.page);
+
+      $ctrl.filterFields = [
+        {
+          id: 'name',
+          title: 'Name',
+          placeholder: 'Filter by Name',
+          filterType: 'text'
+        }
+      ];
+
+      $ctrl.toolbarActions = generateToolbarActions();
     };
 
     function remove(buildConfig) {
@@ -79,6 +92,19 @@
         });
     }
 
+    function generateToolbarActions() {
+      const actions = [];
+
+      if ($ctrl.onEdit) {
+        actions.push({
+          name: 'Edit',
+          title: 'Add or remove build configs to the list',
+          actionFn: edit
+        });
+      }
+
+      return actions.length > 0 ? { primaryActions: actions } : undefined;
+    }
   }
 
 })();

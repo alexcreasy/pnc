@@ -18,7 +18,9 @@
 
 -->
 <div>
-  <pnc-build-configs-data-table page="$ctrl.paginator"></pnc-build-configs-data-table>
+  <pnc-build-configs-data-table page="$ctrl.buildConfigs" on-edit="$ctrl.onEdit"></pnc-build-configs-data-table>
+
+
   <!-- <pnc-data-table page="$ctrl.page">
     <table-slot>
       <pnc-build-configs-list build-configs="$ctrl.buildConfigs.data" display-fields="$ctrl.displayFields" actions-data="$ctrl.actionsData" actions-template-url="pnc-build-group-build-config-actions-template"></pnc-build-configs-list> -->
