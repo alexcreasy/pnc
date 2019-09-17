@@ -21,18 +21,20 @@
 
   angular.module('pnc.group-configs').component('pncGroupConfigBuildConfigsTab', {
     bindings: {
+      groupConfig: '<',
       buildConfigs: '<'
     },
     templateUrl: 'group-configs/detail/pnc-group-config-build-configs-tab.html',
-    controller: ['paginator', Controller]
+    controller: ['$log', 'paginator', Controller]
   });
 
-  function Controller(paginator) {
+  function Controller($log, paginator) {
     const $ctrl = this;
 
     // -- Controller API --
 
     $ctrl.onEdit = onEdit;
+    $ctrl.onRemove = onRemove;
 
     // --------------------
 
@@ -41,7 +43,12 @@
     };
 
     function onEdit(buildConfigs) {
-      console.log('onEdit -> buildConfigs = %O', buildConfigs);
+      $log.error('Batch update of Build Configs not yet implemented. Build Configs: %O', buildConfigs);
+    }
+
+    function onRemove(buildConfig) {
+      $log.info('remove BuildConfig: %O', buildConfig);
+      return $ctrl.groupConfig.$removeBuildConfig({ buildConfigId: buildConfig.id });
     }
   }
 

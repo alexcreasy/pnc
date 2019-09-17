@@ -27,11 +27,11 @@
       onEdit: '&'
     },
     templateUrl: 'build-configs/directives/pnc-build-configs-data-table/pnc-build-configs-data-table.html',
-    controller: ['$q', 'modalSelectService', 'filteringPaginator', Controller]
+    controller: ['$scope', '$q', 'modalSelectService', 'filteringPaginator', Controller]
   });
 
 
-  function Controller($q, modalSelectService, filteringPaginator) {
+  function Controller($scope, $q, modalSelectService, filteringPaginator) {
     var $ctrl = this;
     const DEFAULT_FIELDS = ['name', 'project', 'buildStatus'];
 
@@ -65,8 +65,8 @@
     };
 
     function remove(buildConfig) {
-      $q.when($ctrl.onRemove()(buildConfig)).then(function () {
-        $ctrl.page.refresh();
+      $q.when($ctrl.onRemove()(buildConfig)).then(() => {
+        $ctrl.filterPage.refresh();
       });
     }
 

@@ -85,8 +85,8 @@
             }
           ],
           previousState: [
-            '$state', 
-            '$q', 
+            '$state',
+            '$q',
             ($state, $q) => {
               const currentStateData = {
                 Name: $state.current.name,
@@ -119,23 +119,10 @@
           displayName: false
         }
       });
-      
+
       $stateProvider.state('group-configs.create', {
         url: '/create',
         component: 'pncGroupConfigCreatePage',
-        // resolve: {
-        //   productVersion: [
-        //     '$stateParams',
-        //     'ProductVersion',
-        //     ($stateParams, ProductVersion) => {
-        //       if (!$stateParams.productVersionId) {
-        //         return null;
-        //       }
-
-        //       return ProductVersion.get({ id: $stateParams.productVersionId }).$promise;
-        //     }
-        //   ],
-        // },
         data: {
           requireAuth: true,
           displayName: false,

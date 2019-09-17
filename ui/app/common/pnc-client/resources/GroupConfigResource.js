@@ -67,6 +67,7 @@
         removeBuildConfig: {
           method: 'DELETE',
           url: ENDPOINT + '/build-configs/:buildConfigId',
+          successNotification: false
         },
         queryBuilds: {
           method: 'GET',
