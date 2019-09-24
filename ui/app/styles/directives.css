@@ -428,3 +428,13 @@ td.status-icon {
     margin-left: -20px;
   }
 }
+
+.log-container {
+  display: flex;
+  width: 100%;
+}
+
+.log-line {
+  flex-direction: column;
+  width: 100%;
+}
