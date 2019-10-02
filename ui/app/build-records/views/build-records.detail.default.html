@@ -23,11 +23,19 @@
   </div>
 </div>
 <div class="row">
+  <div class="col-xs-12">
+    <pnc-build-tree build-record="recordCtrl.record"></pnc-build-tree>
+  </div>
+</div>
+
+<div class="row">
+  <pnc-log-viewer build="recordCtrl.record"></pnc-log-viewer>
+</div>
+
+<!-- <div class="row">
   <div class="col-md-12">
     <div ng-if="::recordCtrl.record.status!=='BUILDING'">
       <pnc-log-viewer build="recordCtrl.record"></pnc-log-viewer>
     </div>
   </div>
-</div>
-
-<pnc-build-tree build-record="recordCtrl.record"></pnc-build-tree>
+</div> -->

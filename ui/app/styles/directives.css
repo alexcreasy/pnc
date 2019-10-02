@@ -429,12 +429,27 @@ td.status-icon {
   }
 }
 
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap');
+
 .log-container {
-  display: flex;
+  position: relative;
   width: 100%;
+  background-color: #293134;
+  /*
+   *  background-color: #333;
+   */
+  font-family: 'Source Code Pro', monospace;
+  font-weight: normal;
+  word-wrap: break-word;
+  /* font-kerning: normal;
+  font-feature-settings: "kern", "liga", "clig", "calt"; */
+  color: #E0E2E4;
+  /*
+  color: #b3b9c5;
+  */
+  padding: 20px;
 }
 
 .log-line {
-  flex-direction: column;
   width: 100%;
 }

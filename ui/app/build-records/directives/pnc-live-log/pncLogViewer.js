@@ -23,30 +23,117 @@
       buildRecord: '<'
     },
     template: '<div class="log-container"></div>',
-    controller: ['$element', Controller]
+    controller: ['$timeout', '$element', Controller]
   });
 
-  function Controller($element) {
+
+  function Controller($timeout, $element) {
     const $ctrl = this;
 
     let containerElem;
+
+    let socket;
+
 
     // -- Controller API --
 
 
     // --------------------
 
+    $ctrl.$onInit = () => {
+      socket = new WebSocket('ws://bifrost-master-newcastle-devel.cloud.paas.psi.redhat.com/socket');
+      socket.onopen = function () {
+        console.log('connected to bifrost');
+        socket.send(createSocketMessage());
+      };
+      socket.onmessage = function(msg) {
+        console.log('bifrost msg: %O', msg);
+        decodeBinaryBlob(msg.data);
+      };
+    };
+
+    function decodeBinaryBlob(blob) {
+      const fr = new FileReader();
+
+      fr.onload = function () {
+        console.log('bifrost decode: %s', fr.result);
+      };
+
+      fr.readAsText(blob);
+    }
+
+    function createSocketMessage() {
+      return JSON.stringify({
+        'jsonrpc': '2.0',
+        'method':'WRONG',
+        'id':1,
+        'params': {
+          'maxLines': 10,
+          'matchFilters': '',
+          'prefixFilters': '',
+          'afterLine': null,
+          'class': 'class org.jboss.pnc.bifrost.endpoint.websocket.GetLinesDto',
+          'direction': null
+        }
+      });
+    }
+
     $ctrl.$postLink = () => {
-      containerElem = $element[0];
+      containerElem = $element[0].querySelector('.log-container');
 
       console.log('containerElem = %O', containerElem);
 
-      appendLine(`2019-05-03T17:11:49.000Z org.wildfly.security ELY00001: WildFly Elytron version 1.8.0.Final-redhat-00001`);
-      appendLine(`2019-05-03T17:11:49.000Z org.apache.kafka.clients.Metadata Cluster ID: uc10AX_0QMK6BFuPDcNzGg`);
-      appendLine(`2019-05-03T17:11:50.000Z org.xnio XNIO version 3.6.5.Final-redhat-00001`);
-      appendLine(`2019-05-03T17:11:51.000Z org.jboss.as.txn WFLYTX0013: The node-identifier attribute on the /subsystem=transactions is set to the default value. This is a danger for environments running multiple servers. Please make sure the attribute value is unique.`);
+      runTest(20, 1000);
+    };
 
-      /*
+    function appendLine(text) {
+      const node = createDomNode(text);
+      containerElem.appendChild(node);
+    }
+
+    function prependLine(text) {
+      const node = createDomNode(text);
+      containerElem.prependChild(node);
+    }
+
+    function createDomNode(text) {
+      const node = document.createElement('div');
+      node.setAttribute('class', 'log-line');
+      node.appendChild(document.createTextNode(text));
+      return node;
+    }
+
+
+    const testLines = [
+      `2019-05-03T17:11:49.000Z org.wildfly.security ELY00001: WildFly Elytron version 1.8.0.Final-redhat-00001`,
+      `2019-05-03T17:11:49.000Z org.apache.kafka.clients.Metadata Cluster ID: uc10AX_0QMK6BFuPDcNzGg`,
+      `2019-05-03T17:11:50.000Z org.xnio XNIO version 3.6.5.Final-redhat-00001`,
+      `2019-05-03T17:11:51.000Z org.jboss.as.txn WFLYTX0013: The node-identifier attribute on the /subsystem=transactions is set to the default value. This is a danger for environments running multiple servers. Please make sure the attribute value is unique.`
+    ];
+
+
+    function runTest(noOfLines, delay) {
+      let i = 0;
+
+      (function recurseTest() {
+        appendTestLine();
+        i++;
+
+        if (i === noOfLines) {
+          return;
+        }
+
+        $timeout(recurseTest, delay, false);
+      })();
+
+    }
+
+    function appendTestLine() {
+      const line = testLines[Math.floor(Math.random() * testLines.length)];
+      appendLine(line);
+    }
+
+    /*
 2019-05-03T17:11:49.000Z org.apache.kafka.clients.Metadata Cluster ID: uc10AX_0QMK6BFuPDcNzGg
 2019-05-03T17:11:50.000Z org.jboss.as.controller.management-deprecated WFLYCTL0028: Attribute 'security-realm' in the resource at address '/subsystem=undertow/server=default-server/https-listener=https' is deprecated, and may be removed in a future version. See the attribute description in the output of the read-resource-description operation to learn more about the deprecation.
 2019-05-03T17:11:50.000Z org.xnio XNIO version 3.6.5.Final-redhat-00001
@@ -67,13 +154,6 @@
 2019-05-03T17:11:51.000Z org.jboss.as.mail.extension WFLYMAIL0001: Bound mail session [java:jboss/mail/Default]
 2019-05-03T17:11:51.000Z org.jboss.as.txn WFLYTX0013: The node-identifier attribute on the /subsystem=transactions is set to the default value. This is a danger for environments running multiple servers. Please make sure the attribute value is unique.
 */
-    };
-
-    function appendLine(text) {
-      const line = `<div class="log-line>${text}</div>`;
-
-      containerElem.appendChild(line);
-    }
 
 
   }
