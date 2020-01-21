@@ -41,7 +41,7 @@
 
       $scope.$on(events.BUILD_STATUS_CHANGED, (event, build) => {
         if ($ctrl.build.id === build.id) {
-          $ctrl.build = build;
+          $scope.$applyAsync(() => $ctrl.build = build);
         }
       });
     };
