@@ -24,11 +24,11 @@
       groupBuilds: '<',
     },
     templateUrl: 'group-builds/list/pnc-group-builds-list-page.html',
-    controller: ['filteringPaginator', Controller]
+    controller: ['filteringPaginator', '$scope', 'events', Controller]
   });
 
 
-  function Controller(filteringPaginator) {
+  function Controller(filteringPaginator, $scope, events) {
     const $ctrl = this;
 
     // -- Controller API --
@@ -70,11 +70,7 @@
     $ctrl.$onInit = function () {
       $ctrl.groupBuildsFilteringPage = filteringPaginator($ctrl.groupBuilds);
 
-      /* NCL-4433 group builds need to be updated
-      function processEvent() {}
-      $scope.$on(eventTypes.BUILD_SET_STARTED, processEvent);
-      $scope.$on(eventTypes.BUILD_SET_FINISHED, processEvent);
-      */
+      $scope.$on(events.GROUP_BUILD_PROGRESS_CHANGED, () => $ctrl.groupBuildsFilteringPage.refresh());
     };
 
   }

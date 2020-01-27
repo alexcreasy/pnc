@@ -104,6 +104,10 @@
         return $http.post(restConfig.getPncRestUrl() + '/build-configs/create-with-scm', dto);
       };
 
+      resource.getLatestBuild = function() {
+        return $http.get(restConfig.getPncUrl() + '')
+      };
+
       return resource;
     }
 
