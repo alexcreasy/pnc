@@ -26,7 +26,6 @@
     controller: [Controller]
   });
 
-
   function Controller() {
     const $ctrl = this;
 
