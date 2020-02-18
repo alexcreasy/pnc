@@ -53,7 +53,11 @@
             const unsubscribe = messageBus.onMessage(notification => {
               if (notification.job === 'BUILD_CONFIG_CREATION' && notification.taskId.toString() === taskId) {
                 if (notification.progress === 'FINISHED') {
-                  deferred.resolve(notification);
+                  if (notification.notificationType === 'BC_CREATION_SUCCESS') {
+                    deferred.resolve(notification);
+                  } else {
+                    deferred.reject(normalizeError(notification));
+                  }
                   unsubscribe();
                 } else {
                   deferred.notify(notification);
@@ -62,10 +66,41 @@
             });
           }
         }, errorResp => {
-          deferred.reject(errorResp);
+          deferred.reject(normalizeError(errorResp));
         });
 
         return deferred.promise;
+      }
+
+      /**
+       * Normalizes the error response from either the http response or the websocket notification.
+       * the standard format returned is:
+       *
+       * {
+       *     source: '...' // Where the error came from, either 'http' or 'ws'.
+       *     message: '...' // Human readable error message
+       *     response: ? // The original response object received.
+       * }
+       *
+       */
+      function normalizeError(response) {
+        let normalized = {
+          response: response
+        };
+
+        // Error came from HTTP Request
+        if (response.status && response.statusText) {
+          normalized.source = 'http';
+          normalized.message =  response.data.errorMessage;
+        }
+
+        // Error came from WebSocket
+        if (response.job === 'BUILD_CONFIG_CREATION') {
+          normalized.source = 'ws';
+          normalized.message = response.data.message;
+        }
+
+        return normalized;
       }
 
       function validate(params) {

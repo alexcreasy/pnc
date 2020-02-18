@@ -236,9 +236,9 @@
     }
 
     function error(message) {
-      $ctrl.createStatusMessages.push('Error creating Build Config.');
       $ctrl.createStatusMessages.push(message);
       $ctrl.createError = true;
+      $ctrl.wizardDone = true;
     }
   }
 })();
