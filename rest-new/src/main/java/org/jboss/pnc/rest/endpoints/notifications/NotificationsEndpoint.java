@@ -17,6 +17,7 @@
  */
 package org.jboss.pnc.rest.endpoints.notifications;
 
+import org.jboss.pnc.common.logging.MDCUtils;
 import org.jboss.pnc.notification.Action;
 import org.jboss.pnc.notification.MessageType;
 import org.jboss.pnc.notification.ProgressUpdatesRequest;
@@ -72,6 +73,7 @@ public class NotificationsEndpoint {
 
     @OnOpen
     public void attach(Session attachedSession) {
+        MDCUtils.getRequestContext().;
         logger.debug("Opened new session id: {}, uri: {}.", attachedSession.getId(), attachedSession.getRequestURI());
         notifier.attachClient(new SessionBasedAttachedClient(attachedSession, notifier));
     }
