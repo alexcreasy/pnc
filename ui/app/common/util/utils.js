@@ -46,7 +46,7 @@
           return true;
         }
 
-        if (typeof value === 'string' || value instanceof String && value.length === 0) {
+        if ((typeof value === 'string' || value instanceof String) && value.length === 0) {
           return true;
         }
 
