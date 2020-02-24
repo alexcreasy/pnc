@@ -27,11 +27,11 @@
       onEdit: '&'
     },
     templateUrl: 'build-configs/directives/pnc-build-configs-data-table/pnc-build-configs-data-table.html',
-    controller: ['$scope', '$q', 'modalSelectService', 'filteringPaginator', Controller]
+    controller: ['utils', '$q', 'modalSelectService', 'filteringPaginator', Controller]
   });
 
 
-  function Controller($scope, $q, modalSelectService, filteringPaginator) {
+  function Controller(utils, $q, modalSelectService, filteringPaginator) {
     var $ctrl = this;
     const DEFAULT_FIELDS = ['name', 'project', 'buildStatus'];
 
@@ -71,25 +71,17 @@
     }
 
     function edit() {
-      $q.when()
-        .then(function () {
-          if ($ctrl.page.total === 1) {
-            return $ctrl.page.data;
-          } else {
-            return $ctrl.page.getWithNewSize($ctrl.page.total * $ctrl.page.count).then(function (resp) { return resp.data; });
-          }
-        })
-        .then(function (buildConfigs) {
-          return modalSelectService.openForBuildConfigs({
-            title: 'Insert / Remove Build Configs',
-            buildConfigs: buildConfigs
-          }).result;
-        })
-        .then(function (editedBuildConfigs) {
-          $q.when($ctrl.onEdit()(editedBuildConfigs)).then(function () {
-            $ctrl.page.refresh();
+      utils.dePaginate($ctrl.page)
+          .then(buildConfigs => {
+            return modalSelectService.openForBuildConfigs({
+              title: 'Insert / Remove Build Configs',
+              buildConfigs: buildConfigs
+            }).result;
+          })
+          .then(editedBuildConfigs => {
+            $q.when($ctrl.onEdit()(editedBuildConfigs))
+              .then(() => $ctrl.page.refresh());
           });
-        });
     }
 
     function generateToolbarActions() {
