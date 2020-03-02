@@ -37,24 +37,24 @@
     'pncNotify',
     'keycloak',
     function($q, $log, pncNotify, keycloak) {
+      const MAX_NOTIFICATION_LENGTH = 120;
 
       function defaultSuccessNotification(response) {
         if (response.config.method !== 'GET') {
-          $log.debug('HTTP response: %O', response);
           pncNotify.success('Request successful');
         }
       }
 
-      function handleError(rejection) {
-        var MAX_NOTIFICATION_LENGTH = 120;
+      function isStandardError(data) {
+        return data && data.errorMessage;
+      }
 
-        var error;
+      function defaultErrorNotification(rejection) {
+        const error = rejection.data;
 
-        if (rejection && rejection.data && rejection.data.errorMessage) {
-          error = rejection.data;
-        } else {
-          pncNotify.error('PNC REST Api returned an error in an invalid format: ' + rejection.status + ' ' + rejection.statusText);
-          $log.error('PNC REST Api returned an error in an invalid format: response: %O', rejection);
+        if (!isStandardError(error)) {
+          pncNotify.error(`PNC API Response: ${rejection.status} ${rejection.statusText}`);
+          $log.error('PNC REST API returned an error in a non-standard format %O', rejection);
           return rejection;
         }
 
@@ -63,9 +63,20 @@
         }
 
         pncNotify.error(error.errorMessage);
-        $log.error('PNC REST API returned the following error: type: "%s", message: "%s", details: "%s"',
+        $log.error('PNC API Error response: type: "%s", message: "%s", details: "%s"',
             error.errorType, error.errorMessage, error.details);
+      }
 
+      function handleError(rejection) {
+        const notify = rejection.config.errorNotification;
+
+        if (angular.isUndefined(notify)) {
+          defaultErrorNotification(rejection);
+        } else if (angular.isFunction(notify)) {
+          notify(rejection);
+        } else if (angular.isString(notify)) {
+          pncNotify.error(notify);
+        }
       }
 
       return {
@@ -91,9 +102,6 @@
               break;
             case 401:
               keycloak.login();
-              break;
-            case 404:
-              pncNotify.error('Requested resource not found');
               break;
             default:
               handleError(rejection);

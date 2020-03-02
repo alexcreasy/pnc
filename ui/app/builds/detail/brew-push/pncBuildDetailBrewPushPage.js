@@ -21,20 +21,30 @@
 
     angular.module('pnc.builds').component('pncBuildDetailBrewPushPage', {
       bindings: {
-        build: '<',
-        brewPushResult: '<'
+        build: '<'
       },
       templateUrl: 'builds/detail/brew-push/pnc-build-detail-brew-push-page.html',
-      controller: [Controller]
+      controller: ['pncProperties', 'BuildResource', Controller]
     });
 
-    function Controller() {
-      //var $ctrl = this;
+    function Controller(pncProperties) {
+      const $ctrl = this;
 
       // -- Controller API --
 
 
       // --------------------
+
+      $ctrl.$onInit = () => {
+        // const promise = $ctrl.build.$getBrewPushResult().then(
+        //     resp => $ctrl.brewPushResult = resp
+        // );
+
+        const bifrostUrl = new URL(pncProperties.bifrostUrl);
+        $ctrl.bifrostHost = bifrostUrl.host;
+        $ctrl.prefixFilters = 'loggerName.keyword:org.jboss.pnc.bpm.causeway.BuildResultPushManager';
+        $ctrl.matchFilters = `mdc.processContext.keyword:${$ctrl.build.id}`;
+      };
 
     }
 

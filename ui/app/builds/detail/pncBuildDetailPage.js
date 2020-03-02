@@ -22,8 +22,7 @@
   angular.module('pnc.builds').component('pncBuildDetailPage', {
     bindings: {
       build: '<',
-      dependencyGraph: '<',
-      brewPushResult: '<'
+      dependencyGraph: '<'
     },
     templateUrl: 'builds/detail/pnc-build-detail-page.html',
     controller: ['$scope', 'events', Controller]
@@ -34,16 +33,13 @@
     const $ctrl = this;
 
     // -- Controller API --
-    $ctrl.isFinished = false;
-    $ctrl.hasPushResults = false;
+
+    $ctrl.brewPush = brewPush;
 
     // --------------------
 
-
     $ctrl.$onInit = function () {
       $ctrl.isFinished = $ctrl.build.progress === 'FINISHED';
-      $ctrl.hasPushResults = !!$ctrl.brewPushResult.status;
-
 
       $scope.$on(events.BUILD_STATUS_CHANGED, (event, build) => {
         if ($ctrl.build.id === build.id) {
@@ -51,6 +47,10 @@
         }
       });
     };
+
+    function brewPush(tagName) {
+      console.log(`Push build: ${$ctrl.build.$canonicalName()} to brew tag: ${tagName}`);
+    }
 
   }
 

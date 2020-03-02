@@ -21,7 +21,7 @@
   <div class="col-md-12">
     <div class="page-header border-none">
       <div class="btn-group pull-right" role="group" aria-label="Build Actions">
-        <pnc-brew-push-button build="$ctrl.build"></pnc-brew-push-button>
+        <pnc-brew-push-button ng-show="$ctrl.build.$isSuccess()" on-confirm-push="$ctrl.brewPush(tagName)"></pnc-brew-push-button>
         <button ng-if="$ctrl.build.$isCancelable()" ng-click="$ctrl.build.$cancel()" type="button" class="btn btn-danger"><i class="fa fa-ban" aria-hidden="true"></i>&nbsp;Abort</button>
       </div>
       <h1>
@@ -51,7 +51,7 @@
       <li role="presentation" ui-sref-active="active" ng-show="$ctrl.isFinished">
         <a href ui-sref="projects.detail.build-configs.detail.builds.detail.dependencies">Dependencies</a>
       </li>
-      <li role="presentation" ui-sref-active="active" ng-show="$ctrl.hasPushResults">
+      <li role="presentation" ui-sref-active="active" ng-show="$ctrl.build.$isSuccess()">
         <a href ui-sref="projects.detail.build-configs.detail.builds.detail.brew-push">Brew Push</a>
       </li>
     </ul>

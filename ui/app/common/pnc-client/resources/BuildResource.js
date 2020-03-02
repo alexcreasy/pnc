@@ -29,12 +29,13 @@
   module.factory('BuildResource', [
     '$resource',
     '$q',
+    '$http',
     'restConfig',
     'authService',
     'BUILD_PATH',
     'BUILD_SSH_CREDENTIALS_PATH',
     'buildStatusHelper',
-    ($resource, $q, restConfig, authService, BUILD_PATH, BUILD_SSH_CREDENTIALS_PATH, buildStatusHelper) => {
+    ($resource, $q, $http, restConfig, authService, BUILD_PATH, BUILD_SSH_CREDENTIALS_PATH, buildStatusHelper) => {
       const ENDPOINT = restConfig.getPncRestUrl() + BUILD_PATH;
       const BUILD_SSH_CREDENTIALS_ENDPOINT = restConfig.getPncRestUrl() + BUILD_SSH_CREDENTIALS_PATH;
 
@@ -99,7 +100,7 @@
         /**
          * ssh-credentials is the only one GET REST endpoint requiring authentication, this is the reason
          * why url structure is not compliant with the REST standards: /builds/:id/ssh-credentials, see NCL-5250
-         * 
+         *
          * This method shouldn't be called directly, but getSshCredentials() should be used.
          */
         _getSshCredentials :{
@@ -136,11 +137,6 @@
           url: ENDPOINT + '/cancel'
         },
 
-        getBrewPushResult: {
-          method: 'GET',
-          url: ENDPOINT + '/brew-push'
-        },
-
         /**
          * Push build to Brew.
          */
@@ -166,6 +162,25 @@
         }
       });
 
+      /**
+       * Fetches the result of the last attempt to push the build to brew.
+       */
+      function getBrewPushResult(build) {
+        return $http({
+          method: 'GET',
+          url: `${ENDPOINT.replace(':id', build.id)}/brew-push`,
+          errorNotification: false
+        }).catch(err => {
+          // In this case a 404 is not an error. It simply means a brew push has not been attempted yet.
+          if (err.status === 404) {
+            return $q.when(null);
+          }
+          return err;
+        });
+      }
+
+      resource.getBrewPushResult = getBrewPushResult;
+      resource.prototype.$getBrewPushResult = function() { return getBrewPushResult(this); };
 
       resource.prototype.$isSuccess = function () {
         return buildStatusHelper.isSuccess(this);

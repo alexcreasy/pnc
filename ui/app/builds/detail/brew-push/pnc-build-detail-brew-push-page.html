@@ -36,8 +36,13 @@
 </div>
 <div class="row">
   <div class="col-md-12">
-    <div class="pnc-log-canvas-parent log-console well well-sm pre-wrap push-log">
+    <ng-bifrost-log-viewer
+        bifrost-host="$ctrl.bifrostHost"
+        match-filters="$ctrl.matchFilters"
+        prefix-filters="$ctrl.prefixFilters">
+    </ng-bifrost-log-viewer>
+    <!-- <div class="pnc-log-canvas-parent log-console well well-sm pre-wrap push-log">
       <div class="pnc-log-canvas-content">{{ ::$ctrl.brewPushResult.log }}</div>
-    </div>
+    </div> -->
   </div>
 </div>

@@ -109,9 +109,6 @@
         resolve: {
           build: ['BuildResource', '$stateParams', function (BuildResource, $stateParams) {
             return BuildResource.get({ id: $stateParams.buildId }).$promise;
-          }],
-          brewPushResult: ['BuildResource', '$stateParams', function (BuildResource, $stateParams) {
-            return BuildResource.getBrewPushResult({ id: $stateParams.buildId });
           }]
         }
       });
@@ -189,6 +186,12 @@
         data: {
           displayName: 'Brew Push Results',
           title: '#{{ build.id }} {{ build.buildConfigRevision.name }} | Brew Push'
+        },
+        resolve: {
+          brewPushResult: [
+            'build',
+            build => build.$getBrewPushResult()
+          ]
         }
       });
 
