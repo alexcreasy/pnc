@@ -18,48 +18,24 @@
 (function () {
   'use strict';
 
-  angular.module('pnc.common.pnc-client.jobs').factory('brewPushBuild', [
+  angular.module('pnc.common.pnc-client.jobs').factory('Job', [
     '$http',
     '$q',
     'restConfig',
     'messageBus',
-    'BuildResource',
-    function ($http, $q, restConfig, messageBus, BuildResource) {
+    function () {
 
-      function pushBuild(build) {
-        const deferred = $q.defer();
+      return class Job {
 
-        BuildResource.brewPush(build).$promise
-            .then(
-              resp => {
-                deferred.notify(resp);
-                messageBus.onMessage
+        constructor() {
 
-              },
-              err => deferred.reject(err));
+        }
 
+        builder() {
 
-        return deferred.promise;
+        }
 
       }
-
-      function trackPushJob(buildId, onUpdate) {
-        const messageBus.onMessage(
-            withBuildId(buildId,
-              () =>
-            )
-        );
-      }
-
-      function withBuildId(buildId, callback) {
-        return notification => {
-          if (notification.job === 'BREW_PUSH' && notification.buildPushResult.buildId === buildId) {
-            console.debug(`withBuildId: ${buildId}`, notification);
-            callback(notification);
-          }
-        };
-      }
-
 
       // const url = `${restConfig.getPncRestUrl()}/build-configs/create-with-scm`;
 
