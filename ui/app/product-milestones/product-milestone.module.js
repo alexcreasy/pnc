@@ -51,13 +51,23 @@
         },
         resolve: {
           productMilestone: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams) =>
+<<<<<<< HEAD
             ProductMilestoneResource.get({id: $stateParams.productMilestoneId}).$promise
           ],
           performedBuilds: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams) =>
             ProductMilestoneResource.queryPerformedBuilds({id: $stateParams.productMilestoneId}).$promise
+=======
+            ProductMilestoneResource.get({ id: $stateParams.productMilestoneId }).$promise
+          ],
+          performedBuilds: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams) =>
+            ProductMilestoneResource.queryPerformedBuilds({ id: $stateParams.productMilestoneId }).$promise
+          ],
+          closeResults: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams) =>
+            ProductMilestoneResource.queryCloseResults({ id: $stateParams.productMilestoneId }).$promise
+>>>>>>> WIP
           ],
           latestCloseResult: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams, $log) =>
-            ProductMilestoneResource.queryLatestCloseResult({ id: $stateParams.productMilestoneId }).$promise.catch((error) => {
+            ProductMilestoneResource.getLatestCloseResult({ id: $stateParams.productMilestoneId }).$promise.catch((error) => {
               $log.error('Error loading release workflow: ' + JSON.stringify(error));
             })
           ]
