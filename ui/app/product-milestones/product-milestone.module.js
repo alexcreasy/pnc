@@ -124,6 +124,24 @@
             ProductMilestoneResource.get({id: $stateParams.productMilestoneId}).$promise
           ]
         }
+      })
+
+      .state('products.detail.product-versions.detail.milestone.detail.close-result', {
+        url: '/close-result/{closeResultId}',
+        views: {
+          'content@': {
+            component: 'pncProductMilestoneCloseResultPage'
+          }
+        },
+        data: {
+          displayName: 'Close Result',
+          title: 'Close Result | {{ productMilestone.version }} | {{ product.name }} '
+        },
+        resolve: {
+          closeResult: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams) =>
+            ProductMilestoneResource.queryCloseResults({ id: $stateParams.productMilestoneId, q: 'id==' + $stateParams.closeResultId }).$promise
+          ]
+        }
       });
 
   }]);

@@ -18,39 +18,27 @@
 (function() {
   'use strict';
 
-  angular.module('pnc.product-milestones').component('pncProductMilestoneClosePage', {
+  angular.module('pnc.product-milestones').component('pncProductMilestoneCloseResultPage', {
     bindings: {
-      product: '<',
-      productVersion: '<',
-      productMilestone: '<'
+      // product: '<',
+      // productVersion: '<',
+      // productMilestone: '<',
+      closeResult: '<'
     },
-    templateUrl: 'product-milestones/close/pnc-product-milestone-close-page.html',
-    controller: ['$state', Controller]
+    templateUrl: 'product-milestones/close-result/pnc-product-milestone-close-result-page.html',
+    controller: [Controller]
   });
 
-  function Controller($state) {
+  function Controller() {
     const $ctrl = this;
 
     // -- Controller API --
 
-    $ctrl.submit = submit;
-
     // --------------------
 
     $ctrl.$onInit = () => {
-      $ctrl.data = $ctrl.productMilestone;
-    };
 
-    function submit() {
-      $ctrl.data.$close().then(() => {
-        $state.go('products.detail.product-versions.detail', {
-          productId: $ctrl.product.id,
-          versionId: $ctrl.productVersion.id
-        }, {
-          reload: true
-        });
-      });
-    }
+    };
 
   }
 
