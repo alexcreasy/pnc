@@ -51,12 +51,6 @@
         },
         resolve: {
           productMilestone: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams) =>
-<<<<<<< HEAD
-            ProductMilestoneResource.get({id: $stateParams.productMilestoneId}).$promise
-          ],
-          performedBuilds: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams) =>
-            ProductMilestoneResource.queryPerformedBuilds({id: $stateParams.productMilestoneId}).$promise
-=======
             ProductMilestoneResource.get({ id: $stateParams.productMilestoneId }).$promise
           ],
           performedBuilds: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams) =>
@@ -64,7 +58,6 @@
           ],
           closeResults: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams) =>
             ProductMilestoneResource.queryCloseResults({ id: $stateParams.productMilestoneId }).$promise
->>>>>>> WIP
           ],
           latestCloseResult: ['ProductMilestoneResource', '$stateParams', (ProductMilestoneResource, $stateParams, $log) =>
             ProductMilestoneResource.getLatestCloseResult({ id: $stateParams.productMilestoneId }).$promise.catch((error) => {
