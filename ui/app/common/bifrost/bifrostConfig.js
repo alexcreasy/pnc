@@ -18,19 +18,40 @@
 (function () {
   'use strict';
 
-  angular.module('pnc.common', [
-    'pnc.common.authentication',
-    'pnc.common.bifrost',
-    'pnc.common.components',
-    'pnc.common.da-client',
-    'pnc.common.directives',
-    'pnc.common.events',
-    'pnc.common.notifications',
-    'pnc.common.pnc-client',
-    'pnc.common.select-modals',
-    'pnc.common.util',
-    'pnc.common.filters',
-    'pnc-ui-extras.uiBreadcrumbs'
-  ]);
+  const module = angular.module('pnc.common.bifrost');
+
+  /**
+   * Provider for configuration of the bifrost client services.
+   */
+  module.provider('bifrostConfig', function () {
+
+    let bifrostUrl;
+
+    function setBifrostUrl(url) {
+      bifrostUrl = url;
+    }
+
+    function getBifrostUrl() {
+      return bifrostUrl;
+    }
+
+    function getBifrostHost() {
+      return new URL(bifrostUrl).host;
+    }
+
+
+    return {
+      setBifrostUrl,
+      getBifrostUrl,
+      getBifrostHost,
+
+      $get: () => {
+        return {
+          getBifrostUrl,
+          getBifrostHost
+        };
+      }
+    };
+  });
 
 })();

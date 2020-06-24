@@ -120,7 +120,7 @@
       })
 
       .state('products.detail.product-versions.detail.milestone.detail.close-result', {
-        url: '/close-result/{closeResultId}',
+        url: '/close-results/{closeResultId}',
         views: {
           'content@': {
             component: 'pncProductMilestoneCloseResultPage'

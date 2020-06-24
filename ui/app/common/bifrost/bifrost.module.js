@@ -18,19 +18,6 @@
 (function () {
   'use strict';
 
-  angular.module('pnc.common', [
-    'pnc.common.authentication',
-    'pnc.common.bifrost',
-    'pnc.common.components',
-    'pnc.common.da-client',
-    'pnc.common.directives',
-    'pnc.common.events',
-    'pnc.common.notifications',
-    'pnc.common.pnc-client',
-    'pnc.common.select-modals',
-    'pnc.common.util',
-    'pnc.common.filters',
-    'pnc-ui-extras.uiBreadcrumbs'
-  ]);
+  angular.module('pnc.common.bifrost', []);
 
 })();

@@ -37,7 +37,7 @@
     // --------------------
 
     $ctrl.$onInit = () => {
-
+      $ctrl.data = $ctrl.closeResult.data[0];
     };
 
   }

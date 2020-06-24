@@ -108,7 +108,8 @@
     'restConfigProvider',
     'daConfigProvider',
     'authConfigProvider',
-    function (pncProperties, restConfigProvider, daConfigProvider, authConfigProvider) {
+    'bifrostConfigProvider',
+    function (pncProperties, restConfigProvider, daConfigProvider, authConfigProvider, bifrostConfigProvider) {
       // representing PNC REST API version 1
       restConfigProvider.setPncUrl(pncProperties.externalLegacyPncUrl);
 
@@ -122,6 +123,8 @@
       daConfigProvider.setDaUrl(pncProperties.externalDaUrl);
 
       authConfigProvider.setSsoTokenLifespan(pncProperties.ssoTokenLifespan);
+
+      bifrostConfigProvider.setBifrostUrl(pncProperties.externalBifrostUrl);
     }
   ]);
 
