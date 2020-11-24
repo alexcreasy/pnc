@@ -45,6 +45,7 @@
 
     $ctrl.search = search;
     $ctrl.showDeprecated = false;
+    $ctrl.forceUpdateOptions = forceUpdateOptions;
 
     // --------------------
 
@@ -94,7 +95,6 @@
     };
 
     $ctrl.$postLink = function () {
-
       // $timeout used without an interval value to ensure the DOM element has
       // been rendered when we try to to find it.
       $timeout(function () {
@@ -139,6 +139,12 @@
       }
 
       return doSearch($viewValue);
+    }
+
+    function forceUpdateOptions($viewValue) {
+      angular.element($element[0].querySelector('px-combobox'))
+             .controller('pxCombobox')
+             .loadOptions($viewValue);
     }
   }
 })();
